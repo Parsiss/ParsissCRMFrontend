@@ -5,3 +5,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
+@import '~@angular/material/theming';
+@import './fontiran';
+
+$custom-typography: mat-typography-config(
+    $font-family: '"IRANSansX"'
+);
+@include angular-material-typography($custom-typography);
