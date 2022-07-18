@@ -1,36 +1,43 @@
-<mat-toolbar>
-  <mat-toolbar-row>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <a mat-button> {{ 'parsiss' | translate }}</a>
-    <a mat-button>{{ 'home' | translate }}</a>
-    <div>
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-        {{'report' | translate}}
+<div [dir]="textDir">
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+        <mat-icon>menu</mat-icon>
       </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item>
-          <span>{{'reports' | translate}}</span>
+        <a mat-button href="https://parsiss.com/{{selectedLanguage == 'fa' ? 'fa' : ''}}"> {{ 'parsiss' | translate }}</a>
+        <a mat-button routerLink="home">{{ 'home' | translate }}</a>
+      <div>
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          {{'report' | translate}}
         </button>
-        <button mat-menu-item disabled>
-          <span>{{'add new report' | translate}}</span>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <a routerLink="reports" mat-menu-item>{{'reports' | translate}}</a>
+          </button>
+          <button mat-menu-item>
+            <a routerLink="add_reports" mat-menu-item>{{'add new report' | translate}}</a>
+          </button>
+        </mat-menu>
+      </div>
+      <a mat-button class="example-spacer"></a>
+      <div style="display: flex; align-items: center; justify-content: center;"
+        [style.flex-direction]="selectedLanguage == 'fa' ? 'row' : 'row-reverse'"
+      >
+        <button mat-icon-button [matMenuTriggerFor]="languagemenu" aria-label="Example icon-button with a menu">
+          {{ selectedLanguage == 'fa' ? 'فارسی' : 'English' }}
         </button>
-      </mat-menu>
-    </div>
-    <a mat-button class="example-spacer"></a>
-    <div>
-      <button mat-icon-button [matMenuTriggerFor]="languagemenu" aria-label="Example icon-button with a menu">
-        {{ selectedLanguage }}
         <mat-icon>language</mat-icon>
-      </button>
-      <mat-menu #languagemenu="matMenu">
-        <button mat-menu-item *ngFor="let lang of translate.getLangs()" (click)="selectedLanguage=lang">
-          <span>{{ lang }}</span>
-        </button>
-      </mat-menu>
-    </div>
-  </mat-toolbar-row>
-</mat-toolbar>
+        <mat-menu #languagemenu="matMenu">
+          <button mat-menu-item (click)="selectedLanguage='fa'">
+            <span>فارسی</span>
+          </button>
+          <button mat-menu-item (click)="selectedLanguage='en'">
+            <span>English</span>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
-<router-outlet></router-outlet>
+  <router-outlet></router-outlet>
+</div>
