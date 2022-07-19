@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -21,9 +22,13 @@ export class AppComponent {
     this.translate.use(value);
   }
 
-  constructor(public translate: TranslateService) {
+  constructor(
+    public translate: TranslateService,
+    private router: Router
+    ) {
     translate.addLangs(['en', 'fa']);
     translate.setDefaultLang('fa');
     this.selectedLanguage = 'fa';
   }
+
 }

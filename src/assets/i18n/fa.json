@@ -1,4 +1,7 @@
 {
+    "id": "شناسه",
+    "advanced search": "جستجوی پیشرفته",
+    "simple search": "جستجو",
     "parsiss": "پارسیس",
     "home": "خانه",
     "report": "گزارش",
@@ -12,6 +15,7 @@
     "family": "نام خانوادگی",
     "email": "ایمیل",
     "phone": "شماره تلفن",
+    "phonenumber": "شماره تلفن",
     "address": "شهر",
     "age": "سن",
     "national_code": "کد ملی",

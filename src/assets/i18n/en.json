@@ -1,4 +1,7 @@
 {
+    "id": "identity",
+    "advanced search": "Advanced Search",
+    "simple search": "Search",
     "parsiss": "Parsiss",
     "home": "Home",
     "report": "Report",
@@ -12,6 +15,7 @@
     "family": "Family",
     "email": "Email",
     "phone": "Phone",
+    "PhoneNumber": "Phone Number",
     "address": "Address",
     "age": "Age",
     "national_code": "National ID",
