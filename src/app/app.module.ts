@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomePageComponentComponent } from './home-page-component/home-page-component.component';
+import { HomePageComponent } from './home-page-component/home-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -15,8 +15,12 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {MatSelectModule} from '@angular/material/select';
 import {MatMenuModule} from '@angular/material/menu';
-import { ImageSliderComponentComponent } from './image-slider-component/image-slider-component.component';
+import { ImageSliderComponent } from './image-slider-component/image-slider.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReportsListComponent } from './reports-list-component/reports-list.component';
+import { RouterModule } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -26,8 +30,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    HomePageComponentComponent,
-    ImageSliderComponentComponent
+    HomePageComponent,
+    ImageSliderComponent,
+    ReportsListComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,6 +46,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSelectModule,
     MatMenuModule,
     NgbModule,
+    RouterModule,
+    MatTableModule,
+    MatPaginatorModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

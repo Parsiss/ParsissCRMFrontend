@@ -1,22 +1,22 @@
-<div [dir]="textDir">
+<div [dir]="textDir" style="min-height: 100%; display: flex; flex-direction: column;">
   <mat-toolbar>
     <mat-toolbar-row>
       <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
         <mat-icon>menu</mat-icon>
       </button>
       <a mat-button href="https://parsiss.com/{{selectedLanguage == 'fa' ? 'fa' : ''}}"> {{ 'parsiss' | translate }}</a>
-      <a mat-button routerLink="home">{{ 'home' | translate }}</a>
+      <a mat-button routerLink="home" routerLinkActive="active">{{ 'home' | translate }}</a>
       <div>
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
           {{'report' | translate}}
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item>
-            <a routerLink="reports" mat-menu-item>{{'reports' | translate}}</a>
-          </button>
-          <button mat-menu-item>
+          <!-- <button mat-menu-item> -->
+            <a routerLink="reportsList" routerLinkActive="active" mat-menu-item>{{'reports' | translate}}</a>
+          <!-- </button> -->
+          <!-- <button mat-menu-item> -->
             <a routerLink="add_reports" mat-menu-item>{{'add new report' | translate}}</a>
-          </button>
+          <!-- </button> -->
         </mat-menu>
       </div>
       <a mat-button class="example-spacer"></a>
@@ -39,4 +39,17 @@
   </mat-toolbar>
 
   <router-outlet></router-outlet>
+
+  <div class="text-center text-white" style="background-color: #212121; margin-top: auto;">
+    <!-- Grid container -->
+    <div class="container p-4"></div>
+    <!-- Grid container -->
+
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: #212121;">
+      © 2022 Copyright:
+      <a class="text-white" href="https://parsiss.com/{{selectedLanguage == 'fa' ? 'fa' : ''}}">parsiss.com</a>
+    </div>
+    <!-- Copyright -->
+  </div>
 </div>
