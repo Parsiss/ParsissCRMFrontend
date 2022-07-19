@@ -9,16 +9,16 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent {
   title = 'ParsissCRMFrontend';
   private _selectedLanguage = 'fa';
-  
+
   textDir: 'rtl' | 'ltr' = 'rtl';
 
   get selectedLanguage(): string {
-      return this._selectedLanguage;
+    return this._selectedLanguage;
   }
   set selectedLanguage(value: string) {
-      this._selectedLanguage = value;
-      this.textDir = this._selectedLanguage === 'fa' ? 'rtl' : 'ltr';
-      this.translate.use(value);
+    this._selectedLanguage = value;
+    this.textDir = this._selectedLanguage === 'fa' ? 'rtl' : 'ltr';
+    this.translate.use(value);
   }
 
   constructor(public translate: TranslateService) {

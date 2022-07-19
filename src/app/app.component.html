@@ -4,8 +4,8 @@
       <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
         <mat-icon>menu</mat-icon>
       </button>
-        <a mat-button href="https://parsiss.com/{{selectedLanguage == 'fa' ? 'fa' : ''}}"> {{ 'parsiss' | translate }}</a>
-        <a mat-button routerLink="home">{{ 'home' | translate }}</a>
+      <a mat-button href="https://parsiss.com/{{selectedLanguage == 'fa' ? 'fa' : ''}}"> {{ 'parsiss' | translate }}</a>
+      <a mat-button routerLink="home">{{ 'home' | translate }}</a>
       <div>
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
           {{'report' | translate}}
@@ -21,8 +21,7 @@
       </div>
       <a mat-button class="example-spacer"></a>
       <div style="display: flex; align-items: center; justify-content: center;"
-        [style.flex-direction]="selectedLanguage == 'fa' ? 'row' : 'row-reverse'"
-      >
+        [style.flex-direction]="selectedLanguage == 'fa' ? 'row' : 'row-reverse'">
         <button mat-icon-button [matMenuTriggerFor]="languagemenu" aria-label="Example icon-button with a menu">
           {{ selectedLanguage == 'fa' ? 'فارسی' : 'English' }}
         </button>
