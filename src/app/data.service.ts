@@ -15,7 +15,6 @@ export class DataService {
   ) { }
   
   public getReports(): Observable<ReportData> {
-    console.log('getReports');
     return this.http.get<ReportData>(this.base_url + 'report');
   }
 

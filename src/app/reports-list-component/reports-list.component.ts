@@ -17,8 +17,7 @@ export class ReportsListComponent implements AfterViewInit {
 
   @ViewChild(MatSort) sort: MatSort;
 
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
@@ -30,7 +29,6 @@ export class ReportsListComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataService.getReports().subscribe(
       (data) => {
-        console.log(data);
         this.dataSource.data = data.Patients;
       }
     );
@@ -38,7 +36,7 @@ export class ReportsListComponent implements AfterViewInit {
   }
 
   announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
+    if(sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
@@ -49,4 +47,13 @@ export class ReportsListComponent implements AfterViewInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+  removeIdColumn() {
+    this.displayedColumns.splice(0, 1);
+  }
+
+  addIdColumn() {
+    this.displayedColumns.splice(0, 0, 'ID');
+  }
+
 }

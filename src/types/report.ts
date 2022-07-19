@@ -10,7 +10,6 @@ export interface Patient {
     PlaceOfBirth: string;
 }
 
-
 export interface Filter {
     Value: string;
     Text: string;
