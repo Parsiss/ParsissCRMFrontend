@@ -21,3 +21,13 @@ export interface ReportData {
     Patients: Patient[];
     Filters: Filter[];
 }
+
+export interface Filter {
+    Name: string;
+    Values: string[];
+
+    /** Date special case
+     * Name: 'Date'
+     * Values: ['StartDate', 'EndDate']
+     */
+}

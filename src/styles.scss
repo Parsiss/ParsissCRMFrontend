@@ -11,6 +11,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 @import './fontiran';
 
 $custom-typography: mat-typography-config(
-    $font-family: '"IRANSansX"'
+    $font-family: '"IRANSansX"',
 );
 @include angular-material-typography($custom-typography);
