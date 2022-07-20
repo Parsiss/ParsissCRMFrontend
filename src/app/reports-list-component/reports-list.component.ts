@@ -19,7 +19,7 @@ export class ReportsListComponent implements AfterViewInit {
 
   displayedFields: string[] = ['Name', 'NationalID', 'PhoneNumber'];
   displayedColumns: string[] = [...this.displayedFields, 'Actions'];
-  
+
   internalFilter: KeyListOfValues<string> = {};
 
   filters: filterGroup[] = [];
@@ -62,21 +62,21 @@ export class ReportsListComponent implements AfterViewInit {
     this.dataSource.sort = this.sort;
 
     this.range.controls['start'].valueChanges.subscribe(() => {
-      this.applyFilters();
+      this.dateChanged();
     });
 
     this.range.controls['end'].valueChanges.subscribe(() => {
-      this.applyFilters();
+      this.dateChanged();
     });
 
   }
 
   checkboxChanged(group: string, value: string) {
-    if(this.internalFilter[group] === undefined) {
+    if (this.internalFilter[group] === undefined) {
       this.internalFilter[group] = [];
     }
 
-    if(this.internalFilter[group].find(v => v === value) === undefined) {
+    if (this.internalFilter[group].find(v => v === value) === undefined) {
       this.internalFilter[group].push(value);
     } else {
       this.internalFilter[group] = this.internalFilter[group].filter(v => v !== value);
@@ -87,12 +87,17 @@ export class ReportsListComponent implements AfterViewInit {
 
   dateChanged() {
     this.internalFilter["surgery_date"] = [];
-    if(this.range.controls['start'].value) {
+    if (this.range.controls['start'].value) {
       this.internalFilter["surgery_date"].push(this.range.controls['start'].value);
     }
-    if(this.range.controls['end'].value) {
+    if (this.range.controls['end'].value) {
       this.internalFilter["surgery_date"].push(this.range.controls['end'].value);
     }
+
+    if (this.internalFilter["surgery_date"].length === 0) {
+      delete this.internalFilter["surgery_date"];
+    }
+
     this.applyFilters();
   }
 

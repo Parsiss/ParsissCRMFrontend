@@ -16,7 +16,7 @@ export class DataService {
   ) { }
   
   public getReports(filters: KeyListOfValues<string> | null): Observable<ReportData> {
-    if(filters === null) {
+    if(filters === null || Object.keys(filters).length === 0) {
       return this.http.get<ReportData>(this.base_url + 'report');
     }
 
