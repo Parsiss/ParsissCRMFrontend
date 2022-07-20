@@ -37,6 +37,7 @@ import * as moment from 'jalali-moment';
 import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Platform } from '@angular/cdk/platform';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DetailPageComponent } from './detail-page-component/detail-page.component';
 
 export class CustomDateAdapter extends NativeDateAdapter {
   constructor(matDateLocale: string) {
@@ -73,7 +74,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     HomePageComponent,
     ImageSliderComponent,
-    ReportsListComponent
+    ReportsListComponent,
+    DetailPageComponent
   ],
   imports: [
     BrowserModule,

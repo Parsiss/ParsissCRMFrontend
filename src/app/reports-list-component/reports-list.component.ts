@@ -8,6 +8,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import { filterGroup, KeyListOfValues } from './interfaces';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reports-list',
@@ -35,7 +36,8 @@ export class ReportsListComponent implements AfterViewInit {
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
-    private dataService: DataService
+    private dataService: DataService,
+    private router: Router
   ) { }
 
   ngAfterViewInit(): void {
@@ -83,6 +85,10 @@ export class ReportsListComponent implements AfterViewInit {
     }
 
     this.applyFilters();
+  }
+
+  navigateTo(id: number) {
+    this.router.navigate(['/detailPage/' + id]);
   }
 
   dateChanged() {

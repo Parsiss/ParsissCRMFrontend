@@ -96,5 +96,7 @@
     "Healthy Insurance": "Healthy Insurance",
     "Paid By Hospital": "Paid by hospital",
     "from": "From",
-    "to": "To"
+    "to": "To",
+    "surgery_area": "Surgery area",
+    "surgery_result": "Surgery result"
 }

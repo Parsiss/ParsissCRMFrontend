@@ -96,5 +96,7 @@
     "Healthy Insurance": "بیمه سلامت",
     "Paid By Hospital": "پرداخت شده توسط بیمارستان",
     "from": "از",
-    "to": "تا"
+    "to": "تا",
+    "surgery_area": "حوزه عمل",
+    "surgery_result": "نتیجه عمل"
 }
