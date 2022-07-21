@@ -1,1 +1,78 @@
-REPORT NUMBER {{ id }}
+
+<div class="main-container">
+  <form [formGroup]="form" class="primary-info">
+    <mat-form-field appearance="fill" style="grid-area: name;">
+      <mat-label>Enter name</mat-label>
+      <input matInput placeholder="Name" formControlName="name" required>
+      <mat-error *ngIf="form.controls['name'].invalid">Name is required</mat-error>
+    </mat-form-field>
+  
+    <mat-form-field appearance="fill" style="grid-area: national-id;">
+      <mat-label>Enter national id</mat-label>
+      <input matInput placeholder="National ID" formControlName="national_id" numberfield>
+      <mat-error *ngIf="form.controls['national_id'].invalid">Enter a valid national ID</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="grid-area: phone;">
+      <mat-label>Enter Phone Number</mat-label>
+      <input matInput placeholder="Phone Number" formControlName="phone" numberfield>
+      <mat-error *ngIf="form.controls['phone'].invalid">Enter a valid phone number</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="grid-area: surgery-date;">
+      <mat-label>Choose surgery date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="surgery_date" placeholder="Surgery Date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Address</mat-label>
+      <textarea matInput formControlName="address"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="grid-area: place-of-birth;">
+      <mat-label>Place of birth</mat-label>
+      <input matInput placeholder="Place of birth" formControlName="palce_of_birth">
+    </mat-form-field>
+
+    <!-- surgeon_first -->
+    <mat-form-field appearance="fill" style="grid-area: surgeon-first;">
+      <mat-label>Surgeon First</mat-label>
+      <input matInput placeholder="Surgeon First" formControlName="surgeon_first">
+    </mat-form-field>
+
+    <!-- hospital -->
+    <mat-form-field appearance="fill" style="grid-area: hospital;">
+      <mat-label>Hospital</mat-label>
+      <input matInput placeholder="Hospital" formControlName="hospital">
+    </mat-form-field>
+
+    <!-- hospital type -->
+    <mat-form-field appearance="fill" style="grid-area: hospital-type;">
+      <mat-select placeholder="Hospital Type" formControlName="hospital_type">
+        <mat-option value="private">Private</mat-option>
+        <mat-option value="public">Public</mat-option>
+        <mat-option value="other">Other</mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <!-- surgery day -->
+    <mat-form-field appearance="fill" style="grid-area: surgery-day;">
+      <mat-select placeholder="Surdery Day" formControlName="surgery_day">
+        <mat-option value="0">Saturday</mat-option>
+        <mat-option value="1">Sunday</mat-option>
+        <mat-option value="2">Monday</mat-option>
+        <mat-option value="3">Tuesday</mat-option>
+        <mat-option value="4">Wednesday</mat-option>
+        <mat-option value="5">Thursday</mat-option>
+        <mat-option value="6">Friday</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <!-- surgery time -->
+
+
+  </form> 
+</div>
