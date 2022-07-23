@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-
-html, body {
+html[lang="fa"],body[lang="fa"]{
     height:100%;
+    -moz-font-feature-settings: "ss02";
+    -webkit-font-feature-settings: "ss02";
+    font-feature-settings: "ss02";
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
