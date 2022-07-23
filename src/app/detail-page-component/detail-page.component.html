@@ -1,78 +1,312 @@
+<mat-tab-group class="main-container">
+  <mat-tab label="{{'primary_information' | translate }}">
+    <mat-spinner *ngIf="!htmlService.isPageReady" style="margin:0 auto;"></mat-spinner>
 
-<div class="main-container">
-  <form [formGroup]="form" class="primary-info">
-    <mat-form-field appearance="fill" style="grid-area: name;">
-      <mat-label>Enter name</mat-label>
-      <input matInput placeholder="Name" formControlName="name" required>
-      <mat-error *ngIf="form.controls['name'].invalid">Name is required</mat-error>
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill" style="grid-area: national-id;">
-      <mat-label>Enter national id</mat-label>
-      <input matInput placeholder="National ID" formControlName="national_id" numberfield>
-      <mat-error *ngIf="form.controls['national_id'].invalid">Enter a valid national ID</mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" style="grid-area: phone;">
-      <mat-label>Enter Phone Number</mat-label>
-      <input matInput placeholder="Phone Number" formControlName="phone" numberfield>
-      <mat-error *ngIf="form.controls['phone'].invalid">Enter a valid phone number</mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" style="grid-area: surgery-date;">
-      <mat-label>Choose surgery date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="surgery_date" placeholder="Surgery Date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Address</mat-label>
-      <textarea matInput formControlName="address"></textarea>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" style="grid-area: place-of-birth;">
-      <mat-label>Place of birth</mat-label>
-      <input matInput placeholder="Place of birth" formControlName="palce_of_birth">
-    </mat-form-field>
-
-    <!-- surgeon_first -->
-    <mat-form-field appearance="fill" style="grid-area: surgeon-first;">
-      <mat-label>Surgeon First</mat-label>
-      <input matInput placeholder="Surgeon First" formControlName="surgeon_first">
-    </mat-form-field>
-
-    <!-- hospital -->
-    <mat-form-field appearance="fill" style="grid-area: hospital;">
-      <mat-label>Hospital</mat-label>
-      <input matInput placeholder="Hospital" formControlName="hospital">
-    </mat-form-field>
-
-    <!-- hospital type -->
-    <mat-form-field appearance="fill" style="grid-area: hospital-type;">
-      <mat-select placeholder="Hospital Type" formControlName="hospital_type">
-        <mat-option value="private">Private</mat-option>
-        <mat-option value="public">Public</mat-option>
-        <mat-option value="other">Other</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <form [formGroup]="form" class="primary-info" *ngIf="htmlService.isPageReady">
+      <mat-form-field appearance="fill" style="grid-area: name;">
+        <mat-label>{{'name' | translate}}</mat-label>
+        <input matInput placeholder="{{'name' | translate}}" formControlName="Name">
+        <mat-error *ngIf="form.controls['Name'].invalid">{{'name_is_required' | translate}}</mat-error>
+      </mat-form-field>
     
-    <!-- surgery day -->
-    <mat-form-field appearance="fill" style="grid-area: surgery-day;">
-      <mat-select placeholder="Surdery Day" formControlName="surgery_day">
-        <mat-option value="0">Saturday</mat-option>
-        <mat-option value="1">Sunday</mat-option>
-        <mat-option value="2">Monday</mat-option>
-        <mat-option value="3">Tuesday</mat-option>
-        <mat-option value="4">Wednesday</mat-option>
-        <mat-option value="5">Thursday</mat-option>
-        <mat-option value="6">Friday</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="fill" style="grid-area: national-id;">
+        <mat-label>{{'national_code' | translate}}</mat-label>
+        <input matInput placeholder="{{'national_code' | translate}}" formControlName="NationalID" numberfield>
+        <mat-error *ngIf="form.controls['NationalID'].invalid">Enter a valid national ID</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" style="grid-area: phone;">
+        <mat-label>{{'phone' | translate}}</mat-label>
+        <input matInput placeholder="{{'phone' | translate}}" formControlName="PhoneNumber" numberfield>
+        <mat-error *ngIf="form.controls['PhoneNumber'].invalid">Enter a valid phone number</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" style="grid-area: surgery-date;">
+        <mat-label>{{'surgery_date' | translate}}</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="SurgeryDate" placeholder="{{'surgery_date' | translate}}">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>{{'address' | translate}}</mat-label>
+        <textarea matInput formControlName="Address"></textarea>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" style="grid-area: place-of-birth;">
+        <mat-label>{{'place_of_birth' | translate}}</mat-label>
+        <input matInput placeholder="{{'place_of_birth' | translate}}" formControlName="PlaceOfBirth">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" style="grid-area: surgeon-first;">
+        <mat-label>{{'surgeon_first' | translate}}</mat-label>
+        <input matInput placeholder="{{'surgeon_first' | translate}}" formControlName="SurgeonFirst">
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" style="grid-area: hospital;">
+        <mat-label>{{'hospital' | translate}}</mat-label>
+        <input matInput placeholder="{{'hospital' | translate}}" formControlName="Hospital">
+      </mat-form-field>
+  
+
+      <mat-form-field appearance="fill" style="grid-area: hospital-type;">
+        <mat-label>{{'hospital_type' | translate}}</mat-label>
+        <mat-select formControlName="HospitalType">
+          <mat-option *ngFor="let value of options.get('hospital_type')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>  
+      
+      <mat-form-field appearance="fill" style="grid-area: surgery-day;">
+        <mat-label>{{'surgery_day' | translate}}</mat-label>
+        <mat-select formControlName="SurgeryDay">
+          <mat-option *ngFor="let value of options.get('surgery_day')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: surgery-time;">
+        <mat-label>{{'surgery_time' | translate}}</mat-label>
+        <mat-select formControlName="SurgeryTime">
+          <mat-option *ngFor="let value of options.get('surgery_time')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: MR;">
+        <mat-label>{{'MR' | translate}}</mat-label>
+        <mat-select formControlName="MR">
+          <mat-option *ngFor="let value of options.get('image_validity')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: CT;">
+        <mat-label>{{'CT' | translate}}</mat-label>
+        <mat-select formControlName="CT">
+          <mat-option *ngFor="let value of options.get('image_validity')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: operator-first;">
+        <mat-label>{{'operator_first' | translate}}</mat-label>
+        <input matInput placeholder="{{'operator_first' | translate}}" formControlName="OperatorFirst">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: operator-second;">
+        <mat-label>{{'operator_second' | translate}}</mat-label>
+        <input matInput placeholder="{{'operator_second' | translate}}" formControlName="OperatorSecond">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: first-contact;">
+        <mat-label>{{'first_contact' | translate}}</mat-label>
+        <input matInput placeholder="{{'first_contact' | translate}}" formControlName="FirstContact">
+      </mat-form-field>
 
 
-    <!-- surgery time -->
+      <mat-form-field appearance="fill" style="grid-area: first-caller;">
+        <mat-label>{{'first_caller' | translate}}</mat-label>
+        <input matInput placeholder="{{'first_caller' | translate}}" formControlName="FirstCaller">
+      </mat-form-field>
 
+      <mat-form-field appearance="fill" style="grid-area: payment-status;">
+        <mat-label>{{'payment_status' | translate}}</mat-label>
+        <mat-select formControlName="PaymentStatus">
+          <mat-option *ngFor="let value of options.get('payment_status')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  </form> 
-</div>
+      <mat-form-field appearance="fill" style="grid-area: payment-date;">
+        <mat-label>{{'payment_date' | translate}}</mat-label>
+        <input matInput [matDatepicker]="paymentpicker" formControlName="PaymentDate" placeholder="{{'payment_date' | translate}}">
+        <mat-datepicker-toggle matSuffix [for]="paymentpicker"></mat-datepicker-toggle>
+        <mat-datepicker #paymentpicker></mat-datepicker>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label>{{'amount' | translate}}</mat-label>
+        <input matInput type="text" currencyMask [options]="{ prefix: '', thousands: ',', precision: 0 }" formControlName="PaymentAmount" placeholder="0">
+        <span matSuffix>ریال</span>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: payment-card;">
+        <mat-label>{{'payment_card' | translate}}</mat-label>
+        <input matInput placeholder="{{'payment_card' | translate}}" formControlName="LastFourDigitsCard" numberfield>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: bank;">
+        <mat-label>{{'bank' | translate}}</mat-label>
+        <input matInput placeholder="{{'bank' | translate}}" formControlName="Bank">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" floatLabel="always" style="grid-area: discount-percentage;">
+        <mat-label>{{'discount_percentage' | translate}}</mat-label>
+        <input matInput type="number" min="0" max="100" formControlName="DiscountPercent" placeholder="0">
+        <span matPrefix>%</span>
+        <mat-error *ngIf="form.controls['DiscountPercent'].invalid">{{'percent_error' | translate}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: discount-reason;">
+        <mat-label>{{'discount_reason' | translate}}</mat-label>
+        <input matInput placeholder="{{'discount_reason' | translate}}" formControlName="ReasonForDiscount">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: insurance;">
+        <mat-label>{{'insurance' | translate}}</mat-label>
+        <input matInput placeholder="{{'insurance' | translate}}" formControlName="TypeOfInsurance">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: financial-verifier;">
+        <mat-label>{{'financial_verifier' | translate}}</mat-label>
+        <input matInput placeholder="{{'financial_verifier' | translate}}" formControlName="FinancialVerifier">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: recipt-number;">
+        <mat-label>{{'receipt_number' | translate}}</mat-label>
+        <input matInput placeholder="{{'receipt_number' | translate}}" formControlName="ReceiptNumber">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: surgery-result;">
+        <mat-label>{{'surgery_result' | translate}}</mat-label>
+        <mat-select formControlName="SurgeryResult">
+          <mat-option *ngFor="let value of options.get('surgery_result')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: cancellation-reason;" *ngIf="form.controls['SurgeryResult'].value === '2'">
+        <mat-label>{{'cancellation_reason' | translate}}</mat-label>
+        <input matInput placeholder="{{'cancellation_reason' | translate}}" formControlName="CancellationReason">
+      </mat-form-field>
+
+    </form> 
+  </mat-tab>
+  <mat-tab label="{{'complementary_information' | translate }}">
+    <mat-spinner *ngIf="!htmlService.isPageReady" style="margin:0 auto;"></mat-spinner>
+    <form *ngIf="htmlService.isPageReady" [formGroup]="form" class="complementary-info">
+      <mat-form-field appearance="fill" style="grid-area: file-number;">
+        <mat-label>{{'file_number' | translate}}</mat-label>
+        <input matInput placeholder="{{'file_number' | translate}}" formControlName="FileNumber" numberfield>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: date-of-admission;">
+        <mat-label>{{'date_of_hospital_admission' | translate}}</mat-label>
+        <input matInput [matDatepicker]="hospitalAdmissionDatepicker" formControlName="DateOfHospitalAdmission" placeholder="{{'date_of_hospital_admission' | translate}}">
+        <mat-datepicker-toggle matSuffix [for]="hospitalAdmissionDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #hospitalAdmissionDatepicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: age;">
+        <mat-label>{{'age' | translate}}</mat-label>
+        <input matInput type="number" min="0" max="150" formControlName="Age" placeholder="{{'age' | translate}}">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: surgery-type;">
+        <mat-label>{{'surgery_type' | translate}}</mat-label>
+        <input matInput type="number" formControlName="SurgeryType" placeholder="{{'surgery_type' | translate}}">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: surgery-area;">
+        <mat-label>{{'surgery_area' | translate}}</mat-label>
+        <mat-select formControlName="SurgeryArea">
+          <mat-option *ngFor="let value of options.get('surgery_area')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: surgery-description;">
+        <mat-label>{{'surgery_description' | translate}}</mat-label>
+        <textarea matInput placeholder="{{'surgery_description' | translate}}" formControlName="SurgeryDescription" rows="3"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: surgeon-second;">
+        <mat-label>{{'surgeon_second' | translate}}</mat-label>
+        <input matInput placeholder="{{'surgeon_second' | translate}}" formControlName="SurgeonSecond">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: resident;">
+        <mat-label>{{'resident' | translate}}</mat-label>
+        <input matInput placeholder="{{'resident' | translate}}" formControlName="Resident">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: hospital-address;">
+        <mat-label>{{'hospital_address' | translate}}</mat-label>
+        <input matInput placeholder="{{'hospital_address' | translate}}" formControlName="HospitalAddress">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: FMRI;">
+        <mat-label>{{'FMRI' | translate}}</mat-label>
+        <mat-select formControlName="FMRI">
+          <mat-option *ngFor="let value of options.get('image_validity')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: DTI;">
+        <mat-label>{{'DTI' | translate}}</mat-label>
+        <mat-select formControlName="DTI">
+          <mat-option *ngFor="let value of options.get('image_validity')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: start-time;">
+        <mat-label>{{'start_time' | translate}}</mat-label>
+        <input matInput [matDatepicker]="startTimeDatepicker" formControlName="StartTime" placeholder="{{'start_time' | translate}}">
+        <mat-datepicker-toggle matSuffix [for]="startTimeDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #startTimeDatepicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: end-time;">
+        <mat-label>{{'end_time' | translate}}</mat-label>
+        <input matInput [matDatepicker]="endTimeDatepicker" formControlName="EndTime" placeholder="{{'end_time' | translate}}">
+        <mat-datepicker-toggle matSuffix [for]="endTimeDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #endTimeDatepicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: enter-time;">
+        <mat-label>{{'enter_time' | translate}}</mat-label>
+        <input matInput [matDatepicker]="enterTimeDatepicker" formControlName="EnterTime" placeholder="{{'enter_time' | translate}}">
+        <mat-datepicker-toggle matSuffix [for]="enterTimeDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #enterTimeDatepicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: exit-time;">
+        <mat-label>{{'exit_time' | translate}}</mat-label>
+        <input matInput [matDatepicker]="exitTimeDatepicker" formControlName="ExitTime" placeholder="{{'exit_time' | translate}}">
+        <mat-datepicker-toggle matSuffix [for]="exitTimeDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #exitTimeDatepicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: patient-enter-time;">
+        <mat-label>{{'patient_enter_time' | translate}}</mat-label>
+        <input matInput [matDatepicker]="patientEnterTimeDatepicker" formControlName="PatientEnterTime" placeholder="{{'patient_enter_time' | translate}}">
+        <mat-datepicker-toggle matSuffix [for]="patientEnterTimeDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #patientEnterTimeDatepicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: headband-fix;">
+        <mat-label>{{'head_fix_type' | translate}}</mat-label>
+        <mat-select formControlName="HeadFixType">
+          <mat-option *ngFor="let value of options.get('head_fix_type')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </form>
+
+  </mat-tab>
+</mat-tab-group>

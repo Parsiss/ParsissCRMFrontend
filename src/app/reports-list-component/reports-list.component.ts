@@ -44,10 +44,12 @@ export class ReportsListComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataService.getReports(null).subscribe(
       (data) => {
-        console.log(data);
-        this.dataSource.data = data.Patients;
-        data.Filters.forEach((filter) => {
-          console.log(filter);
+        this.dataSource.data = data;
+      });
+
+    this.dataService.getOptions().subscribe(
+      (data) => {
+        data.forEach((filter) => {
           if (this.filters.find(f => f.name === filter.Group) === undefined) {
             this.filters.push({
               name: filter.Group,
@@ -61,6 +63,7 @@ export class ReportsListComponent implements AfterViewInit {
           });
         });
       });
+
     this.dataSource.sort = this.sort;
 
     this.range.controls['start'].valueChanges.subscribe(() => {
@@ -109,7 +112,7 @@ export class ReportsListComponent implements AfterViewInit {
 
   applyFilters() {
     this.dataService.getReports(this.internalFilter).subscribe(
-      (data) => this.dataSource.data = data.Patients
+      (data) => this.dataSource.data = data
     );
   }
 

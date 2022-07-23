@@ -2,20 +2,54 @@
   margin: 1rem;
 }
 
+::ng-deep .mat-tab-header {
+  margin-bottom: 1rem;
+}
+
 mat-form-field {
   margin-left: 1rem;
   margin-right: 1rem;
 }
 
+mat-spinner {
+  align-self: center;
+}
+
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 .primary-info {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 1rem;
   grid-template-areas: 
-    "name national-id phone"
-    "surgery-date address place-of-birth"
-    "surgeon-first hospital hospital-type"
-    "surgery-day surgery-day surgery-day";
-    ;
+    "name national-id phone surgery-date"
+    "address place-of-birth surgeon-first hospital"
+    "hospital-type surgery-day surgery-time MR"
+    "CT operator-first operator-second first-contact "
+    "first-caller payment-status payment-date payment-amount"
+    "payment-card bank discount-percentage discount-reason"
+    "insurance financial-verifier recipt-number surgery-result"
+    "cancellation-reason cancellation cancellation cancellation";
+  ;
+}
+
+
+.complementary-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 1rem;
+  grid-template-areas: 
+    "file-number date-of-admission age surgery-type"
+    "surgery-area surgery-description surgeon-second resident"
+    "hospital-address FMRI DTI start-time"
+    "end-time enter-time exit-time patient-enter-time"
+    "headband-fix patient patient patient"
   ;
 }

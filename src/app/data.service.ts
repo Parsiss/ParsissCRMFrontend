@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ReportData } from '../types/report';
+import { Filter, Patient, PatientFullInformation } from '../types/report';
 
 import { filterGroup, KeyListOfValues } from './reports-list-component/interfaces';
 
@@ -15,13 +15,21 @@ export class DataService {
     public http: HttpClient
   ) { }
   
-  public getReports(filters: KeyListOfValues<string> | null): Observable<ReportData> {
+  public getReports(filters: KeyListOfValues<string> | null): Observable<Patient[]> {
     if(filters === null || Object.keys(filters).length === 0) {
-      return this.http.get<ReportData>(this.base_url + 'report');
+      return this.http.get<Patient[]>(this.base_url + 'report');
     }
 
     let bodyString = JSON.stringify(filters);
-    return this.http.post<ReportData>(this.base_url + 'report/filtered', bodyString);
+    return this.http.post<Patient[]>(this.base_url + 'report/filtered', bodyString);
+  }
+
+  public getOptions(): Observable<Filter[]> {
+    return this.http.get<Filter[]>(this.base_url + 'options');
+  }
+
+  public getPatient(id: number): Observable<PatientFullInformation> {
+    return this.http.get<PatientFullInformation>(this.base_url + 'report/detail/' + id);
   }
 
 }
