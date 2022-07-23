@@ -98,5 +98,6 @@
     "from": "From",
     "to": "To",
     "surgery_area": "Surgery area",
-    "surgery_result": "Surgery result"
+    "surgery_result": "Surgery result",
+    "detail": "Detail"
 }
