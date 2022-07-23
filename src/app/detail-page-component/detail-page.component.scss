@@ -1,0 +1,21 @@
+.main-container {
+  margin: 1rem;
+}
+
+mat-form-field {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.primary-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 1rem;
+  grid-template-areas: 
+    "name national-id phone"
+    "surgery-date address place-of-birth"
+    "surgeon-first hospital hospital-type"
+    "surgery-day surgery-day surgery-day";
+    ;
+  ;
+}

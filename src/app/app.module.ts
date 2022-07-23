@@ -38,6 +38,7 @@ import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } fro
 import { Platform } from '@angular/cdk/platform';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DetailPageComponent } from './detail-page-component/detail-page.component';
+import { NumberfieldDirective } from './numberfield.directive';
 
 export class CustomDateAdapter extends NativeDateAdapter {
   constructor(matDateLocale: string) {
@@ -75,7 +76,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     HomePageComponent,
     ImageSliderComponent,
     ReportsListComponent,
-    DetailPageComponent
+    DetailPageComponent,
+    NumberfieldDirective
   ],
   imports: [
     BrowserModule,
