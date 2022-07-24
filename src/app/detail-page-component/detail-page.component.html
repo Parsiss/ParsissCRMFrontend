@@ -8,46 +8,47 @@
         <input matInput placeholder="{{'name' | translate}}" formControlName="Name">
         <mat-error *ngIf="form.controls['Name'].invalid">{{'name_is_required' | translate}}</mat-error>
       </mat-form-field>
-    
+
       <mat-form-field appearance="fill" style="grid-area: national-id;">
         <mat-label>{{'national_code' | translate}}</mat-label>
         <input matInput placeholder="{{'national_code' | translate}}" formControlName="NationalID" numberfield>
         <mat-error *ngIf="form.controls['NationalID'].invalid">Enter a valid national ID</mat-error>
       </mat-form-field>
-  
+
       <mat-form-field appearance="fill" style="grid-area: phone;">
         <mat-label>{{'phone' | translate}}</mat-label>
         <input matInput placeholder="{{'phone' | translate}}" formControlName="PhoneNumber" numberfield>
         <mat-error *ngIf="form.controls['PhoneNumber'].invalid">Enter a valid phone number</mat-error>
       </mat-form-field>
-  
+
       <mat-form-field appearance="fill" style="grid-area: surgery-date;">
         <mat-label>{{'surgery_date' | translate}}</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="SurgeryDate" placeholder="{{'surgery_date' | translate}}">
+        <input matInput [matDatepicker]="picker" formControlName="SurgeryDate"
+          placeholder="{{'surgery_date' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-  
-      <mat-form-field appearance="fill">
+
+      <mat-form-field appearance="fill" style="grid-area: address;">
         <mat-label>{{'address' | translate}}</mat-label>
-        <textarea matInput formControlName="Address"></textarea>
+        <input matInput formControlName="Address" placeholder="{{'address' | translate}}">
       </mat-form-field>
-  
+
       <mat-form-field appearance="fill" style="grid-area: place-of-birth;">
         <mat-label>{{'place_of_birth' | translate}}</mat-label>
         <input matInput placeholder="{{'place_of_birth' | translate}}" formControlName="PlaceOfBirth">
       </mat-form-field>
-  
+
       <mat-form-field appearance="fill" style="grid-area: surgeon-first;">
         <mat-label>{{'surgeon_first' | translate}}</mat-label>
         <input matInput placeholder="{{'surgeon_first' | translate}}" formControlName="SurgeonFirst">
       </mat-form-field>
-  
+
       <mat-form-field appearance="fill" style="grid-area: hospital;">
         <mat-label>{{'hospital' | translate}}</mat-label>
         <input matInput placeholder="{{'hospital' | translate}}" formControlName="Hospital">
       </mat-form-field>
-  
+
 
       <mat-form-field appearance="fill" style="grid-area: hospital-type;">
         <mat-label>{{'hospital_type' | translate}}</mat-label>
@@ -56,8 +57,8 @@
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
-      </mat-form-field>  
-      
+      </mat-form-field>
+
       <mat-form-field appearance="fill" style="grid-area: surgery-day;">
         <mat-label>{{'surgery_day' | translate}}</mat-label>
         <mat-select formControlName="SurgeryDay">
@@ -126,14 +127,16 @@
 
       <mat-form-field appearance="fill" style="grid-area: payment-date;">
         <mat-label>{{'payment_date' | translate}}</mat-label>
-        <input matInput [matDatepicker]="paymentpicker" formControlName="PaymentDate" placeholder="{{'payment_date' | translate}}">
+        <input matInput [matDatepicker]="paymentpicker" formControlName="PaymentDate"
+          placeholder="{{'payment_date' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="paymentpicker"></mat-datepicker-toggle>
         <mat-datepicker #paymentpicker></mat-datepicker>
       </mat-form-field>
-  
+
       <mat-form-field appearance="fill" floatLabel="always">
         <mat-label>{{'amount' | translate}}</mat-label>
-        <input matInput type="text" currencyMask [options]="{ prefix: '', thousands: ',', precision: 0 }" formControlName="PaymentAmount" placeholder="0">
+        <input matInput type="text" currencyMask [options]="{ prefix: '', thousands: ',', precision: 0 }"
+          formControlName="PaymentAmount" placeholder="0">
         <span matSuffix>ریال</span>
       </mat-form-field>
 
@@ -183,12 +186,13 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" style="grid-area: cancellation-reason;" *ngIf="form.controls['SurgeryResult'].value === '2'">
+      <mat-form-field appearance="fill" style="grid-area: cancellation-reason;"
+        *ngIf="form.controls['SurgeryResult'].value === '2'">
         <mat-label>{{'cancellation_reason' | translate}}</mat-label>
         <input matInput placeholder="{{'cancellation_reason' | translate}}" formControlName="CancellationReason">
       </mat-form-field>
 
-    </form> 
+    </form>
   </mat-tab>
   <mat-tab label="{{'complementary_information' | translate }}">
     <mat-spinner *ngIf="!htmlService.isPageReady" style="margin:0 auto;"></mat-spinner>
@@ -200,7 +204,8 @@
 
       <mat-form-field appearance="fill" style="grid-area: date-of-admission;">
         <mat-label>{{'date_of_hospital_admission' | translate}}</mat-label>
-        <input matInput [matDatepicker]="hospitalAdmissionDatepicker" formControlName="DateOfHospitalAdmission" placeholder="{{'date_of_hospital_admission' | translate}}">
+        <input matInput [matDatepicker]="hospitalAdmissionDatepicker" formControlName="DateOfHospitalAdmission"
+          placeholder="{{'date_of_hospital_admission' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="hospitalAdmissionDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #hospitalAdmissionDatepicker></mat-datepicker>
       </mat-form-field>
@@ -226,7 +231,8 @@
 
       <mat-form-field appearance="fill" style="grid-area: surgery-description;">
         <mat-label>{{'surgery_description' | translate}}</mat-label>
-        <textarea matInput placeholder="{{'surgery_description' | translate}}" formControlName="SurgeryDescription" rows="3"></textarea>
+        <textarea matInput placeholder="{{'surgery_description' | translate}}" formControlName="SurgeryDescription"
+          rows="3"></textarea>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgeon-second;">
@@ -264,35 +270,40 @@
 
       <mat-form-field appearance="fill" style="grid-area: start-time;">
         <mat-label>{{'start_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="startTimeDatepicker" formControlName="StartTime" placeholder="{{'start_time' | translate}}">
+        <input matInput [matDatepicker]="startTimeDatepicker" formControlName="StartTime"
+          placeholder="{{'start_time' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="startTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #startTimeDatepicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: end-time;">
         <mat-label>{{'end_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="endTimeDatepicker" formControlName="EndTime" placeholder="{{'end_time' | translate}}">
+        <input matInput [matDatepicker]="endTimeDatepicker" formControlName="EndTime"
+          placeholder="{{'end_time' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="endTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #endTimeDatepicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: enter-time;">
         <mat-label>{{'enter_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="enterTimeDatepicker" formControlName="EnterTime" placeholder="{{'enter_time' | translate}}">
+        <input matInput [matDatepicker]="enterTimeDatepicker" formControlName="EnterTime"
+          placeholder="{{'enter_time' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="enterTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #enterTimeDatepicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: exit-time;">
         <mat-label>{{'exit_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="exitTimeDatepicker" formControlName="ExitTime" placeholder="{{'exit_time' | translate}}">
+        <input matInput [matDatepicker]="exitTimeDatepicker" formControlName="ExitTime"
+          placeholder="{{'exit_time' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="exitTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #exitTimeDatepicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: patient-enter-time;">
         <mat-label>{{'patient_enter_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="patientEnterTimeDatepicker" formControlName="PatientEnterTime" placeholder="{{'patient_enter_time' | translate}}">
+        <input matInput [matDatepicker]="patientEnterTimeDatepicker" formControlName="PatientEnterTime"
+          placeholder="{{'patient_enter_time' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="patientEnterTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #patientEnterTimeDatepicker></mat-datepicker>
       </mat-form-field>

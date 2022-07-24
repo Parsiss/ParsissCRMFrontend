@@ -12,6 +12,6 @@ export class HtmlService {
   public set isPageReady(value: boolean) {
     this._isPageReady = value;
   }
-  
+
   constructor() { }
 }

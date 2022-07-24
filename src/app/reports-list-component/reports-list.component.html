@@ -34,7 +34,8 @@
       </ng-container>
       <ng-container matColumnDef="Actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ 'detail' | translate }} </th>
-        <td mat-cell *matCellDef="let element"><button (click)="navigateTo(element.ID)" mat-stroked-button>{{ 'detail' | translate }}</button></td>
+        <td mat-cell *matCellDef="let element"><button (click)="navigateTo(element.ID)" mat-stroked-button>{{ 'detail' |
+            translate }}</button></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

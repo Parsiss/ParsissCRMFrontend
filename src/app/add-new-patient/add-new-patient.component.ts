@@ -10,9 +10,9 @@ import { DetailPageComponent } from '../detail-page-component/detail-page.compon
 })
 export class AddNewPatientComponent implements OnInit {
   id: number = -1;
-  
+
   constructor() {
-    
+
   }
 
   ngOnInit(): void {

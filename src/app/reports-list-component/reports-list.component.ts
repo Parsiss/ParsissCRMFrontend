@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,13 +9,14 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { filterGroup, KeyListOfValues } from './interfaces';
 import { Router } from '@angular/router';
+import { HtmlService } from '../html.service';
 
 @Component({
   selector: 'app-reports-list',
   templateUrl: './reports-list.component.html',
   styleUrls: ['./reports-list.component.scss']
 })
-export class ReportsListComponent implements AfterViewInit {
+export class ReportsListComponent implements OnInit {
   dataSource = new MatTableDataSource<Patient>([]);
 
   displayedFields: string[] = ['Name', 'NationalID', 'PhoneNumber'];
@@ -40,7 +41,7 @@ export class ReportsListComponent implements AfterViewInit {
     private router: Router
   ) { }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataService.getReports(null).subscribe(
       (data) => {

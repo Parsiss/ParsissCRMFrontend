@@ -11,17 +11,16 @@ import { HtmlService } from '../html.service';
 @Component({
   selector: 'app-detail-page',
   templateUrl: './detail-page.component.html',
-  styleUrls: ['./detail-page.component.scss'],
-  providers: [HtmlService]
+  styleUrls: ['./detail-page.component.scss']
 })
 export class DetailPageComponent implements OnInit {
   @Input() id: number;
   @Input() patientName: FormControl;
 
   fulldata: PatientFullInformation = {
-    Patient: { },
-    SurgeryInfo: { },
-    FinancialInfo: { }
+    Patient: {},
+    SurgeryInfo: {},
+    FinancialInfo: {}
   }
 
   options: Map<string, optionGroup> = new Map<string, optionGroup>();
@@ -88,7 +87,7 @@ export class DetailPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.patientName != null) {
+    if (this.patientName != null) {
       this.form.addControl('Name', this.patientName);
     } else {
       this.form.addControl('Name', new FormControl('', Validators.required));
@@ -113,18 +112,18 @@ export class DetailPageComponent implements OnInit {
         this.htmlService.isPageReady = true;
       });
 
-    if(this.id == -1) {
-      return 
+    if (this.id == -1) {
+      return
     }
-    
+
     this.dataService.getPatient(this.id).subscribe(fulldata => {
       this.fulldata = fulldata;
-      for(let key in this.form.controls) {
-        if(key in fulldata.Patient) {
+      for (let key in this.form.controls) {
+        if (key in fulldata.Patient) {
           this.form.controls[key].setValue((fulldata.Patient as any)[key]);
-        } else if(key in fulldata.SurgeryInfo) {
+        } else if (key in fulldata.SurgeryInfo) {
           this.form.controls[key].setValue((fulldata.SurgeryInfo as any)[key]);
-        } else if(key in fulldata.FinancialInfo) {
+        } else if (key in fulldata.FinancialInfo) {
           this.form.controls[key].setValue((fulldata.FinancialInfo as any)[key]);
         }
       }

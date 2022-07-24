@@ -29,8 +29,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxCurrencyModule } from "ngx-currency";
 
@@ -46,12 +46,13 @@ import { DetailPageComponent } from './detail-page-component/detail-page.compone
 import { NumberfieldDirective } from './numberfield.directive';
 import { AddNewPatientComponent } from './add-new-patient/add-new-patient.component';
 import { UpdatePatientComponent } from './update-patient/update-patient.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 export class CustomDateAdapter extends NativeDateAdapter {
   constructor(matDateLocale: string) {
     super(matDateLocale, new Platform({}));
   }
-  
+
   override format(date: Date, displayFormat: object): string {
     var faDate = moment(date.toDateString()).locale('fa').format('YYYY/MM/DD');
     return faDate;
@@ -115,6 +116,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatTabsModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     FormsModule,
     ReactiveFormsModule,
     TranslateModule.forRoot({
@@ -126,7 +128,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     })
   ],
   providers: [
-    DataService, HttpClient, 
+    DataService, HttpClient,
     { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
     // { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
     //{ provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
