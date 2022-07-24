@@ -37,4 +37,10 @@ export class DataService {
     return this.http.post<object>(this.base_url + 'report/detail/update', bodyString);
   }
 
+  public addPatient(fulldata: PatientFullInformation): Observable<object> {
+    let bodyString = JSON.stringify(fulldata);
+    console.log(bodyString);
+    return this.http.post<object>(this.base_url + 'report/detail/add', bodyString);
+  }
+
 }

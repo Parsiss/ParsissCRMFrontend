@@ -23,6 +23,71 @@ export class DetailPageComponent implements OnInit {
     FinancialInfo: {}
   }
 
+  //   Patient: {
+  //     ID: -1,
+  //     Name: '',
+  //     Family: '',
+  //     Age: 0,
+  //     PhoneNumber: '',
+  //     NationalID: '',
+  //     Address: '',
+  //     Email: '',
+  //     PlaceOfBirth: '',
+  //   },
+  //   SurgeryInfo: {
+  //     ID: -1,
+  //     PatientID: -1,
+  //     SurgeryDate: '',
+  //     SurgeryDay: -1,
+  //     SurgeryTime: -1,
+  //     SurgeryType: '',
+  //     SurgeryArea: -1,
+  //     SurgeryDescription: '',
+  //     SurgeryResult: -1,
+  //     SurgeonFirst: '',
+  //     SurgeonSecond: '',
+  //     Resident: '',
+  //     Hospital: '',
+  //     HospitalType: -1,
+  //     HospitalAddress: '',
+  //     CT:-1,
+  //     MR:-1,
+  //     FMRI:-1,
+  //     DTI:-1,
+  //     OperatorFirst: '',
+  //     OperatorSecond: '',
+  //     StartTime: '',
+  //     StopTime: '',
+  //     EnterTime: '',
+  //     ExitTime: '',
+  //     PatientEnterTime: '',
+  //     HeadFixType: -1,
+  //     CancellationReason: '',
+  //     FileNumber: '',
+  //     DateOfHospitalAdmission: '',
+  //   },
+  //   FinancialInfo: {
+  //     ID: -1,
+  //     PatientID: -1,
+  //     PaymentStatus: -1,
+  //     DateOfFirstContact: '',
+  //     PaymentNote: '',
+  //     FirstCaller: '',
+  //     DateOfPayment: '',
+  //     LastFourDigitsCard: '',
+  //     CashAmount: '',
+  //     Bank: '',
+  //     DiscountPercent: -1,
+  //     ReasonForDiscount: '',
+  //     HealthPlanAmount: '',
+  //     TypeOfInsurance: '',
+  //     FinancialVerifier: '',
+  //     ReceiptNumber: -1,
+  //     ReceiptDate: '',
+  //     ReceiptReceiver: '',
+  //   }
+  // }
+
   options: Map<string, optionGroup> = new Map<string, optionGroup>();
 
   form: FormGroup;
@@ -111,10 +176,6 @@ export class DetailPageComponent implements OnInit {
 
         this.htmlService.isPageReady = true;
       });
-
-    if (this.id == -1) {
-      return
-    }
 
     this.dataService.getPatient(this.id).subscribe(fulldata => {
       this.fulldata = fulldata;

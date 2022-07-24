@@ -1,1 +1,10 @@
-<app-detail-page [id]="id"></app-detail-page>
+<mat-card>
+    <mat-card-header>
+    </mat-card-header>
+    <mat-card-content>
+        <app-detail-page [id]="id"></app-detail-page>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="AddNewPatient()">{{'add_new_report' | translate}}</button>
+    </mat-card-actions>
+</mat-card>

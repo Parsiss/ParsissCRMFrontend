@@ -5,7 +5,7 @@ import { PatientFullInformation } from 'src/types/report';
 import { DataService } from '../data.service';
 import { DetailPageComponent } from '../detail-page-component/detail-page.component';
 import { HtmlService } from '../html.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-update-patient',
@@ -40,7 +40,7 @@ export class UpdatePatientComponent implements OnInit {
 
   SaveChanges() {
 
-    if(this.id == 0) return;
+    if (this.id == 0) return;
 
     let fulldata: PatientFullInformation = {
       Patient: {},

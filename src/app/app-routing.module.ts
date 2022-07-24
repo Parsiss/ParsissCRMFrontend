@@ -9,7 +9,7 @@ import { UpdatePatientComponent } from './update-patient/update-patient.componen
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'detailPage/:id', component: UpdatePatientComponent },
-  { path: 'add-new-patient', component: AddNewPatientComponent },
+  { path: 'add_new_patient', component: AddNewPatientComponent },
   { path: 'home', component: HomePageComponent },
   { path: 'reportsList', component: ReportsListComponent },
   { path: '**', redirectTo: 'home' }
