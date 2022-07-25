@@ -14,9 +14,9 @@ export class DataService {
   constructor(
     public http: HttpClient
   ) { }
-  
+
   public getReports(filters: KeyListOfValues<string> | null): Observable<Patient[]> {
-    if(filters === null || Object.keys(filters).length === 0) {
+    if (filters === null || Object.keys(filters).length === 0) {
       return this.http.get<Patient[]>(this.base_url + 'report');
     }
 
@@ -30,6 +30,17 @@ export class DataService {
 
   public getPatient(id: number): Observable<PatientFullInformation> {
     return this.http.get<PatientFullInformation>(this.base_url + 'report/detail/' + id);
+  }
+
+  public updatePatient(fulldata: PatientFullInformation): Observable<object> {
+    let bodyString = JSON.stringify(fulldata);
+    return this.http.post<object>(this.base_url + 'report/detail/update', bodyString);
+  }
+
+  public addPatient(fulldata: PatientFullInformation): Observable<object> {
+    let bodyString = JSON.stringify(fulldata);
+    console.log(bodyString);
+    return this.http.post<object>(this.base_url + 'report/detail/add', bodyString);
   }
 
 }
