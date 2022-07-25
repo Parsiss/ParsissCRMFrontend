@@ -51,7 +51,7 @@ export class CustomDateAdapter extends NativeDateAdapter {
   constructor(matDateLocale: string) {
     super(matDateLocale, new Platform({}));
   }
-  
+
   override format(date: Date, displayFormat: object): string {
     var faDate = moment(date.toDateString()).locale('fa').format('YYYY/MM/DD');
     return faDate;
@@ -126,10 +126,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     })
   ],
   providers: [
-    DataService, HttpClient, 
+    HttpClient,
     { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
-    // { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
-    //{ provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
   bootstrap: [AppComponent]
 })

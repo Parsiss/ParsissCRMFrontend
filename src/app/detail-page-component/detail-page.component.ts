@@ -12,7 +12,6 @@ import { HtmlService } from '../html.service';
   selector: 'app-detail-page',
   templateUrl: './detail-page.component.html',
   styleUrls: ['./detail-page.component.scss'],
-  providers: [HtmlService]
 })
 export class DetailPageComponent implements OnInit {
   @Input() id: number;
@@ -114,9 +113,9 @@ export class DetailPageComponent implements OnInit {
       });
 
     if(this.id == -1) {
-      return 
+      return
     }
-    
+
     this.dataService.getPatient(this.id).subscribe(fulldata => {
       this.fulldata = fulldata;
       for(let key in this.form.controls) {
