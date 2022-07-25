@@ -128,7 +128,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     })
   ],
   providers: [
-    DataService, HttpClient,
+    HttpClient,
     { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
     FormControlDirective, 
     FormGroupDirective,
