@@ -23,7 +23,8 @@
 
       <mat-form-field appearance="fill" style="grid-area: surgery-date;">
         <mat-label>{{'surgery_date' | translate}}</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="SurgeryDate"
+        <input matInput [matDatepicker]="picker" [value]="timestampToDate(form.controls['SurgeryDate'].value)"
+          (dateChange)="onDateChange($event, form.controls['SurgeryDate'])"
           placeholder="{{'surgery_date' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
@@ -107,7 +108,11 @@
 
       <mat-form-field appearance="fill" style="grid-area: first-contact;">
         <mat-label>{{'first_contact' | translate}}</mat-label>
-        <input matInput placeholder="{{'first_contact' | translate}}" formControlName="FirstContact">
+        <input matInput [matDatepicker]="firstContactpicker" placeholder="{{'first_contact' | translate}}"
+          [value]="timestampToDate(form.controls['FirstContact'].value)"
+          (dateChange)="onDateChange($event, form.controls['FirstContact'])">
+          <mat-datepicker-toggle matSuffix [for]="firstContactpicker"></mat-datepicker-toggle>
+        <mat-datepicker #firstContactpicker></mat-datepicker>
       </mat-form-field>
 
 
@@ -127,7 +132,8 @@
 
       <mat-form-field appearance="fill" style="grid-area: payment-date;">
         <mat-label>{{'payment_date' | translate}}</mat-label>
-        <input matInput [matDatepicker]="paymentpicker" formControlName="PaymentDate"
+        <input matInput [matDatepicker]="paymentpicker" [value]="timestampToDate(form.controls['DateOfPayment'].value)"
+          (dateChange)="onDateChange($event, form.controls['DateOfPayment'])"
           placeholder="{{'payment_date' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="paymentpicker"></mat-datepicker-toggle>
         <mat-datepicker #paymentpicker></mat-datepicker>
@@ -204,8 +210,10 @@
 
       <mat-form-field appearance="fill" style="grid-area: date-of-admission;">
         <mat-label>{{'date_of_hospital_admission' | translate}}</mat-label>
-        <input matInput [matDatepicker]="hospitalAdmissionDatepicker" formControlName="DateOfHospitalAdmission"
-          placeholder="{{'date_of_hospital_admission' | translate}}">
+        <input matInput [matDatepicker]="hospitalAdmissionDatepicker"
+          placeholder="{{'date_of_hospital_admission' | translate}}"
+          [value]="timestampToDate(form.controls['DateOfHospitalAdmission'].value)"
+          (dateChange)="onDateChange($event, form.controls['DateOfHospitalAdmission'])">
         <mat-datepicker-toggle matSuffix [for]="hospitalAdmissionDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #hospitalAdmissionDatepicker></mat-datepicker>
       </mat-form-field>
@@ -270,7 +278,9 @@
 
       <mat-form-field appearance="fill" style="grid-area: start-time;">
         <mat-label>{{'start_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="startTimeDatepicker" formControlName="StartTime"
+        <input matInput [matDatepicker]="startTimeDatepicker"
+          [value]="timestampToDate(form.controls['StartTime'].value)"
+          (dateChange)="onDateChange($event, form.controls['StartTime'])"
           placeholder="{{'start_time' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="startTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #startTimeDatepicker></mat-datepicker>
@@ -278,32 +288,36 @@
 
       <mat-form-field appearance="fill" style="grid-area: end-time;">
         <mat-label>{{'end_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="endTimeDatepicker" formControlName="EndTime"
-          placeholder="{{'end_time' | translate}}">
+        <input matInput [matDatepicker]="endTimeDatepicker" placeholder="{{'end_time' | translate}}"
+          [value]="timestampToDate(form.controls['EndTime'].value)"
+          (dateChange)="onDateChange($event, form.controls['EndTime'])">
         <mat-datepicker-toggle matSuffix [for]="endTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #endTimeDatepicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: enter-time;">
         <mat-label>{{'enter_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="enterTimeDatepicker" formControlName="EnterTime"
-          placeholder="{{'enter_time' | translate}}">
+        <input matInput [matDatepicker]="enterTimeDatepicker" placeholder="{{'enter_time' | translate}}" 
+          [value]="timestampToDate(form.controls['EnterTime'].value)"
+          (dateChange)="onDateChange($event, form.controls['EnterTime'])">
         <mat-datepicker-toggle matSuffix [for]="enterTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #enterTimeDatepicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: exit-time;">
         <mat-label>{{'exit_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="exitTimeDatepicker" formControlName="ExitTime"
-          placeholder="{{'exit_time' | translate}}">
+        <input matInput [matDatepicker]="exitTimeDatepicker" placeholder="{{'exit_time' | translate}}"
+          [value]="timestampToDate(form.controls['ExitTime'].value)"
+          (dateChange)="onDateChange($event, form.controls['ExitTime'])">
         <mat-datepicker-toggle matSuffix [for]="exitTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #exitTimeDatepicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: patient-enter-time;">
         <mat-label>{{'patient_enter_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="patientEnterTimeDatepicker" formControlName="PatientEnterTime"
-          placeholder="{{'patient_enter_time' | translate}}">
+        <input matInput [matDatepicker]="patientEnterTimeDatepicker" placeholder="{{'patient_enter_time' | translate}}"
+          [value]="timestampToDate(form.controls['PatientEnterTime'].value)"
+          (dateChange)="onDateChange($event, form.controls['PatientEnterTime'])">
         <mat-datepicker-toggle matSuffix [for]="patientEnterTimeDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #patientEnterTimeDatepicker></mat-datepicker>
       </mat-form-field>

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataService } from '../data.service';
@@ -7,6 +7,8 @@ import { Patient, PatientFinancialInformation, SurgeriesInformation, PatientFull
 
 import { optionGroup } from './interfaces';
 import { HtmlService } from '../html.service';
+import * as moment from 'jalali-moment';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-detail-page',
@@ -22,71 +24,6 @@ export class DetailPageComponent implements OnInit {
     SurgeryInfo: {},
     FinancialInfo: {}
   }
-
-  //   Patient: {
-  //     ID: -1,
-  //     Name: '',
-  //     Family: '',
-  //     Age: 0,
-  //     PhoneNumber: '',
-  //     NationalID: '',
-  //     Address: '',
-  //     Email: '',
-  //     PlaceOfBirth: '',
-  //   },
-  //   SurgeryInfo: {
-  //     ID: -1,
-  //     PatientID: -1,
-  //     SurgeryDate: '',
-  //     SurgeryDay: -1,
-  //     SurgeryTime: -1,
-  //     SurgeryType: '',
-  //     SurgeryArea: -1,
-  //     SurgeryDescription: '',
-  //     SurgeryResult: -1,
-  //     SurgeonFirst: '',
-  //     SurgeonSecond: '',
-  //     Resident: '',
-  //     Hospital: '',
-  //     HospitalType: -1,
-  //     HospitalAddress: '',
-  //     CT:-1,
-  //     MR:-1,
-  //     FMRI:-1,
-  //     DTI:-1,
-  //     OperatorFirst: '',
-  //     OperatorSecond: '',
-  //     StartTime: '',
-  //     StopTime: '',
-  //     EnterTime: '',
-  //     ExitTime: '',
-  //     PatientEnterTime: '',
-  //     HeadFixType: -1,
-  //     CancellationReason: '',
-  //     FileNumber: '',
-  //     DateOfHospitalAdmission: '',
-  //   },
-  //   FinancialInfo: {
-  //     ID: -1,
-  //     PatientID: -1,
-  //     PaymentStatus: -1,
-  //     DateOfFirstContact: '',
-  //     PaymentNote: '',
-  //     FirstCaller: '',
-  //     DateOfPayment: '',
-  //     LastFourDigitsCard: '',
-  //     CashAmount: '',
-  //     Bank: '',
-  //     DiscountPercent: -1,
-  //     ReasonForDiscount: '',
-  //     HealthPlanAmount: '',
-  //     TypeOfInsurance: '',
-  //     FinancialVerifier: '',
-  //     ReceiptNumber: -1,
-  //     ReceiptDate: '',
-  //     ReceiptReceiver: '',
-  //   }
-  // }
 
   options: Map<string, optionGroup> = new Map<string, optionGroup>();
 
@@ -115,7 +52,7 @@ export class DetailPageComponent implements OnInit {
       FirstContact: new FormControl(''),
       FirstCaller: new FormControl(''),
       PaymentStatus: new FormControl(''),
-      PaymentDate: new FormControl(''),
+      DateOfPayment: new FormControl(''),
       PaymentAmount: new FormControl(''),
       LastFourDigitsCard: new FormControl(''),
       Bank: new FormControl(''),
@@ -147,7 +84,7 @@ export class DetailPageComponent implements OnInit {
 
     this.form.controls['SurgeryDate'].valueChanges.subscribe(value => {
       const day = new Date(value).getDay();
-      this.form.controls['SurgeryDay'].setValue(String(day));
+      this.form.controls['SurgeryDay'].setValue(day);
     });
   }
 
@@ -155,6 +92,7 @@ export class DetailPageComponent implements OnInit {
     if (this.patientName != null) {
       this.form.addControl('Name', this.patientName);
     } else {
+      console.log('no name');
       this.form.addControl('Name', new FormControl('', Validators.required));
     }
 
@@ -189,6 +127,15 @@ export class DetailPageComponent implements OnInit {
         }
       }
     });
+  }
+
+  timestampToDate(timestamp: number): Date {
+    return moment.unix(timestamp).toDate();
+  }
+
+  onDateChange(event: MatDatepickerInputEvent<Date>, control: AbstractControl) {
+    const timestamp = parseInt((event.value!.getTime() / 1000).toFixed(0))
+    control.setValue(timestamp);
   }
 
 }

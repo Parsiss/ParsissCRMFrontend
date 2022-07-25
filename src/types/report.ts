@@ -1,3 +1,5 @@
+import { Time } from "@angular/common";
+
 export interface Patient {
     ID?: number;
     Name?: string;
@@ -13,7 +15,7 @@ export interface Patient {
 export interface SurgeriesInformation {
     ID?: number;
     PatientID?: number;
-    SurgeryDate?: string;
+    SurgeryDate?: number;
     SurgeryDay?: number;
     SurgeryTime?: number;
     SurgeryType?: string;
@@ -32,25 +34,25 @@ export interface SurgeriesInformation {
     DTI?: number;
     OperatorFirst?: string;
     OperatorSecond?: string;
-    StartTime?: string;
-    StopTime?: string;
-    EnterTime?: string;
-    ExitTime?: string;
-    PatientEnterTime?: string;
+    StartTime?: number;
+    StopTime?: number;
+    EnterTime?: number;
+    ExitTime?: number;
+    PatientEnterTime?: number;
     HeadFixType?: number;
     CancellationReason?: string;
     FileNumber?: string;
-    DateOfHospitalAdmission?: string;
+    DateOfHospitalAdmission?: number;
 }
 
 export interface PatientFinancialInformation {
     ID?: number;
     PatientID?: number;
     PaymentStatus?: number;
-    DateOfFirstContact?: string;
+    DateOfFirstContact?: number;
     PaymentNote?: string;
     FirstCaller?: string;
-    DateOfPayment?: string;
+    DateOfPayment?: number;
     LastFourDigitsCard?: string;
     CashAmount?: string;
     Bank?: string;
@@ -60,7 +62,7 @@ export interface PatientFinancialInformation {
     TypeOfInsurance?: string;
     FinancialVerifier?: string;
     ReceiptNumber?: number;
-    ReceiptDate?: string;
+    ReceiptDate?: number;
     ReceiptReceiver?: string;
 }
 

@@ -41,7 +41,7 @@ import * as moment from 'jalali-moment';
 
 import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Platform } from '@angular/cdk/platform';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControlDirective, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DetailPageComponent } from './detail-page-component/detail-page.component';
 import { NumberfieldDirective } from './numberfield.directive';
 import { AddNewPatientComponent } from './add-new-patient/add-new-patient.component';
@@ -130,6 +130,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     DataService, HttpClient,
     { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
+    FormControlDirective, 
+    FormGroupDirective,
     // { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
     //{ provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
