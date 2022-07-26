@@ -18,10 +18,9 @@ export class AddNewPatientComponent implements OnInit {
   @ViewChild(DetailPageComponent) detailPage: DetailPageComponent;
 
   constructor(
-    private htmlService: HtmlService, 
-    private dataService: DataService, 
-    private router: Router, 
-  ) {
+    private htmlService: HtmlService,
+    private dataService: DataService,
+    private router: Router) {
 
   }
 
@@ -46,7 +45,6 @@ export class AddNewPatientComponent implements OnInit {
     this.dataService.addPatient(fulldata).subscribe(
       (data: any) => {
         this.htmlService.isPageReady = true;
-        // navigate to home
         this.router.navigate(['/reportsList']);
       }
     );
