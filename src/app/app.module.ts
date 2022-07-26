@@ -77,6 +77,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { CalendarComponent } from './calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     DetailPageComponent,
     NumberfieldDirective,
     AddNewPatientComponent,
-    UpdatePatientComponent
+    UpdatePatientComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,
