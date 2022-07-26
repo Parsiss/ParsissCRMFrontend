@@ -16,7 +16,7 @@ import { HtmlService } from '../html.service';
   templateUrl: './reports-list.component.html',
   styleUrls: ['./reports-list.component.scss']
 })
-export class ReportsListComponent implements OnInit {
+export class ReportsListComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Patient>([]);
 
   displayedFields: string[] = ['Name', 'NationalID', 'PhoneNumber'];
@@ -41,8 +41,13 @@ export class ReportsListComponent implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnInit(): void {
+    
+    console.log(this.paginator);
     this.dataService.getReports(null).subscribe(
       (data) => {
         this.dataSource.data = data;

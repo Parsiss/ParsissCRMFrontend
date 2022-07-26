@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PatientFullInformation } from 'src/types/report';
 import { DataService } from '../data.service';
 import { DetailPageComponent } from '../detail-page-component/detail-page.component';
@@ -20,7 +20,8 @@ export class AddNewPatientComponent implements OnInit {
   constructor(
     private htmlService: HtmlService, 
     private dataService: DataService, 
-    private _snackBar: MatSnackBar) {
+    private router: Router, 
+  ) {
 
   }
 
@@ -45,10 +46,8 @@ export class AddNewPatientComponent implements OnInit {
     this.dataService.addPatient(fulldata).subscribe(
       (data: any) => {
         this.htmlService.isPageReady = true;
-        this._snackBar.open("Profile Updated Successfully", "Close");
-        setTimeout(() => {
-          this._snackBar.dismiss();
-        }, 2000);
+        // navigate to home
+        this.router.navigate(['/reportsList']);
       }
     );
   }

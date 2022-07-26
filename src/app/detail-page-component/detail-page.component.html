@@ -30,6 +30,8 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
+
+
       <mat-form-field appearance="fill" style="grid-area: address;">
         <mat-label>{{'address' | translate}}</mat-label>
         <input matInput formControlName="Address" placeholder="{{'address' | translate}}">
@@ -111,7 +113,7 @@
         <input matInput [matDatepicker]="firstContactpicker" placeholder="{{'first_contact' | translate}}"
           [value]="timestampToDate(form.controls['FirstContact'].value)"
           (dateChange)="onDateChange($event, form.controls['FirstContact'])">
-          <mat-datepicker-toggle matSuffix [for]="firstContactpicker"></mat-datepicker-toggle>
+        <mat-datepicker-toggle matSuffix [for]="firstContactpicker"></mat-datepicker-toggle>
         <mat-datepicker #firstContactpicker></mat-datepicker>
       </mat-form-field>
 
@@ -278,48 +280,42 @@
 
       <mat-form-field appearance="fill" style="grid-area: start-time;">
         <mat-label>{{'start_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="startTimeDatepicker"
-          [value]="timestampToDate(form.controls['StartTime'].value)"
-          (dateChange)="onDateChange($event, form.controls['StartTime'])"
-          placeholder="{{'start_time' | translate}}">
-        <mat-datepicker-toggle matSuffix [for]="startTimeDatepicker"></mat-datepicker-toggle>
-        <mat-datepicker #startTimeDatepicker></mat-datepicker>
+        <input matInput [ngxTimepicker]="startTimeDatepicker" [format]="24" placeholder="{{'start_time' | translate}}"
+          [value]="toTime(form.controls['StartTime'].value)">
+        <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['StartTime'])" #startTimeDatepicker
+          [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: end-time;">
         <mat-label>{{'end_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="endTimeDatepicker" placeholder="{{'end_time' | translate}}"
-          [value]="timestampToDate(form.controls['EndTime'].value)"
-          (dateChange)="onDateChange($event, form.controls['EndTime'])">
-        <mat-datepicker-toggle matSuffix [for]="endTimeDatepicker"></mat-datepicker-toggle>
-        <mat-datepicker #endTimeDatepicker></mat-datepicker>
+        <input matInput placeholder="{{'end_time' | translate}}" [ngxTimepicker]="stopTimeDatepicker" [format]="24"
+          [value]="toTime(form.controls['StopTime'].value)">
+        <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['StopTime'])" #stopTimeDatepicker
+          [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: enter-time;">
         <mat-label>{{'enter_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="enterTimeDatepicker" placeholder="{{'enter_time' | translate}}" 
-          [value]="timestampToDate(form.controls['EnterTime'].value)"
-          (dateChange)="onDateChange($event, form.controls['EnterTime'])">
-        <mat-datepicker-toggle matSuffix [for]="enterTimeDatepicker"></mat-datepicker-toggle>
-        <mat-datepicker #enterTimeDatepicker></mat-datepicker>
+        <input matInput placeholder="{{'enter_time' | translate}}" [ngxTimepicker]="enterTimeDatepicker" [format]="24"
+          [value]="toTime(form.controls['EnterTime'].value)">
+        <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['EnterTime'])" #enterTimeDatepicker
+          [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: exit-time;">
         <mat-label>{{'exit_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="exitTimeDatepicker" placeholder="{{'exit_time' | translate}}"
-          [value]="timestampToDate(form.controls['ExitTime'].value)"
-          (dateChange)="onDateChange($event, form.controls['ExitTime'])">
-        <mat-datepicker-toggle matSuffix [for]="exitTimeDatepicker"></mat-datepicker-toggle>
-        <mat-datepicker #exitTimeDatepicker></mat-datepicker>
+        <input matInput placeholder="{{'exit_time' | translate}}" [ngxTimepicker]="exitTimeDatepicker" [format]="24"
+          [value]="toTime(form.controls['ExitTime'].value)">
+        <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['ExitTime'])" #exitTimeDatepicker
+          [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: patient-enter-time;">
         <mat-label>{{'patient_enter_time' | translate}}</mat-label>
-        <input matInput [matDatepicker]="patientEnterTimeDatepicker" placeholder="{{'patient_enter_time' | translate}}"
-          [value]="timestampToDate(form.controls['PatientEnterTime'].value)"
-          (dateChange)="onDateChange($event, form.controls['PatientEnterTime'])">
-        <mat-datepicker-toggle matSuffix [for]="patientEnterTimeDatepicker"></mat-datepicker-toggle>
-        <mat-datepicker #patientEnterTimeDatepicker></mat-datepicker>
+        <input matInput placeholder="{{'patient_enter_time' | translate}}" [ngxTimepicker]="patientEnterTimeDatepicker"
+        [format]="24" [value]="toTime(form.controls['PatientEnterTime'].value)">
+        <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['PatientEnterTime'])"
+          #patientEnterTimeDatepicker [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: headband-fix;">

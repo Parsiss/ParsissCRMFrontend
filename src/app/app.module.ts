@@ -34,7 +34,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxCurrencyModule } from "ngx-currency";
 
-
 import { MatTabsModule } from '@angular/material/tabs';
 
 import * as moment from 'jalali-moment';
@@ -77,6 +76,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 @NgModule({
   declarations: [
@@ -119,6 +119,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSnackBarModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxMaterialTimepickerModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

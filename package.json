@@ -31,6 +31,7 @@
     "eva-icons": "^1.1.3",
     "jalali-moment": "^3.3.11",
     "ngx-currency": "^2.5.3",
+    "ngx-material-timepicker": "^5.5.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

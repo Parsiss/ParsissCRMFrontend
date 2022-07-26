@@ -9,6 +9,7 @@ import { optionGroup } from './interfaces';
 import { HtmlService } from '../html.service';
 import * as moment from 'jalali-moment';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 
 @Component({
   selector: 'app-detail-page',
@@ -18,6 +19,23 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 export class DetailPageComponent implements OnInit {
   @Input() id: number;
   @Input() patientName: FormControl;
+
+  time = { hour: 13, minute: 30 };
+
+  darkTheme: NgxMaterialTimepickerTheme = {
+    container: {
+      bodyBackgroundColor: '#424242',
+      buttonColor: '#fff'
+    },
+    dial: {
+      dialBackgroundColor: '#555',
+    },
+    clockFace: {
+      clockFaceBackgroundColor: '#555',
+      clockHandColor: '#9fbd90',
+      clockFaceTimeInactiveColor: '#fff'
+    }
+  };
 
   fulldata: PatientFullInformation = {
     Patient: {},
@@ -75,7 +93,7 @@ export class DetailPageComponent implements OnInit {
       FMRI: new FormControl(''),
       DTI: new FormControl(''),
       StartTime: new FormControl(''),
-      EndTime: new FormControl(''),
+      StopTime: new FormControl(''),
       EnterTime: new FormControl(''),
       ExitTime: new FormControl(''),
       PatientEnterTime: new FormControl(''),
@@ -136,6 +154,14 @@ export class DetailPageComponent implements OnInit {
   onDateChange(event: MatDatepickerInputEvent<Date>, control: AbstractControl) {
     const timestamp = parseInt((event.value!.getTime() / 1000).toFixed(0))
     control.setValue(timestamp);
+  }
+
+  onTimeChange(event: string, control: AbstractControl) {
+    control.setValue(event + ':00');
+  }
+
+  toTime(time: string): string {
+    return moment(time, 'HH:mm').format('HH:mm');
   }
 
 }
