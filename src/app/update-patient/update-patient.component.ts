@@ -65,10 +65,9 @@ export class UpdatePatientComponent implements OnInit {
       (data: any) => {
         console.log(data);
         this.htmlService.isPageReady = true;
-        this._snackBar.open("Profile Updated Successfully", "Close");
-        setTimeout(() => {
-          this._snackBar.dismiss();
-        }, 2000);
+        this._snackBar.open("Profile Updated Successfully", "Close", {
+          duration: 2000,
+        });
       }
     );
   }

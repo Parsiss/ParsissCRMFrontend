@@ -29,13 +29,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxCurrencyModule } from "ngx-currency";
 
 import { MatTabsModule } from '@angular/material/tabs';
-
-import * as moment from 'jalali-moment';
 
 import { NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Platform } from '@angular/cdk/platform';
@@ -48,6 +46,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
+
+import * as moment from 'jalali-moment';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -140,10 +140,10 @@ import { CalendarComponent } from './calendar/calendar.component';
   providers: [
     HttpClient,
     { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
+    { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     FormControlDirective,
     FormGroupDirective,
-    { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
-    //{ provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
   bootstrap: [AppComponent]
 })

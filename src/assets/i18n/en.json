@@ -99,5 +99,6 @@
     "from": "From",
     "to": "To",
     "surgery_area": "Surgery area",
-    "detail": "Detail"
+    "detail": "Detail",
+    "remove": "Remove"
 }
