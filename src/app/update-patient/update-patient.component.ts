@@ -19,7 +19,7 @@ export class UpdatePatientComponent implements OnInit {
 
   patientName = new FormControl('', [Validators.required]);
 
-  name: string;
+  name: string | null;
 
   constructor(
     route: ActivatedRoute,

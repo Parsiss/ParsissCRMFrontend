@@ -21,7 +21,6 @@ import { ReportsListComponent } from './reports-list-component/reports-list.comp
 import { RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { DataService } from './data.service';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -38,14 +37,21 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 import * as moment from 'jalali-moment';
 
-import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Platform } from '@angular/cdk/platform';
 import { FormControlDirective, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DetailPageComponent } from './detail-page-component/detail-page.component';
 import { NumberfieldDirective } from './numberfield.directive';
 import { AddNewPatientComponent } from './add-new-patient/add-new-patient.component';
 import { UpdatePatientComponent } from './update-patient/update-patient.component';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+]);
 
 export class CustomDateAdapter extends NativeDateAdapter {
   constructor(matDateLocale: string) {
@@ -76,7 +82,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 
-import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { CalendarComponent } from './calendar/calendar.component';
 
 @NgModule({
@@ -122,6 +128,7 @@ import { CalendarComponent } from './calendar/calendar.component';
     FormsModule,
     ReactiveFormsModule,
     NgxMaterialTimepickerModule,
+    FullCalendarModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -133,9 +140,9 @@ import { CalendarComponent } from './calendar/calendar.component';
   providers: [
     HttpClient,
     { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
-    FormControlDirective, 
+    FormControlDirective,
     FormGroupDirective,
-    // { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
     //{ provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
   bootstrap: [AppComponent]
