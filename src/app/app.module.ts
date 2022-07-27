@@ -46,11 +46,17 @@ import { AddNewPatientComponent } from './add-new-patient/add-new-patient.compon
 import { UpdatePatientComponent } from './update-patient/update-patient.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { FullCalendarModule } from '@fullcalendar/angular';
+import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+import interactionPlugin from '@fullcalendar/interaction';
 
-FullCalendarModule.registerPlugins([
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
+  timeGridPlugin,
+  listPlugin,
+  interactionPlugin
 ]);
 
 export class CustomDateAdapter extends NativeDateAdapter {
