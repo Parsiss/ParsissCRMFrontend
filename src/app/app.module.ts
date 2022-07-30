@@ -50,7 +50,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 
-import * as moment from 'jalali-moment';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { CalendarComponent } from './calendar/calendar.component';
+import { JalaliMomentDateAdapter } from './moment-date-adapter';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -59,37 +61,9 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   interactionPlugin
 ]);
 
-export class CustomDateAdapter extends NativeDateAdapter {
-  constructor(matDateLocale: string) {
-    super(matDateLocale, new Platform({}));
-  }
-
-  override format(date: Date, displayFormat: object): string {
-    var faDate = moment(date.toDateString()).locale('fa').format('YYYY/MM/DD');
-    return faDate;
-  }
-}
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: { month: 'short', year: 'numeric', day: 'numeric' }
-  },
-  display: {
-    dateInput: 'input',
-    monthYearLabel: { year: 'numeric', month: 'short' },
-    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
-    monthYearA11yLabel: { year: 'numeric', month: 'long' }
-  }
-}
-
-
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
-
-
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { CalendarComponent } from './calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -145,9 +119,8 @@ import { CalendarComponent } from './calendar/calendar.component';
   ],
   providers: [
     HttpClient,
-    { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
-    { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'fa' },
+    { provide: DateAdapter, useClass: JalaliMomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     FormControlDirective,
     FormGroupDirective,
   ],
