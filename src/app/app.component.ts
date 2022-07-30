@@ -15,6 +15,8 @@ export class AppComponent {
 
   textDir: 'rtl' | 'ltr' = 'rtl';
 
+  date = new Date();
+  
   get selectedLanguage(): string {
     return this._selectedLanguage;
   }

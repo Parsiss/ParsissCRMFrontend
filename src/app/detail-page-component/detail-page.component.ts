@@ -151,8 +151,8 @@ export class DetailPageComponent implements OnInit {
     return moment.unix(timestamp).toDate();
   }
 
-  onDateChange(event: MatDatepickerInputEvent<Date>, control: AbstractControl) {
-    const timestamp = parseInt((event.value!.getTime() / 1000).toFixed(0))
+  onDateChange(event: MatDatepickerInputEvent<moment.Moment>, control: AbstractControl) {
+    const timestamp = event.value!.unix();
     control.setValue(timestamp);
   }
 

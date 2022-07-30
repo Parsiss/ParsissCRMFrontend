@@ -83,7 +83,7 @@
       <mat-form-field appearance="fill" style="grid-area: MR;">
         <mat-label>{{'MR' | translate}}</mat-label>
         <mat-select formControlName="MR">
-          <mat-option *ngFor="let value of options.get('image_validity')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('MR')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
@@ -92,7 +92,7 @@
       <mat-form-field appearance="fill" style="grid-area: CT;">
         <mat-label>{{'CT' | translate}}</mat-label>
         <mat-select formControlName="CT">
-          <mat-option *ngFor="let value of options.get('image_validity')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('CT')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
@@ -263,7 +263,7 @@
       <mat-form-field appearance="fill" style="grid-area: FMRI;">
         <mat-label>{{'FMRI' | translate}}</mat-label>
         <mat-select formControlName="FMRI">
-          <mat-option *ngFor="let value of options.get('image_validity')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('FMRI')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
@@ -272,7 +272,7 @@
       <mat-form-field appearance="fill" style="grid-area: DTI;">
         <mat-label>{{'DTI' | translate}}</mat-label>
         <mat-select formControlName="DTI">
-          <mat-option *ngFor="let value of options.get('image_validity')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('DTI')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>

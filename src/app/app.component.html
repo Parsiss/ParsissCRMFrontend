@@ -1,3 +1,4 @@
+
 <mat-card [dir]="textDir" style="min-height: 100%; display: flex; flex-direction: column; padding: 0;">
   <mat-toolbar>
     <mat-toolbar-row>
@@ -11,9 +12,9 @@
           {{'report' | translate}}
         </button>
         <mat-menu #menu="matMenu">
-            <a routerLink="reportsList" routerLinkActive="active" mat-menu-item>{{'reports' | translate}}</a>
+          <a routerLink="reportsList" routerLinkActive="active" mat-menu-item>{{'reports' | translate}}</a>
 
-            <a routerLink="add_new_patient" mat-menu-item>{{'add_new_report' | translate}}</a>
+          <a routerLink="add_new_patient" mat-menu-item>{{'add_new_report' | translate}}</a>
         </mat-menu>
       </div>
       <a mat-button class="example-spacer"></a>

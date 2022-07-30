@@ -6,6 +6,10 @@ mat-card {
     border-radius: 0px !important;
 }
 
+mat-expansion-panel {
+    margin-top: 3px;
+}
+
 .main-container {
     display: grid;
     grid-template-columns: 1fr 12fr;

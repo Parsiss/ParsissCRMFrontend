@@ -40,8 +40,11 @@ export class DataService {
 
   public addPatient(fulldata: PatientFullInformation): Observable<object> {
     let bodyString = JSON.stringify(fulldata);
-    console.log(bodyString);
-    return this.http.post<object>(this.base_url + 'report/detail/add', bodyString);
+    return this.http.post<object>(this.base_url + 'report/add', bodyString);
+  }
+
+  public deletePatient(id: number): Observable<object> {
+    return this.http.delete<object>(this.base_url + 'report/delete/' + id);
   }
 
   public getCalendarEvent(): Observable<CalendarEvent[]> {

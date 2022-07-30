@@ -10,6 +10,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { filterGroup, KeyListOfValues } from './interfaces';
 import { Router } from '@angular/router';
 import { HtmlService } from '../html.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-reports-list',
@@ -20,7 +21,7 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Patient>([]);
 
   displayedFields: string[] = ['Name', 'NationalID', 'PhoneNumber'];
-  displayedColumns: string[] = [...this.displayedFields, 'Actions'];
+  displayedColumns: string[] = [...this.displayedFields, 'Detail', 'Remove'];
 
   internalFilter: KeyListOfValues<string> = {};
 
@@ -38,6 +39,7 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private dataService: DataService,
+    private _snackBar: MatSnackBar,
     private router: Router
   ) { }
 
@@ -99,6 +101,22 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   navigateTo(id: number) {
     this.router.navigate(['/detailPage/' + id]);
   }
+
+  remove(id: number) {
+    this.dataService.deletePatient(id).subscribe(
+      (data) => {
+        if((data as any)['success']) {
+          this.dataSource.data = this.dataSource.data.filter(p => p.ID !== id);
+          this._snackBar.open('Patient removed successfully', 'close', {
+            duration: 2000,
+          });
+        } else {
+          this._snackBar.open('Error removing patient', 'close', {
+            duration: 2000,
+          });
+        }
+      });
+    }
 
   dateChanged() {
     this.internalFilter["surgery_date"] = [];
