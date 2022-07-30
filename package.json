@@ -32,7 +32,6 @@
     "@popperjs/core": "^2.11.5",
     "bootstrap": "^5.2.0",
     "jalali-moment": "^3.3.10",
-    "ng2-jalali-date-picker": "^2.2.8",
     "ngx-currency": "^2.5.3",
     "ngx-material-timepicker": "^5.5.3",
     "rxjs": "~7.5.6",
