@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/angular';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { FullCalendarComponent, CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/angular';
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import faLocale from '@fullcalendar/core/locales/fa';
+
+import { DataService } from '../data.service';
+import {CalendarEvent} from "./intefrace";
 
 
 
@@ -10,11 +13,28 @@ import faLocale from '@fullcalendar/core/locales/fa';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit {
-  constructor() { }
+export class CalendarComponent implements OnInit, AfterViewInit {
+  dataSource: CalendarEvent[] = [];
+
+  @ViewChild('calendar') calendarComponent: FullCalendarComponent;
+  constructor(
+    private dataService: DataService
+  ) {}
 
   ngOnInit(): void {
   }
+  ngAfterViewInit(): void {
+    let api = this.calendarComponent.getApi();
+    console.log(api.currentData.viewApi.activeStart);
+    console.log(api.currentData.viewApi.activeEnd);
+    this.dataService.getCalendarEvent().subscribe(
+      (data) => {
+        data.forEach((event) => {
+          console.log(event);
+        });
+      });
+  }
+
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
     headerToolbar: {
@@ -35,7 +55,7 @@ export class CalendarComponent implements OnInit {
     locale: faLocale,
     visibleRange: {
       start: '2022-5-20', //روز اول ماه شمسی
-      end: '2022-7-21' // روز آخر بیستم بود که یه روز اضاف کردم تا درست شد
+      end: '2022-6-21' // روز آخر بیستم بود که یه روز اضاف کردم تا درست شد
     },
   };
   currentEvents: EventApi[] = [];
@@ -75,5 +95,4 @@ export class CalendarComponent implements OnInit {
   handleEvents(events: EventApi[]) {
     this.currentEvents = events;
   }
-
 }
