@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Filter, Patient, PatientFullInformation } from '../types/report';
 
 import { filterGroup, KeyListOfValues } from './reports-list-component/interfaces';
+import {CalendarEvent} from "./calendar/intefrace";
 
 @Injectable({
   providedIn: 'root'
@@ -46,4 +47,7 @@ export class DataService {
     return this.http.delete<object>(this.base_url + 'report/delete/' + id);
   }
 
+  public getCalendarEvent(): Observable<CalendarEvent[]> {
+      return this.http.get<CalendarEvent[]>(this.base_url + 'home/calendar_event');
+  }
 }

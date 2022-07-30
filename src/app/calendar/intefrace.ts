@@ -15,4 +15,9 @@ export interface EventData {
     createdAt?: Date;
     type?: number;
     color?: string;
-  }
+}
+
+export interface CalendarEvent {
+  hospitalName: string;
+  operatorName: string;
+}
