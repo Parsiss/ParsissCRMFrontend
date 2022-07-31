@@ -123,6 +123,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     { provide: DateAdapter, useClass: JalaliMomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     FormControlDirective,
     FormGroupDirective,
+
   ],
   bootstrap: [AppComponent]
 })

@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FullCalendarComponent, CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/angular';
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import faLocale from '@fullcalendar/core/locales/fa';
 
 import { DataService } from '../data.service';
-import {CalendarEvent} from "./intefrace";
+import { CalendarEvent } from "./intefrace";
 
 
 
@@ -19,7 +19,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
   constructor(
     private dataService: DataService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
   }
@@ -33,6 +33,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           console.log(event);
         });
       });
+
+     // set ption to the calendar api
+     this.calendarComponent.getApi().setOption('visibleRange', {
+      start: '2017-04-01',
+      end: '2017-04-05'
+    });
   }
 
   calendarVisible = true;
