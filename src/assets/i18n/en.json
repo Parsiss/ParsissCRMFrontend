@@ -13,6 +13,8 @@
     "about": "About Us",
     "add_new_report": "Add new report",
     "add_new_patient": "Add new patient",
+    "surgery_date_from": "Surgery date from",
+    "surgery_date_to": "Surgery date to",
     "primary_information": "Primary information",
     "name": "Name",
     "family": "Family",

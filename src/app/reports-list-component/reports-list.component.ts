@@ -119,17 +119,12 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     }
 
   dateChanged() {
-    this.internalFilter["surgery_date"] = [];
-    if (this.range.controls['start'].value) {
-      this.internalFilter["surgery_date"].push(this.range.controls['start'].value);
-    }
-    if (this.range.controls['end'].value) {
-      this.internalFilter["surgery_date"].push(this.range.controls['end'].value);
-    }
+    this.internalFilter["surgery_date"] = [
+      this.range.controls['start'].value,
+      this.range.controls['end'].value
+    ];
 
-    if (this.internalFilter["surgery_date"].length === 0) {
-      delete this.internalFilter["surgery_date"];
-    }
+    console.log(this.internalFilter["surgery_date"]);
 
     this.applyFilters();
   }

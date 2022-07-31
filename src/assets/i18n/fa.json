@@ -33,6 +33,8 @@
     "surgery_type": "نوع عمل",
     "surgery_day": "روز عمل",
     "surgery_time": "زمان عمل",
+    "surgery_date_from": "تاریخ عمل از",
+    "surgery_date_to": "تاریخ عمل تا",
     "surgery_description": "توضیحات عمل",
     "image_validity": "اعتبار تصویر",
     "surgery_result": "نتیجه عمل",

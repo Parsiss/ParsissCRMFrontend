@@ -4,14 +4,23 @@
     <mat-form-field style="margin: 10px 10px;">
       <input matInput type="text" (keyup)="doFilter($event)" placeholder="{{'simple search' | translate }}">
     </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-        <input matStartDate formControlName="start" [placeholder]="'start date' | translate">
-        <input matEndDate formControlName="end" [placeholder]="'end date' | translate">
-      </mat-date-range-input>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-    </mat-form-field>
+
+    <form [formGroup]="range" class="container">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'surgery_date_from' | translate}}</mat-label>
+        <input matInput [matDatepicker]="startpicker" formControlName="start" [placeholder]="'start date' | translate">
+        <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+        <mat-datepicker #startpicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>{{'surgery_date_to' | translate}}</mat-label>
+        <input matInput [matDatepicker]="endpicker" formControlName="end" [placeholder]="'end date' | translate">
+        <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+        <mat-datepicker #endpicker></mat-datepicker>
+      </mat-form-field>
+    </form>
+
     <mat-expansion-panel hideToggle *ngFor="let filter of filters">
       <mat-expansion-panel-header>
         <mat-panel-title>
