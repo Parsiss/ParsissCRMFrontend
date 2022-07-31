@@ -1,10 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Filter, Patient, PatientFullInformation } from '../types/report';
+import {Filter, Patient, PatientFullInformation, SurgeriesInformation} from '../types/report';
 
 import { filterGroup, KeyListOfValues } from './reports-list-component/interfaces';
-import {CalendarEvent} from "./calendar/intefrace";
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +46,7 @@ export class DataService {
     return this.http.delete<object>(this.base_url + 'report/delete/' + id);
   }
 
-  public getCalendarEvent(): Observable<CalendarEvent[]> {
-      return this.http.get<CalendarEvent[]>(this.base_url + 'home/calendar_event');
+  public getCalendarEvent(): Observable<SurgeriesInformation[]> {
+      return this.http.get<SurgeriesInformation[]>(this.base_url + 'home/calendar_event');
   }
 }

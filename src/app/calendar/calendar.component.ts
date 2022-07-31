@@ -3,10 +3,9 @@ import { FullCalendarComponent, CalendarOptions, DateSelectArg, EventClickArg, E
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import faLocale from '@fullcalendar/core/locales/fa';
 
+import { Router } from '@angular/router';
+
 import { DataService } from '../data.service';
-import {CalendarEvent} from "./intefrace";
-
-
 
 @Component({
   selector: 'app-calendar',
@@ -14,25 +13,36 @@ import {CalendarEvent} from "./intefrace";
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, AfterViewInit {
-  dataSource: CalendarEvent[] = [];
-
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
   constructor(
-    private dataService: DataService
+    private dataService: DataService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
   }
   ngAfterViewInit(): void {
     let api = this.calendarComponent.getApi();
-    console.log(api.currentData.viewApi.activeStart);
-    console.log(api.currentData.viewApi.activeEnd);
     this.dataService.getCalendarEvent().subscribe(
       (data) => {
-        data.forEach((event) => {
-          console.log(event);
+        let listOfOperators = data.map(event => event.OperatorFirst);
+        listOfOperators = Array.from(new Set(listOfOperators));
+        let colors = ['#f44336', '#03a9f4', '#4caf50', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b'];
+        let colorMap = new Map<string, string>();
+        listOfOperators.forEach((operator, index) => {
+          colorMap.set(operator as string, colors[index]);
         });
-      });
+
+        data.forEach((event) => {
+          api.addEvent({
+            id: event.ID!.toString(),
+            title: event.Hospital + ' ' + event.OperatorFirst,
+            start: new Date(event.SurgeryDate as number * 1000),
+            end: new Date(event.SurgeryDate as number * 1000),
+            color: colorMap.get(event.OperatorFirst as string),
+          });
+        });
+    });
   }
 
   calendarVisible = true;
@@ -42,6 +52,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
     },
+
     initialView: 'dayGridMonth',
     initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
     weekends: true,
@@ -54,8 +65,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     eventsSet: this.handleEvents.bind(this),
     locale: faLocale,
     visibleRange: {
-      start: '2022-5-20', //روز اول ماه شمسی
-      end: '2022-6-21' // روز آخر بیستم بود که یه روز اضاف کردم تا درست شد
+      start: '2022-5-20',
+      end: '2022-6-21'
     },
   };
   currentEvents: EventApi[] = [];
@@ -70,26 +81,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    const title = prompt('Please enter a new title for your event');
     const calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      });
-    }
+    calendarApi.unselect();
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
-    }
+    let id = clickInfo.event.id;
+    this.router.navigate(['/detailPage', id]);
   }
 
   handleEvents(events: EventApi[]) {

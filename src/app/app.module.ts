@@ -36,7 +36,7 @@ import { NgxCurrencyModule } from "ngx-currency";
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { Platform } from '@angular/cdk/platform';
+import { DatePipe } from '@angular/common'
 import { FormControlDirective, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DetailPageComponent } from './detail-page-component/detail-page.component';
 import { NumberfieldDirective } from './numberfield.directive';
@@ -123,6 +123,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     { provide: DateAdapter, useClass: JalaliMomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     FormControlDirective,
     FormGroupDirective,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
