@@ -25,12 +25,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     let api = this.calendarComponent.getApi();
     this.dataService.getCalendarEvent().subscribe(
       (data) => {
-        let listOfOperators = data.map(event => event.OperatorFirst);
+        let listOfOperators = data.map(event => event.HospitalType);
         listOfOperators = Array.from(new Set(listOfOperators));
         let colors = ['#f44336', '#03a9f4', '#4caf50', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b'];
-        let colorMap = new Map<string, string>();
+        let colorMap = new Map<number, string>();
         listOfOperators.forEach((operator, index) => {
-          colorMap.set(operator as string, colors[index]);
+          colorMap.set(operator as number, colors[index]);
         });
 
         data.forEach((event) => {
@@ -39,7 +39,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             title: event.Hospital + ' ' + event.OperatorFirst,
             start: new Date(event.SurgeryDate as number * 1000),
             end: new Date(event.SurgeryDate as number * 1000),
-            color: colorMap.get(event.OperatorFirst as string),
+            color: colorMap.get(event.HospitalType as number),
           });
         });
     });
