@@ -12,12 +12,16 @@ import { Router } from '@angular/router';
 import { HtmlService } from '../html.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import {MatDialog} from '@angular/material/dialog';
+import { DialogOverviewComponent } from '../dialog-overview/dialog-overview.component';
+
 @Component({
   selector: 'app-reports-list',
   templateUrl: './reports-list.component.html',
   styleUrls: ['./reports-list.component.scss']
 })
 export class ReportsListComponent implements OnInit, AfterViewInit {
+
   dataSource = new MatTableDataSource<Patient>([]);
 
   displayedFields: string[] = ['Name', 'NationalID', 'PhoneNumber'];
@@ -40,7 +44,8 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     private _liveAnnouncer: LiveAnnouncer,
     private dataService: DataService,
     private _snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
   ) { }
 
   ngAfterViewInit() {
@@ -48,7 +53,7 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    
+
     console.log(this.paginator);
     this.dataService.getReports(null).subscribe(
       (data) => {
@@ -103,20 +108,31 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   }
 
   remove(id: number) {
-    this.dataService.deletePatient(id).subscribe(
-      (data) => {
-        if((data as any)['success']) {
-          this.dataSource.data = this.dataSource.data.filter(p => p.ID !== id);
-          this._snackBar.open('Patient removed successfully', 'close', {
-            duration: 2000,
-          });
-        } else {
-          this._snackBar.open('Error removing patient', 'close', {
-            duration: 2000,
-          });
+    const dialogRef = this.dialog.open(DialogOverviewComponent, {
+      width: '350px',
+      data: {title: "Remove Report", content: "Are you sure you want to remove this report?"},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+        if(result == 'Canceled') {
+          return;
         }
-      });
-    }
+        this.dataService.deletePatient(id).subscribe(
+          (data) => {
+            if ((data as any)['success']) {
+              this.dataSource.data = this.dataSource.data.filter(p => p.ID !== id);
+              this._snackBar.open('Patient removed successfully', 'close', {
+                duration: 2000,
+              });
+            } else {
+              this._snackBar.open('Error removing patient', 'close', {
+                duration: 2000,
+              });
+            }
+          });
+      }
+    );
+  }
 
   dateChanged() {
     this.internalFilter["surgery_date"] = [

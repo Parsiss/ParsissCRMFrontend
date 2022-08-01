@@ -53,6 +53,9 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { CalendarComponent } from './calendar/calendar.component';
 import { JalaliMomentDateAdapter } from './moment-date-adapter';
+import { DialogOverviewComponent } from './dialog-overview/dialog-overview.component';
+import {MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
+
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -75,7 +78,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     NumberfieldDirective,
     AddNewPatientComponent,
     UpdatePatientComponent,
-    CalendarComponent
+    CalendarComponent,
+    DialogOverviewComponent
   ],
   imports: [
     BrowserModule,
@@ -109,6 +113,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ReactiveFormsModule,
     NgxMaterialTimepickerModule,
     FullCalendarModule,
+    MatDialogModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -121,6 +126,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClient,
     { provide: MAT_DATE_LOCALE, useValue: 'fa' },
     { provide: DateAdapter, useClass: JalaliMomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     FormControlDirective,
     FormGroupDirective,
     DatePipe
