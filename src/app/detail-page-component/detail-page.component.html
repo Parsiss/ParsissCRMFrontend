@@ -28,19 +28,7 @@
           placeholder="{{'surgery_date' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-
-
-
-      <mat-form-field appearance="fill" style="grid-area: address;">
-        <mat-label>{{'address' | translate}}</mat-label>
-        <input matInput formControlName="Address" placeholder="{{'address' | translate}}">
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" style="grid-area: place-of-birth;">
-        <mat-label>{{'place_of_birth' | translate}}</mat-label>
-        <input matInput placeholder="{{'place_of_birth' | translate}}" formControlName="PlaceOfBirth">
-      </mat-form-field>
+      </mat-form-field>      
 
       <mat-form-field appearance="fill" style="grid-area: surgeon-first;">
         <mat-label>{{'surgeon_first' | translate}}</mat-label>
@@ -195,11 +183,10 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: cancellation-reason;"
-        *ngIf="form.controls['SurgeryResult'].value === '2'">
+        *ngIf="form.controls['SurgeryResult'].value === 2">
         <mat-label>{{'cancellation_reason' | translate}}</mat-label>
         <input matInput placeholder="{{'cancellation_reason' | translate}}" formControlName="CancellationReason">
       </mat-form-field>
-
     </form>
   </mat-tab>
   <mat-tab label="{{'complementary_information' | translate }}">
@@ -208,6 +195,16 @@
       <mat-form-field appearance="fill" style="grid-area: file-number;">
         <mat-label>{{'file_number' | translate}}</mat-label>
         <input matInput placeholder="{{'file_number' | translate}}" formControlName="FileNumber" numberfield>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: address;">
+        <mat-label>{{'address' | translate}}</mat-label>
+        <input matInput formControlName="Address" placeholder="{{'address' | translate}}">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: place-of-birth;">
+        <mat-label>{{'place_of_birth' | translate}}</mat-label>
+        <input matInput placeholder="{{'place_of_birth' | translate}}" formControlName="PlaceOfBirth">
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: date-of-admission;">
