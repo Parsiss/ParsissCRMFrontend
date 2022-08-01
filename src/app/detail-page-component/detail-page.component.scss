@@ -30,14 +30,12 @@ input[type="number"] {
   grid-gap: 1rem;
   grid-template-areas: 
     "name national-id phone surgery-date"
-    "address place-of-birth surgeon-first hospital"
-    "hospital-type surgery-day surgery-time MR"
-    "CT operator-first operator-second first-contact "
-    "first-caller payment-status payment-date payment-amount"
-    "payment-card bank discount-percentage discount-reason"
-    "insurance financial-verifier recipt-number surgery-result"
-    "cancellation-reason cancellation cancellation cancellation";
-  ;
+    "surgeon-first hospital hospital-type surgery-day"
+    "surgery-time MR CT operator-first"
+    "operator-second first-contact first-caller payment-status"
+    "payment-date payment-amount payment-card bank"
+    "discount-percentage discount-reason insurance financial-verifier"
+    "recipt-number surgery-result cancellation-reason emtpy"
 }
 
 
@@ -46,10 +44,10 @@ input[type="number"] {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 1rem;
   grid-template-areas: 
-    "file-number date-of-admission age surgery-type"
-    "surgery-area surgery-description surgeon-second resident"
-    "hospital-address FMRI DTI start-time"
-    "end-time enter-time exit-time patient-enter-time"
-    "headband-fix patient patient patient"
+    "file-number address place-of-birth date-of-admission"
+    "age surgery-type surgery-area surgery-description"
+    "surgeon-second resident hospital-address FMRI"
+    "DTI start-time end-time enter-time"
+    "exit-time patient-enter-time headband-fix patient"
   ;
 }
