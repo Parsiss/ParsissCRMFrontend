@@ -101,7 +101,7 @@ export class DetailPageComponent implements OnInit {
     });
 
     this.form.controls['SurgeryDate'].valueChanges.subscribe(value => {
-      const day = new Date(value).getDay();
+      const day = moment.unix(value).jDay() + 1;
       this.form.controls['SurgeryDay'].setValue(day);
     });
   }
@@ -110,7 +110,6 @@ export class DetailPageComponent implements OnInit {
     if (this.patientName != null) {
       this.form.addControl('Name', this.patientName);
     } else {
-      console.log('no name');
       this.form.addControl('Name', new FormControl('', Validators.required));
     }
 
@@ -136,6 +135,9 @@ export class DetailPageComponent implements OnInit {
     this.dataService.getPatient(this.id).subscribe(fulldata => {
       this.fulldata = fulldata;
       for (let key in this.form.controls) {
+        if((key == 'SurgeryDate' || key == 'SurgeryDay') && this.id == -1) {
+          continue;
+        }
         if (key in fulldata.Patient) {
           this.form.controls[key].setValue((fulldata.Patient as any)[key]);
         } else if (key in fulldata.SurgeryInfo) {

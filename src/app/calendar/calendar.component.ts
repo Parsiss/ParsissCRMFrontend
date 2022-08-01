@@ -1,11 +1,19 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import { FullCalendarComponent, CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/angular';
-import { INITIAL_EVENTS, createEventId } from './event-utils';
+import {
+  FullCalendarComponent,
+  CalendarOptions,
+  DateSelectArg,
+  EventClickArg,
+  EventApi,
+  EventInput
+} from '@fullcalendar/angular';
+
 import faLocale from '@fullcalendar/core/locales/fa';
 
 import { Router } from '@angular/router';
 
 import { DataService } from '../data.service';
+import {DateClickArg} from "@fullcalendar/interaction";
 
 @Component({
   selector: 'app-calendar',
@@ -32,16 +40,17 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         listOfOperators.forEach((operator, index) => {
           colorMap.set(operator as number, colors[index]);
         });
-
+        let eventInput: EventInput[] = [];
         data.forEach((event) => {
-          api.addEvent({
+          eventInput.push({
             id: event.ID!.toString(),
-            title: event.Hospital + ' ' + event.OperatorFirst,
+            title: event.Hospital + ' - ' + event.OperatorFirst,
             start: new Date(event.SurgeryDate as number * 1000),
             end: new Date(event.SurgeryDate as number * 1000),
-            color: colorMap.get(event.HospitalType as number),
+            color: colorMap.get(event.HospitalType as number)
           });
         });
+        api.addEventSource(eventInput);
     });
   }
 
@@ -54,22 +63,19 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     },
 
     initialView: 'dayGridMonth',
-    initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
     weekends: true,
     editable: true,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
-    select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
+    dateClick: this.handleDateClick.bind(this),
     locale: faLocale,
     visibleRange: {
       start: '2022-5-20',
       end: '2022-6-21'
     },
   };
-  currentEvents: EventApi[] = [];
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
@@ -80,17 +86,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     calendarOptions.weekends = !calendarOptions.weekends;
   }
 
-  handleDateSelect(selectInfo: DateSelectArg) {
-    const calendarApi = selectInfo.view.calendar;
-    calendarApi.unselect();
+  handleDateClick(info: DateClickArg)
+  {
+    this.router.navigate(['/add_new_patient', { date: info.date.getTime()}])
   }
 
   handleEventClick(clickInfo: EventClickArg) {
     let id = clickInfo.event.id;
     this.router.navigate(['/detailPage', id]);
-  }
-
-  handleEvents(events: EventApi[]) {
-    this.currentEvents = events;
   }
 }
