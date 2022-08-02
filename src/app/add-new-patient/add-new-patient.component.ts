@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,19 +13,30 @@ import { HtmlService } from '../html.service';
   styleUrls: ['./add-new-patient.component.scss'],
   providers: [HtmlService]
 })
-export class AddNewPatientComponent implements OnInit {
+export class AddNewPatientComponent implements OnInit, AfterViewInit {
   id: number = -1;
   @ViewChild(DetailPageComponent) detailPage: DetailPageComponent;
 
   constructor(
     private htmlService: HtmlService,
     private dataService: DataService,
-    private router: Router) {
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {
 
   }
 
   ngOnInit(): void {
 
+  }
+
+  ngAfterViewInit(): void {
+    this.activatedRoute.params.subscribe(data => {
+      let surgery_date = data['date']
+      if(surgery_date != null) {
+        this.detailPage.form.controls['SurgeryDate'].setValue( (surgery_date / 1000).toFixed(0) )
+      }
+    });
   }
 
   AddNewPatient() {

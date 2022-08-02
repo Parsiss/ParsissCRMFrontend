@@ -6,6 +6,8 @@
   margin-bottom: 1rem;
 }
 
+
+
 mat-form-field {
   margin-left: 1rem;
   margin-right: 1rem;
@@ -28,7 +30,7 @@ input[type="number"] {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 1rem;
-  grid-template-areas: 
+  grid-template-areas:
     "name national-id phone surgery-date"
     "surgeon-first hospital hospital-type surgery-day"
     "surgery-time MR CT operator-first"
@@ -43,7 +45,7 @@ input[type="number"] {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 1rem;
-  grid-template-areas: 
+  grid-template-areas:
     "file-number address place-of-birth date-of-admission"
     "age surgery-type surgery-area surgery-description"
     "surgeon-second resident hospital-address FMRI"
