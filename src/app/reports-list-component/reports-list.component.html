@@ -5,22 +5,29 @@
       <input matInput type="text" (keyup)="doFilter($event)" placeholder="{{'simple search' | translate }}">
     </mat-form-field>
 
-    <form [formGroup]="range" class="container">
-      <mat-form-field appearance="fill">
-        <mat-label>{{'surgery_date_from' | translate}}</mat-label>
-        <input matInput [matDatepicker]="startpicker" formControlName="start" [placeholder]="'start date' | translate">
-        <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
-        <mat-datepicker #startpicker></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>{{'surgery_date_to' | translate}}</mat-label>
-        <input matInput [matDatepicker]="endpicker" formControlName="end" [placeholder]="'end date' | translate">
-        <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
-        <mat-datepicker #endpicker></mat-datepicker>
-      </mat-form-field>
-    </form>
-
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ 'time_range' | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+        <form [formGroup]="range" class="container">
+          <mat-form-field appearance="fill">
+            <mat-label>{{'surgery_date_from' | translate}}</mat-label>
+            <input matInput [matDatepicker]="startpicker" formControlName="start" [placeholder]="'start date' | translate">
+            <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+            <mat-datepicker #startpicker></mat-datepicker>
+          </mat-form-field>
+    
+          <mat-form-field appearance="fill">
+            <mat-label>{{'surgery_date_to' | translate}}</mat-label>
+            <input matInput [matDatepicker]="endpicker" formControlName="end" [placeholder]="'end date' | translate">
+            <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+            <mat-datepicker #endpicker></mat-datepicker>
+          </mat-form-field>
+        </form>
+    </mat-expansion-panel>
+    
     <mat-expansion-panel hideToggle *ngFor="let filter of filters">
       <mat-expansion-panel-header>
         <mat-panel-title>

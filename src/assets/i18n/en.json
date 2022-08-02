@@ -102,5 +102,6 @@
     "to": "To",
     "surgery_area": "Surgery area",
     "detail": "Detail",
-    "remove": "Remove"
+    "remove": "Remove",
+    "time_range": "Time range"
 }
