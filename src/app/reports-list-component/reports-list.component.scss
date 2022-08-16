@@ -1,9 +1,9 @@
 table {
-    width: 100%;
+  width: 100%;
 }
 
 mat-card {
-    border-radius: 0px !important;
+  border-radius: 0px !important;
 }
 
 mat-expansion-panel {
@@ -13,4 +13,19 @@ mat-expansion-panel {
 .main-container {
     display: grid;
     grid-template-columns: 1fr 12fr;
+}
+
+td.mat-column-star {
+  width: 20px;
+  padding-right: 8px;
+}
+
+th.mat-column-position,
+td.mat-column-position {
+  padding-left: 8px;
+}
+
+.actions-container {
+  display: flex;
+  flex-direction: row;
 }
