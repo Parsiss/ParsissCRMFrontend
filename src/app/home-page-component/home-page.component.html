@@ -1,5 +1,8 @@
-<app-image-slider [images]="images"></app-image-slider>
+<!-- <app-image-slider [images]="images"></app-image-slider> -->
 <div style="margin: 10px">
-  <app-calendar></app-calendar>
+  <!-- <app-calendar></app-calendar> -->
+  <app-our-calendar [templateRef]="eventIcon"></app-our-calendar>
+  <ng-template #eventIcon let-event='event' let-date='date'>
+    {{event}}
+  </ng-template>
 </div>
-

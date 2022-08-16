@@ -1,0 +1,32 @@
+<div>
+
+
+    <div style="display: flex; flex-wrap: wrap;">
+        <div  *ngFor="let day of daysOfWeek"  style="height: 30px; width: 300px; border: 1px solid black;">
+            {{day}}
+        </div>
+    <div>
+    <div style="display: flex; flex-wrap: wrap;">
+        <div *ngFor="let date of trash"  style="height: 100px; width: 300px; border: 1px solid black;">
+            
+        </div>
+
+        <div (click)="cliecked(date)" *ngFor="let date of days"  style="height: 100px; width: 300px; border: 1px solid black;">
+            {{dateAdapter.format(date, 'fullDate')}}
+            
+            <div *ngFor="let event of eventsMap.get(date.unix())">
+                <ng-template
+                    [ngTemplateOutlet]="templateRef"
+                    [ngTemplateOutletContext]="{event: event, date: date}"
+                >
+                </ng-template>
+            </div>
+
+        </div>
+
+        <div *ngFor="let date of trash2"  style="height: 100px; width: 300px; border: 1px solid black;">
+            
+        </div>
+    </div>
+
+</div>

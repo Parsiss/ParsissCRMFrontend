@@ -55,6 +55,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { JalaliMomentDateAdapter } from './moment-date-adapter';
 import { DialogOverviewComponent } from './dialog-overview/dialog-overview.component';
 import {MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
+import { OurCalendarComponent } from './our-calendar/our-calendar.component';
 
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
@@ -79,7 +80,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AddNewPatientComponent,
     UpdatePatientComponent,
     CalendarComponent,
-    DialogOverviewComponent
+    DialogOverviewComponent,
+    OurCalendarComponent
   ],
   imports: [
     BrowserModule,
@@ -126,7 +128,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClient,
     { provide: MAT_DATE_LOCALE, useValue: 'fa' },
     { provide: DateAdapter, useClass: JalaliMomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false} },
     FormControlDirective,
     FormGroupDirective,
     DatePipe
