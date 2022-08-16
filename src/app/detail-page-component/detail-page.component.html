@@ -12,13 +12,13 @@
       <mat-form-field appearance="fill" style="grid-area: national-id;">
         <mat-label>{{'national_code' | translate}}</mat-label>
         <input matInput placeholder="{{'national_code' | translate}}" formControlName="NationalID" numberfield>
-        <mat-error *ngIf="form.controls['NationalID'].invalid">Enter a valid national ID</mat-error>
+        <mat-error *ngIf="form.controls['NationalID'].invalid">{{'Enter a valid national ID' | translate}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: phone;">
         <mat-label>{{'phone' | translate}}</mat-label>
         <input matInput placeholder="{{'phone' | translate}}" formControlName="PhoneNumber" numberfield>
-        <mat-error *ngIf="form.controls['PhoneNumber'].invalid">Enter a valid phone number</mat-error>
+        <mat-error *ngIf="form.controls['PhoneNumber'].invalid">{{'Enter a valid phone number' | translate}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgery-date;">
@@ -31,8 +31,8 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgeon-first;">
-        <mat-label>{{'surgeon_first' | translate}}</mat-label>
-        <input matInput placeholder="{{'surgeon_first' | translate}}" formControlName="SurgeonFirst">
+        <mat-label>{{'surgeonfirst' | translate}}</mat-label>
+        <input matInput placeholder="{{'surgeonfirst' | translate}}" formControlName="SurgeonFirst">
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: hospital;">
@@ -87,8 +87,8 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: operator-first;">
-        <mat-label>{{'operator_first' | translate}}</mat-label>
-        <input matInput placeholder="{{'operator_first' | translate}}" formControlName="OperatorFirst">
+        <mat-label>{{'operatorfirst' | translate}}</mat-label>
+        <input matInput placeholder="{{'operatorfirst' | translate}}" formControlName="OperatorFirst">
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: operator-second;">
@@ -112,9 +112,9 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: payment-status;">
-        <mat-label>{{'payment_status' | translate}}</mat-label>
+        <mat-label>{{'paymentstatus' | translate}}</mat-label>
         <mat-select formControlName="PaymentStatus">
-          <mat-option *ngFor="let value of options.get('payment_status')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('paymentstatus')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
@@ -130,15 +130,15 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" floatLabel="always">
-        <mat-label>{{'amount' | translate}}</mat-label>
+        <mat-label>{{'cashamount' | translate}}</mat-label>
         <input matInput type="text" currencyMask [options]="{ prefix: '', thousands: ',', precision: 0 }"
           formControlName="PaymentAmount" placeholder="0">
         <span matSuffix>ریال</span>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: payment-card;">
-        <mat-label>{{'payment_card' | translate}}</mat-label>
-        <input matInput placeholder="{{'payment_card' | translate}}" formControlName="LastFourDigitsCard" numberfield>
+        <mat-label>{{'paymentcard' | translate}}</mat-label>
+        <input matInput placeholder="{{'paymentcard' | translate}}" formControlName="LastFourDigitsCard" numberfield>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: bank;">
@@ -174,9 +174,9 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgery-result;">
-        <mat-label>{{'surgery_result' | translate}}</mat-label>
+        <mat-label>{{'surgeryresult' | translate}}</mat-label>
         <mat-select formControlName="SurgeryResult">
-          <mat-option *ngFor="let value of options.get('surgery_result')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('surgeryresult')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>

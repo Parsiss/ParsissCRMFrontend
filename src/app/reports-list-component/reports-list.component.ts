@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Patient } from 'src/types/report';
+import {tableData} from 'src/types/report';
 import { DataService } from '../data.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -14,6 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {MatDialog} from '@angular/material/dialog';
 import { DialogOverviewComponent } from '../dialog-overview/dialog-overview.component';
+import {optionGroup} from "../detail-page-component/interfaces";
+import {getMatIconFailedToSanitizeLiteralError} from "@angular/material/icon";
 
 @Component({
   selector: 'app-reports-list',
@@ -22,14 +24,17 @@ import { DialogOverviewComponent } from '../dialog-overview/dialog-overview.comp
 })
 export class ReportsListComponent implements OnInit, AfterViewInit {
 
-  dataSource = new MatTableDataSource<Patient>([]);
+  dataSource = new MatTableDataSource<tableData>([]);
 
-  displayedFields: string[] = ['Name', 'NationalID', 'PhoneNumber'];
-  displayedColumns: string[] = [...this.displayedFields, 'Detail', 'Remove'];
+  displayedFields: string[] = ['Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalID', 'PhoneNumber',
+    'SurgeryResult', 'PaymentCard', 'CashAmount', 'OperatorFirst'];
+  displayedColumns: string[] = [...this.displayedFields, 'Actions'];
 
   internalFilter: KeyListOfValues<string> = {};
 
   filters: filterGroup[] = [];
+
+  options: Map<string, optionGroup> = new Map<string, optionGroup>();
 
   range = new FormGroup({
     start: new FormControl(null),
@@ -48,17 +53,42 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
   ) { }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    await new Promise(f => setTimeout(f, 2000));
+    this.dataService.getReports(null).subscribe(
+      (data) => {
+        var temp : tableData[] = [];
+        console.log(this.options)
+        data.Patient.forEach((report) => {
+          temp.push({
+              ID: report.ID,
+              Name: report.Name,
+              NationalID: report.NationalID,
+              PhoneNumber: report.PhoneNumber,
+            }
+          )
+        });
+        data.FinancialInfo.forEach((financial) => {
+          temp.find(f => f.ID === financial.ID)!.PaymentStatus = this.options.get('paymentstatus')!.values.find(f =>
+            f.value == (financial.PaymentStatus!).toString()) === undefined ?
+            '' : this.options.get('paymentstatus')!.values.find(f => f.value == (financial.PaymentStatus!).toString())!.text,
+            temp.find(f => f.ID === financial.ID)!.PaymentCard = financial.LastFourDigitsCard,
+            temp.find(f => f.ID === financial.ID)!.CashAmount = financial.CashAmount
+        });
+        data.SurgeryInfo.forEach((surgery) => {
+          temp.find(f => f.ID === surgery.ID)!.SurgeonFirst = surgery.SurgeonFirst,
+            temp.find(f => f.ID === surgery.ID)!.Hospital = surgery.Hospital,
+            temp.find(f => f.ID === surgery.ID)!.OperatorFirst = surgery.OperatorFirst,
+            temp.find(f => f.ID === surgery.ID)!.SurgeryResult = this.options.get('surgeryresult')!.values.find(f =>
+              f.value == (surgery.SurgeryResult!).toString()) === undefined ?
+              '' : this.options.get('surgeryresult')!.values.find(f => f.value == (surgery.SurgeryResult!).toString())!.text
+        });
+        this.dataSource.data = temp;
+      });
   }
 
   ngOnInit(): void {
-
-    console.log(this.paginator);
-    this.dataService.getReports(null).subscribe(
-      (data) => {
-        this.dataSource.data = data;
-      });
 
     this.dataService.getOptions().subscribe(
       (data) => {
@@ -74,9 +104,20 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
             text: filter.Text,
             selected: filter.Selected
           });
+
+          if (this.options.get(filter.Group) === undefined) {
+            this.options.set(filter.Group, {
+              name: filter.Group,
+              values: []
+            });
+          }
+          this.options.get(filter.Group)!.values.push({
+            value: filter.Value,
+            text: filter.Text,
+            selected: filter.Selected
+          });
         });
       });
-
     this.dataSource.sort = this.sort;
 
     this.range.controls['start'].valueChanges.subscribe(() => {
@@ -147,8 +188,34 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
 
   applyFilters() {
     this.dataService.getReports(this.internalFilter).subscribe(
-      (data) => this.dataSource.data = data
-    );
+      (data) => {
+        var temp : tableData[] = [];
+        data.Patient.forEach((report) => {
+          temp.push({
+            ID: report.ID,
+            Name: report.Name,
+            NationalID: report.NationalID,
+            PhoneNumber: report.PhoneNumber,
+            }
+          )
+        });
+        data.FinancialInfo.forEach((financial) => {
+          temp.find(f => f.ID === financial.ID)!.PaymentStatus = this.options.get('paymentstatus')!.values.find(f =>
+            f.value == (financial.PaymentStatus!).toString()) === undefined ?
+            '' : this.options.get('paymentstatus')!.values.find(f => f.value == (financial.PaymentStatus!).toString())!.text,
+          temp.find(f => f.ID === financial.ID)!.PaymentCard = financial.LastFourDigitsCard,
+          temp.find(f => f.ID === financial.ID)!.CashAmount = financial.CashAmount
+        });
+        data.SurgeryInfo.forEach((surgery) => {
+          temp.find(f => f.ID === surgery.ID)!.SurgeonFirst = surgery.SurgeonFirst,
+          temp.find(f => f.ID === surgery.ID)!.Hospital = surgery.Hospital,
+          temp.find(f => f.ID === surgery.ID)!.OperatorFirst = surgery.OperatorFirst,
+          temp.find(f => f.ID === surgery.ID)!.SurgeryResult = this.options.get('surgeryresult')!.values.find(f =>
+            f.value == (surgery.SurgeryResult!).toString()) === undefined ?
+            '' : this.options.get('surgeryresult')!.values.find(f => f.value == (surgery.SurgeryResult!).toString())!.text
+          });
+        this.dataSource.data = temp;
+    });
   }
 
 

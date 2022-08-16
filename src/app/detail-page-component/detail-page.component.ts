@@ -53,8 +53,8 @@ export class DetailPageComponent implements OnInit {
     public htmlService: HtmlService,
   ) {
     this.form = new FormGroup({
-      NationalID: new FormControl('', Validators.pattern('^[0-9]*$')),
-      PhoneNumber: new FormControl('', Validators.pattern('^[0-9]{10}$')),
+      NationalID: new FormControl('', Validators.pattern('^[0-9]{10}$')),
+      PhoneNumber: new FormControl('', Validators.pattern('^[0-9]{11}$')),
       SurgeryDate: new FormControl(''),
       Address: new FormControl(''),
       PlaceOfBirth: new FormControl(''),
@@ -128,7 +128,6 @@ export class DetailPageComponent implements OnInit {
             selected: filter.Selected
           });
         });
-
         this.htmlService.isPageReady = true;
       });
 

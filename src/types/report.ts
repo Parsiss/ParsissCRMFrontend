@@ -72,6 +72,26 @@ export interface PatientFullInformation {
     FinancialInfo: PatientFinancialInformation;
 }
 
+export interface AllPatientFullInformation {
+  Patient: Patient[];
+  SurgeryInfo: SurgeriesInformation[];
+  FinancialInfo: PatientFinancialInformation[];
+}
+
+export interface tableData {
+  ID?: number;
+  PaymentStatus?: string;
+  Name?: string;
+  SurgeonFirst?: string;
+  Hospital?: string;
+  NationalID?: string;
+  PhoneNumber?: string;
+  SurgeryResult?: string;
+  PaymentCard?: string;
+  CashAmount?: string;
+  OperatorFirst?: string;
+}
+
 export interface Filter {
     Value: string;
     Text: string;

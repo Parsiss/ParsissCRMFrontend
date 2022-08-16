@@ -1,7 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {Filter, Patient, PatientFullInformation, SurgeriesInformation} from '../types/report';
+import {
+  AllPatientFullInformation,
+  Filter,
+  Patient,
+  PatientFullInformation,
+  SurgeriesInformation
+} from '../types/report';
 
 import { filterGroup, KeyListOfValues } from './reports-list-component/interfaces';
 
@@ -9,19 +15,19 @@ import { filterGroup, KeyListOfValues } from './reports-list-component/interface
   providedIn: 'root'
 })
 export class DataService {
-  public base_url = 'http://localhost:8081/api/';
+  public base_url = 'http://localhost:8080/api/';
 
   constructor(
     public http: HttpClient
   ) { }
 
-  public getReports(filters: KeyListOfValues<string> | null): Observable<Patient[]> {
+  public getReports(filters: KeyListOfValues<string> | null): Observable<AllPatientFullInformation> {
     if (filters === null || Object.keys(filters).length === 0) {
-      return this.http.get<Patient[]>(this.base_url + 'report');
+      return this.http.get<AllPatientFullInformation>(this.base_url + 'report');
     }
 
     let bodyString = JSON.stringify(filters);
-    return this.http.post<Patient[]>(this.base_url + 'report/filtered', bodyString);
+    return this.http.post<AllPatientFullInformation>(this.base_url + 'report/filtered', bodyString);
   }
 
   public getOptions(): Observable<Filter[]> {
