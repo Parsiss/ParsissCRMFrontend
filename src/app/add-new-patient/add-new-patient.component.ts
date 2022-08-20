@@ -34,10 +34,10 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
     this.activatedRoute.params.subscribe(data => {
       let surgery_date = data['date']
       if(surgery_date != null) {
-        this.detailPage.form.controls['SurgeryDate'].setValue( (surgery_date / 1000) )
+        this.detailPage.form.controls['SurgeryDate'].setValue( (surgery_date ) )
       }
       else{
-        this.detailPage.form.controls['SurgeryDate'].setValue( 0 )
+        this.detailPage.form.controls['SurgeryDate'].setValue( null )
       }
     });
   }

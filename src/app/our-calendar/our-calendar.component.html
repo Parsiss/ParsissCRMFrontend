@@ -1,32 +1,39 @@
-<div>
+<div class="main-container">
+  <div class="calendar-title">
+    <button mat-mini-fab (click)="previousMonth()" class="my-fab" >
+      <mat-icon class="button-icon" >arrow_forward_ios</mat-icon>
+    </button>
+    <span style="padding-left: 20px; padding-right: 20px">
+      {{daysOfMonth[currentDate.jMonth()]}} {{currentDate.jYear()}}
+    </span>
+    <button mat-mini-fab (click)="nextMonth()" class="my-fab" >
+      <mat-icon class="button-icon" >arrow_back_ios </mat-icon>
+    </button>
+  </div>
+  <div class="calendar-container">
+      <div  *ngFor="let index of daysOrder" class="calendar-cell week-days-cell">
+          {{daysOfWeek[index]}}
+      </div>
 
-
-    <div style="display: flex; flex-wrap: wrap;">
-        <div  *ngFor="let day of daysOfWeek"  style="height: 30px; width: 300px; border: 1px solid black;">
-            {{day}}
+      <div *ngFor="let date of trash" class="calendar-cell"> </div>
+      <div
+        (click)="cliecked(date)" *ngFor="let date of days" class="calendar-cell day-cell"
+        [ngClass]="date.toDate().getFullYear() == today.getFullYear() && date.toDate().getMonth() == today.getMonth() &&
+        date.toDate().getDate() == today.getDate() ? 'today-date' : ''"
+        style="min-height: 150px;">
+        <div class="day-container">
+          <span style="margin-top: 3px;">{{date.jDate()}}</span>
         </div>
-    <div>
-    <div style="display: flex; flex-wrap: wrap;">
-        <div *ngFor="let date of trash"  style="height: 100px; width: 300px; border: 1px solid black;">
-            
+
+        <div *ngFor="let event of eventsMap.get(date.unix())">
+            <ng-template
+                [ngTemplateOutlet]="templateRef"
+                [ngTemplateOutletContext]="{event: event, date: date}"
+            >
+            </ng-template>
         </div>
+      </div>
 
-        <div (click)="cliecked(date)" *ngFor="let date of days"  style="height: 100px; width: 300px; border: 1px solid black;">
-            {{dateAdapter.format(date, 'fullDate')}}
-            
-            <div *ngFor="let event of eventsMap.get(date.unix())">
-                <ng-template
-                    [ngTemplateOutlet]="templateRef"
-                    [ngTemplateOutletContext]="{event: event, date: date}"
-                >
-                </ng-template>
-            </div>
-
-        </div>
-
-        <div *ngFor="let date of trash2"  style="height: 100px; width: 300px; border: 1px solid black;">
-            
-        </div>
-    </div>
-
+      <div *ngFor="let date of trash2" class="calendar-cell"></div>
+  </div>
 </div>

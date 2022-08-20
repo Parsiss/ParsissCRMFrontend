@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {SurgeriesInformation} from "../../types/report";
+import {EventClickArg} from "@fullcalendar/angular";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home-page',
@@ -7,7 +10,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePageComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public router: Router
+  ) { }
   images = [
     'assets/images/image1.jpg',
     'assets/images/image2.jpg',
@@ -17,4 +22,11 @@ export class HomePageComponent implements OnInit {
   ]
   ngOnInit(): void {
   }
+
+  calendarEventClicked(calEvent: SurgeriesInformation)
+  {
+    const id = calEvent.ID;
+    this.router.navigate(['/detailPage', id]);
+  }
+
 }

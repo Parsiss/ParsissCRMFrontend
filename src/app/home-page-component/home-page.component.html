@@ -1,8 +1,19 @@
-<!-- <app-image-slider [images]="images"></app-image-slider> -->
+<app-image-slider [images]="images"></app-image-slider>
 <div style="margin: 10px">
   <!-- <app-calendar></app-calendar> -->
   <app-our-calendar [templateRef]="eventIcon"></app-our-calendar>
   <ng-template #eventIcon let-event='event' let-date='date'>
-    {{event}}
+    <div class="event-container" (click)="calendarEventClicked(event)">
+      <mat-icon *ngIf="event.SurgeryResult == 1" style="color:green;">done</mat-icon>
+      <mat-icon *ngIf="event.SurgeryResult == 2 || event.SurgeryResult == 3" style="color:red;">clear</mat-icon>
+      <mat-icon *ngIf="event.SurgeryResult == 0"> </mat-icon>
+      <p class="event-content">
+        {{event.OperatorFirst}}
+      </p>
+      <p class="event-content">&nbsp;-&nbsp;</p>
+      <p class="event-content" [style.color]="event.HospitalType == 1 ? 'red' : 'green'">
+        {{event.Hospital}}
+      </p>
+    </div>
   </ng-template>
 </div>

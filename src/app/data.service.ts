@@ -55,16 +55,6 @@ export class DataService {
   }
 
   public getCalendarEvent(): Observable<SurgeriesInformation[]> {
-    // return this.http.get<SurgeriesInformation[]>(this.base_url + 'home/calendar_event');
-    let fakeData = [
-      {
-        SurgeryDate: this.dateAdapter.createDate(1401, 7, 1).unix(),
-        OperatorFirst: 'آرش'
-      }, {
-        SurgeryDate: this.dateAdapter.createDate(1401, 7, 1).unix(),
-        OperatorFirst: 'آرش'
-      }
-    ]
-    return of(fakeData);
+    return this.http.get<SurgeriesInformation[]>(this.base_url + 'home/calendar_event');
   }
 }
