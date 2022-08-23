@@ -99,8 +99,8 @@
       <mat-form-field appearance="fill" style="grid-area: first-contact;">
         <mat-label>{{'first_contact' | translate}}</mat-label>
         <input matInput [matDatepicker]="firstContactpicker" placeholder="{{'first_contact' | translate}}"
-          [value]="timestampToDate(form.controls['FirstContact'].value)"
-          (dateChange)="onDateChange($event, form.controls['FirstContact'])">
+          [value]="timestampToDate(form.controls['DateOfFirstContact'].value)"
+          (dateChange)="onDateChange($event, form.controls['DateOfFirstContact'])">
         <mat-datepicker-toggle matSuffix [for]="firstContactpicker"></mat-datepicker-toggle>
         <mat-datepicker #firstContactpicker></mat-datepicker>
       </mat-form-field>
@@ -132,13 +132,13 @@
       <mat-form-field appearance="fill" floatLabel="always">
         <mat-label>{{'cashamount' | translate}}</mat-label>
         <input matInput type="text" currencyMask [options]="{ prefix: '', thousands: ',', precision: 0 }"
-          formControlName="PaymentAmount" placeholder="0">
+          formControlName="CashAmount" placeholder="0">
         <span matSuffix>ریال</span>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: payment-card;">
         <mat-label>{{'paymentcard' | translate}}</mat-label>
-        <input matInput placeholder="{{'paymentcard' | translate}}" formControlName="LastFourDigitsCard" numberfield>
+        <input matInput placeholder="{{'paymentcard' | translate}}" formControlName="LastFourDigitsCard" pattern="^[0-9]$">
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: bank;">
@@ -170,7 +170,8 @@
 
       <mat-form-field appearance="fill" style="grid-area: recipt-number;">
         <mat-label>{{'receipt_number' | translate}}</mat-label>
-        <input matInput placeholder="{{'receipt_number' | translate}}" formControlName="ReceiptNumber">
+        <input matInput type="number" placeholder="{{'receipt_number' | translate}}"
+               formControlName="ReceiptNumber" numberfield >
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgery-result;">
@@ -224,7 +225,7 @@
 
       <mat-form-field appearance="fill" style="grid-area: surgery-type;">
         <mat-label>{{'surgery_type' | translate}}</mat-label>
-        <input matInput type="number" formControlName="SurgeryType" placeholder="{{'surgery_type' | translate}}">
+        <input matInput type="text" formControlName="SurgeryType" placeholder="{{'surgery_type' | translate}}">
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgery-area;">

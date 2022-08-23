@@ -6,6 +6,7 @@ import { PatientFullInformation } from 'src/types/report';
 import { DataService } from '../data.service';
 import { DetailPageComponent } from '../detail-page-component/detail-page.component';
 import { HtmlService } from '../html.service';
+import * as moment from "jalali-moment";
 
 @Component({
   selector: 'app-add-new-patient',
@@ -34,10 +35,9 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
     this.activatedRoute.params.subscribe(data => {
       let surgery_date = data['date']
       if(surgery_date != null) {
-        this.detailPage.form.controls['SurgeryDate'].setValue( (surgery_date ) )
-      }
-      else{
-        this.detailPage.form.controls['SurgeryDate'].setValue( null )
+        this.detailPage.form.controls['SurgeryDate'].setValue(Number(surgery_date))
+      } else{
+        this.detailPage.form.controls['SurgeryDate'].setValue( moment.unix(moment.now()).toDate() )
       }
     });
   }

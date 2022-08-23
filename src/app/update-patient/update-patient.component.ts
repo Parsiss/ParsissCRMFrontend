@@ -51,6 +51,11 @@ export class UpdatePatientComponent implements OnInit {
     fulldata.Patient["ID"] = this.id;
 
     for (let key in this.detailPage.form.controls) {
+      if (key == 'CashAmount')
+      {
+        (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value.toString();
+        continue;
+      }
       if (key in this.detailPage.fulldata.Patient) {
         (fulldata.Patient as any)[key] = this.detailPage.form.controls[key].value;
       } else if (key in this.detailPage.fulldata.SurgeryInfo) {
@@ -63,7 +68,6 @@ export class UpdatePatientComponent implements OnInit {
     this.htmlService.isPageReady = false;
     this.dataService.updatePatient(fulldata).subscribe(
       (data: any) => {
-        console.log(data);
         this.htmlService.isPageReady = true;
         this._snackBar.open("Profile Updated Successfully", "Close", {
           duration: 2000,

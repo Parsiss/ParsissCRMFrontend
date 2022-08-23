@@ -67,11 +67,11 @@ export class DetailPageComponent implements OnInit {
       CT: new FormControl(''),
       OperatorFirst: new FormControl(''),
       OperatorSecond: new FormControl(''),
-      FirstContact: new FormControl(''),
+      DateOfFirstContact: new FormControl(''),
       FirstCaller: new FormControl(''),
       PaymentStatus: new FormControl(''),
       DateOfPayment: new FormControl(''),
-      PaymentAmount: new FormControl(''),
+      CashAmount: new FormControl(''),
       LastFourDigitsCard: new FormControl(''),
       Bank: new FormControl(''),
       DiscountPercent: new FormControl(''),
@@ -137,6 +137,13 @@ export class DetailPageComponent implements OnInit {
         if((key == 'SurgeryDate' || key == 'SurgeryDay') && this.id == -1) {
           continue;
         }
+        if ((key == 'DateOfPayment' || key == 'DateOfFirstContact' || key == 'DateOfHospitalAdmission') && this.id == -1)
+        {
+          this.form.controls['DateOfPayment'].setValue( moment.unix(moment.now()).toDate() )
+          this.form.controls['DateOfFirstContact'].setValue( moment.unix(moment.now()).toDate() )
+          this.form.controls['DateOfHospitalAdmission'].setValue( moment.unix(moment.now()).toDate() )
+          continue;
+        }
         if (key in fulldata.Patient) {
           this.form.controls[key].setValue((fulldata.Patient as any)[key]);
         } else if (key in fulldata.SurgeryInfo) {
@@ -144,11 +151,12 @@ export class DetailPageComponent implements OnInit {
         } else if (key in fulldata.FinancialInfo) {
           this.form.controls[key].setValue((fulldata.FinancialInfo as any)[key]);
         }
+
       }
     });
   }
 
-  timestampToDate(timestamp: number): Date {
+  timestampToDate(timestamp: number): Date | null {
     return moment.unix(timestamp).toDate();
   }
 

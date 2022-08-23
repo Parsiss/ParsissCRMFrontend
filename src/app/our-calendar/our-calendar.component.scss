@@ -21,8 +21,7 @@
   display: flex;
   width: 30px;
   height: 30px;
-  margin: 0 auto;
-  margin-top: 6px;
+  margin: 6px auto 0;
   align-items: center;
   justify-content: center;
   border: 1px solid black;
@@ -53,6 +52,12 @@
   justify-content: center;
   align-items: center;
   font-size: 1.5rem;
+}
+
+.title-content
+{
+  width: 300px;
+  text-align: center;
 }
 
 .my-fab {
