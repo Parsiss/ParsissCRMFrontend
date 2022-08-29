@@ -4,6 +4,14 @@ import { Router } from '@angular/router';
 import * as moment from 'jalali-moment';
 import { DataService } from '../data.service';
 import {SurgeriesInformation} from "../../types/report";
+import {Moment} from "jalali-moment";
+
+
+interface CalendarCell
+{
+  type: "empty" | "date" | "detail";
+  data: any;
+}
 
 
 @Component({
@@ -18,13 +26,12 @@ export class OurCalendarComponent implements OnInit {
   // read ng-container from parent input
   currentDate: moment.Moment;
 
-  days: any[];
+  calendarCells: CalendarCell[] = [];
+
   today: Date;
 
   firstDayOfMonth: number;
   lastDayOfMonth: number;
-  trash: any[];
-  trash2: any[];
 
   daysOrder = [6, 0, 1, 2, 3, 4, 5]
 
@@ -46,7 +53,7 @@ export class OurCalendarComponent implements OnInit {
   ngOnInit(): void {
     this.daysOfWeek = this.dateAdapter.getDayOfWeekNames('long');
     this.daysOfMonth = this.dateAdapter.getMonthNames('long');
-    this.filldays()
+    this.fillCalendarCells()
 
     this.dataService.getCalendarEvent().subscribe(
       (data) => {
@@ -56,6 +63,7 @@ export class OurCalendarComponent implements OnInit {
           }
           this.eventsMap.get(event.SurgeryDate as number)!.push(event);
         })
+        this.fillWeeklyReports();
     });
 
   }
@@ -65,38 +73,93 @@ export class OurCalendarComponent implements OnInit {
     const month = this.currentDate.jMonth();
     const daysInMonth = this.dateAdapter.getNumDaysInMonth(this.dateAdapter.createDate(year, month, 1));
 
-    this.days = [];
+    let currentMonthDays= [];
     for (let i = 0; i < daysInMonth; i++) {
-      this.days.push(this.dateAdapter.createDate(year, month, i + 1));
+      currentMonthDays.push(this.dateAdapter.createDate(year, month, i + 1));
     }
 
-    return this.days;
+    return currentMonthDays;
   }
 
-  filldays() {
-    this.days = this.getListOfDaysInMonth();
-    this.firstDayOfMonth =  this.daysOrder.findIndex((index) => index === this.days[0].day())
-    this.lastDayOfMonth = this.daysOrder.findIndex((index) => index === this.days[this.days.length - 1].day());
-    this.trash = [];
+  fillCalendarCells() {
+    this.calendarCells = [];
+    const currentMonthDays = this.getListOfDaysInMonth();
+    this.firstDayOfMonth =  this.daysOrder.findIndex((index) => index === currentMonthDays[0].day())
     for(let i = 0; i < this.firstDayOfMonth; i++) {
-      this.trash.push(this.days[i]);
+      this.calendarCells.push({type: "empty", data: null});
     }
-    this.trash2 = [];
+    currentMonthDays.forEach((date) => {
+      this.calendarCells.push({
+        type: "date",
+        data: date
+      })
+    })
+    this.lastDayOfMonth = this.daysOrder.findIndex((index) => index === currentMonthDays[currentMonthDays.length - 1].day());
     for(let i = 1; i < 7 - this.lastDayOfMonth; i++) {
-      this.trash2.push(this.days[i]);
+      this.calendarCells.push({type: "empty", data: null});
     }
+  }
+
+  isTehran(str?: string): boolean {
+    if(str == null) {
+      return false;
+    }
+
+    return str.trim() == 'تهران'
+  }
+
+  fillWeeklyReports() {
+    if(this.calendarCells.length == 0) {
+      throw Error("this method should be called after fillCalendarCells")
+    }
+
+    let daysOfThisWeek: moment.Moment[] = [];
+    for(let i = 0; i < this.calendarCells.length + 1; ++i) {
+      if(i % 8 == 7) {
+        let publicHospital = 0, privateHospital = 0, tehran = 0;
+
+        for(let day of daysOfThisWeek) {
+          let events = this.eventsMap.get(day.unix());
+          if(events == undefined) {
+            events = [];
+          }
+
+          for(let event of events) {
+            publicHospital += (event.HospitalType == 1) ? 1 : 0;
+            privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital)) ? 1 : 0;
+            tehran += this.isTehran(event.Hospital) ? 1 : 0;
+           }
+        }
+
+
+        this.calendarCells.splice(i, 0, {type: "detail", data: {
+            'Public': publicHospital,
+            'Private': privateHospital,
+            'Tehran': tehran
+        }});
+
+        daysOfThisWeek = [];
+        ++i;
+      }
+      if(i < this.calendarCells.length && this.calendarCells[i].type == 'date') {
+        daysOfThisWeek.push(this.calendarCells[i].data)
+      }
+    }
+
   }
 
   nextMonth()
   {
     this.currentDate = this.currentDate.add(1, "jmonth")
-    this.filldays()
+    this.fillCalendarCells();
+    this.fillWeeklyReports();
   }
 
   previousMonth()
   {
     this.currentDate = this.currentDate.add(-1, "jmonth")
-    this.filldays()
+    this.fillCalendarCells();
+    this.fillWeeklyReports();
   }
 
   cliecked(date: any) {

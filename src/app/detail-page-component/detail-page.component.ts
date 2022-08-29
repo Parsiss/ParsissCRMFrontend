@@ -10,6 +10,7 @@ import { HtmlService } from '../html.service';
 import * as moment from 'jalali-moment';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
+import {AutofillService} from "../autofill.service";
 
 @Component({
   selector: 'app-detail-page',
@@ -51,9 +52,10 @@ export class DetailPageComponent implements OnInit {
     route: ActivatedRoute,
     public dataService: DataService,
     public htmlService: HtmlService,
+    public autofill: AutofillService
   ) {
     this.form = new FormGroup({
-      NationalID: new FormControl('', Validators.pattern('^[0-9]{10}$')),
+      NationalID: new FormControl(''),
       PhoneNumber: new FormControl('', Validators.pattern('^[0-9]{11}$')),
       SurgeryDate: new FormControl(''),
       Address: new FormControl(''),
@@ -72,7 +74,7 @@ export class DetailPageComponent implements OnInit {
       PaymentStatus: new FormControl(''),
       DateOfPayment: new FormControl(''),
       CashAmount: new FormControl(''),
-      LastFourDigitsCard: new FormControl(''),
+      LastFourDigitsCard: new FormControl('', Validators.pattern('^[0-9]{4}(-[0-9]{4})*$')),
       Bank: new FormControl(''),
       DiscountPercent: new FormControl(''),
       ReasonForDiscount: new FormControl(''),
@@ -139,9 +141,9 @@ export class DetailPageComponent implements OnInit {
         }
         if ((key == 'DateOfPayment' || key == 'DateOfFirstContact' || key == 'DateOfHospitalAdmission') && this.id == -1)
         {
-          this.form.controls['DateOfPayment'].setValue( moment.unix(moment.now()).toDate() )
-          this.form.controls['DateOfFirstContact'].setValue( moment.unix(moment.now()).toDate() )
-          this.form.controls['DateOfHospitalAdmission'].setValue( moment.unix(moment.now()).toDate() )
+          this.form.controls['DateOfPayment'].setValue( Math.floor(moment.unix(moment.now()).unix()/1e3) )
+          this.form.controls['DateOfFirstContact'].setValue( Math.floor(moment.unix(moment.now()).unix()/1e3)  )
+          this.form.controls['DateOfHospitalAdmission'].setValue( Math.floor(moment.unix(moment.now()).unix()/1e3)  )
           continue;
         }
         if (key in fulldata.Patient) {

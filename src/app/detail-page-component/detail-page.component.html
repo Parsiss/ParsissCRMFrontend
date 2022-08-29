@@ -5,21 +5,38 @@
     <form [formGroup]="form" class="primary-info" *ngIf="htmlService.isPageReady">
       <mat-form-field appearance="fill" style="grid-area: name;">
         <mat-label>{{'name' | translate}}</mat-label>
-        <input matInput placeholder="{{'name' | translate}}" formControlName="Name">
+        <input matInput placeholder="{{'name' | translate}}" formControlName="Name" [matAutocomplete]="nameauto">
         <mat-error *ngIf="form.controls['Name'].invalid">{{'name_is_required' | translate}}</mat-error>
       </mat-form-field>
+      <mat-autocomplete #nameauto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('Name', form.controls['Name']!.value, 3)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+
 
       <mat-form-field appearance="fill" style="grid-area: national-id;">
         <mat-label>{{'national_code' | translate}}</mat-label>
-        <input matInput placeholder="{{'national_code' | translate}}" formControlName="NationalID" numberfield>
+        <input matInput placeholder="{{'national_code' | translate}}" formControlName="NationalID" [matAutocomplete]="nationalidauto">
         <mat-error *ngIf="form.controls['NationalID'].invalid">{{'Enter a valid national ID' | translate}}</mat-error>
       </mat-form-field>
+      <mat-autocomplete #nationalidauto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('NationalID', form.controls['NationalID']!.value, 3)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+
 
       <mat-form-field appearance="fill" style="grid-area: phone;">
         <mat-label>{{'phone' | translate}}</mat-label>
-        <input matInput placeholder="{{'phone' | translate}}" formControlName="PhoneNumber" numberfield>
+        <input matInput placeholder="{{'phone' | translate}}" formControlName="PhoneNumber" numberfield [matAutocomplete]="phoneauto">
         <mat-error *ngIf="form.controls['PhoneNumber'].invalid">{{'Enter a valid phone number' | translate}}</mat-error>
       </mat-form-field>
+      <mat-autocomplete #phoneauto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('PhoneNumber', form.controls['PhoneNumber']!.value, 4)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: surgery-date;">
         <mat-label>{{'surgery_date' | translate}}</mat-label>
@@ -32,14 +49,24 @@
 
       <mat-form-field appearance="fill" style="grid-area: surgeon-first;">
         <mat-label>{{'surgeonfirst' | translate}}</mat-label>
-        <input matInput placeholder="{{'surgeonfirst' | translate}}" formControlName="SurgeonFirst">
+        <input matInput placeholder="{{'surgeonfirst' | translate}}" formControlName="SurgeonFirst" [matAutocomplete]="SurgeonFirstAuto">
       </mat-form-field>
+      <mat-autocomplete #SurgeonFirstAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('SurgeonFirst', form.controls['SurgeonFirst']!.value, 2)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+
 
       <mat-form-field appearance="fill" style="grid-area: hospital;">
         <mat-label>{{'hospital' | translate}}</mat-label>
-        <input matInput placeholder="{{'hospital' | translate}}" formControlName="Hospital">
+        <input matInput placeholder="{{'hospital' | translate}}" formControlName="Hospital" [matAutocomplete]="HospitalAuto">
       </mat-form-field>
-
+      <mat-autocomplete #HospitalAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('Hospital', form.controls['Hospital']!.value, 0)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: hospital-type;">
         <mat-label>{{'hospital_type' | translate}}</mat-label>
@@ -88,13 +115,25 @@
 
       <mat-form-field appearance="fill" style="grid-area: operator-first;">
         <mat-label>{{'operatorfirst' | translate}}</mat-label>
-        <input matInput placeholder="{{'operatorfirst' | translate}}" formControlName="OperatorFirst">
+        <input matInput placeholder="{{'operatorfirst' | translate}}" formControlName="OperatorFirst" [matAutocomplete]="OperatorFirstAuto">
       </mat-form-field>
+      <mat-autocomplete #OperatorFirstAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('OperatorFirst', form.controls['OperatorFirst']!.value, 0)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+
 
       <mat-form-field appearance="fill" style="grid-area: operator-second;">
         <mat-label>{{'operator_second' | translate}}</mat-label>
-        <input matInput placeholder="{{'operator_second' | translate}}" formControlName="OperatorSecond">
+        <input matInput placeholder="{{'operator_second' | translate}}" formControlName="OperatorSecond" [matAutocomplete]="OperatorSecondAuto">
       </mat-form-field>
+      <mat-autocomplete #OperatorSecondAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('OperatorSecond', form.controls['OperatorSecond']!.value, 0)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+
 
       <mat-form-field appearance="fill" style="grid-area: first-contact;">
         <mat-label>{{'first_contact' | translate}}</mat-label>
@@ -108,8 +147,13 @@
 
       <mat-form-field appearance="fill" style="grid-area: first-caller;">
         <mat-label>{{'first_caller' | translate}}</mat-label>
-        <input matInput placeholder="{{'first_caller' | translate}}" formControlName="FirstCaller">
+        <input matInput placeholder="{{'first_caller' | translate}}" formControlName="FirstCaller" [matAutocomplete]="FirstCallerAuto">
       </mat-form-field>
+      <mat-autocomplete #FirstCallerAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('FirstCaller', form.controls['FirstCaller']!.value, 0)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: payment-status;">
         <mat-label>{{'paymentstatus' | translate}}</mat-label>
@@ -138,13 +182,18 @@
 
       <mat-form-field appearance="fill" style="grid-area: payment-card;">
         <mat-label>{{'paymentcard' | translate}}</mat-label>
-        <input matInput placeholder="{{'paymentcard' | translate}}" formControlName="LastFourDigitsCard" pattern="^[0-9]$">
+        <input matInput placeholder="{{'paymentcard' | translate}}" formControlName="LastFourDigitsCard">
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: bank;">
         <mat-label>{{'bank' | translate}}</mat-label>
-        <input matInput placeholder="{{'bank' | translate}}" formControlName="Bank">
+        <input matInput placeholder="{{'bank' | translate}}" formControlName="Bank" [matAutocomplete]="BankAuto">
       </mat-form-field>
+      <mat-autocomplete #BankAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('Bank', form.controls['Bank']!.value, 0)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
 
       <mat-form-field appearance="fill" floatLabel="always" style="grid-area: discount-percentage;">
         <mat-label>{{'discount_percentage' | translate}}</mat-label>
@@ -155,18 +204,34 @@
 
       <mat-form-field appearance="fill" style="grid-area: discount-reason;">
         <mat-label>{{'discount_reason' | translate}}</mat-label>
-        <input matInput placeholder="{{'discount_reason' | translate}}" formControlName="ReasonForDiscount">
+        <input matInput placeholder="{{'discount_reason' | translate}}" formControlName="ReasonForDiscount" [matAutocomplete]="ReasonForDiscountAuto">
       </mat-form-field>
+      <mat-autocomplete #ReasonForDiscountAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('ReasonForDiscount', form.controls['ReasonForDiscount']!.value, 0)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+
 
       <mat-form-field appearance="fill" style="grid-area: insurance;">
         <mat-label>{{'insurance' | translate}}</mat-label>
-        <input matInput placeholder="{{'insurance' | translate}}" formControlName="TypeOfInsurance">
+        <input matInput placeholder="{{'insurance' | translate}}" formControlName="TypeOfInsurance" [matAutocomplete]="TypeOfInsuranceAuto">
       </mat-form-field>
+      <mat-autocomplete #TypeOfInsuranceAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('TypeOfInsurance', form.controls['TypeOfInsurance']!.value, 0)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: financial-verifier;">
         <mat-label>{{'financial_verifier' | translate}}</mat-label>
-        <input matInput placeholder="{{'financial_verifier' | translate}}" formControlName="FinancialVerifier">
+        <input matInput placeholder="{{'financial_verifier' | translate}}" formControlName="FinancialVerifier" [matAutocomplete]="FinancialVerifierAuto">
       </mat-form-field>
+      <mat-autocomplete #FinancialVerifierAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('FinancialVerifier', form.controls['FinancialVerifier']!.value, 0)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: recipt-number;">
         <mat-label>{{'receipt_number' | translate}}</mat-label>
@@ -200,13 +265,24 @@
 
       <mat-form-field appearance="fill" style="grid-area: address;">
         <mat-label>{{'address' | translate}}</mat-label>
-        <input matInput formControlName="Address" placeholder="{{'address' | translate}}">
+        <input matInput formControlName="Address" placeholder="{{'address' | translate}}" [matAutocomplete]="AddressAuto">
       </mat-form-field>
+      <mat-autocomplete #AddressAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('Address', form.controls['Address']!.value, 1)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: place-of-birth;">
         <mat-label>{{'place_of_birth' | translate}}</mat-label>
-        <input matInput placeholder="{{'place_of_birth' | translate}}" formControlName="PlaceOfBirth">
+        <input matInput placeholder="{{'place_of_birth' | translate}}" formControlName="PlaceOfBirth" [matAutocomplete]="PlaceOfBirthAuto">
       </mat-form-field>
+      <mat-autocomplete #PlaceOfBirthAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('PlaceOfBirth', form.controls['PlaceOfBirth']!.value, 1)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+
 
       <mat-form-field appearance="fill" style="grid-area: date-of-admission;">
         <mat-label>{{'date_of_hospital_admission' | translate}}</mat-label>
@@ -245,13 +321,23 @@
 
       <mat-form-field appearance="fill" style="grid-area: surgeon-second;">
         <mat-label>{{'surgeon_second' | translate}}</mat-label>
-        <input matInput placeholder="{{'surgeon_second' | translate}}" formControlName="SurgeonSecond">
+        <input matInput placeholder="{{'surgeon_second' | translate}}" formControlName="SurgeonSecond" [matAutocomplete]="SurgeonSecondAuto">
       </mat-form-field>
+      <mat-autocomplete #SurgeonSecondAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('SurgeonSecond', form.controls['SurgeonSecond']!.value, 2)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: resident;">
         <mat-label>{{'resident' | translate}}</mat-label>
-        <input matInput placeholder="{{'resident' | translate}}" formControlName="Resident">
+        <input matInput placeholder="{{'resident' | translate}}" formControlName="Resident" [matAutocomplete]="ResidentAuto">
       </mat-form-field>
+      <mat-autocomplete #ResidentAuto="matAutocomplete">
+        <mat-option *ngFor="let option of autofill.get('Resident', form.controls['Resident']!.value, 2)" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: hospital-address;">
         <mat-label>{{'hospital_address' | translate}}</mat-label>

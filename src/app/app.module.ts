@@ -56,6 +56,8 @@ import { JalaliMomentDateAdapter } from './moment-date-adapter';
 import { DialogOverviewComponent } from './dialog-overview/dialog-overview.component';
 import {MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
 import { OurCalendarComponent } from './our-calendar/our-calendar.component';
+import {AutofillService} from "./autofill.service";
+import {MAT_AUTOCOMPLETE_DEFAULT_OPTIONS, MatAutocompleteModule} from "@angular/material/autocomplete";
 
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
@@ -114,6 +116,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormsModule,
     ReactiveFormsModule,
     NgxMaterialTimepickerModule,
+    MatAutocompleteModule,
     FullCalendarModule,
     MatDialogModule,
     TranslateModule.forRoot({
@@ -129,6 +132,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     { provide: MAT_DATE_LOCALE, useValue: 'fa' },
     { provide: DateAdapter, useClass: JalaliMomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false} },
+    { provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: {
+        autoActiveFirstOption: true
+    }},
     FormControlDirective,
     FormGroupDirective,
     DatePipe

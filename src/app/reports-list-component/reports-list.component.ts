@@ -59,7 +59,6 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     this.dataService.getReports(null).subscribe(
       (data) => {
         var temp : tableData[] = [];
-        console.log(this.options)
         data.Patient.forEach((report) => {
           temp.push({
               ID: report.ID,
@@ -180,9 +179,6 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
       this.range.controls['start'].value,
       this.range.controls['end'].value
     ];
-
-    console.log(this.internalFilter["surgery_date"]);
-
     this.applyFilters();
   }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {SurgeriesInformation} from "../../types/report";
 import {EventClickArg} from "@fullcalendar/angular";
 import {Router} from "@angular/router";
+import {AutofillService} from "../autofill.service";
 
 @Component({
   selector: 'app-home-page',
@@ -11,7 +12,8 @@ import {Router} from "@angular/router";
 export class HomePageComponent implements OnInit {
 
   constructor(
-    public router: Router
+    public router: Router,
+    public autofill: AutofillService
   ) { }
   images = [
     'assets/images/image1.jpg',

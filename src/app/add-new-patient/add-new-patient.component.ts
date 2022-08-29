@@ -37,31 +37,33 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
       if(surgery_date != null) {
         this.detailPage.form.controls['SurgeryDate'].setValue(Number(surgery_date))
       } else{
-        this.detailPage.form.controls['SurgeryDate'].setValue( moment.unix(moment.now()).toDate() )
+        this.detailPage.form.controls['SurgeryDate'].setValue( Math.floor(moment.unix(moment.now()).unix()/1e3))
       }
     });
   }
 
   AddNewPatient() {
-    let fulldata: PatientFullInformation = this.detailPage.fulldata;
+    if (this.detailPage.form.valid)
+    {
+      let fulldata: PatientFullInformation = this.detailPage.fulldata;
 
-    for (let key in this.detailPage.form.controls) {
-      if (key in this.detailPage.fulldata.Patient) {
-        (fulldata.Patient as any)[key] = this.detailPage.form.controls[key].value;
-      } else if (key in this.detailPage.fulldata.SurgeryInfo) {
-        (fulldata.SurgeryInfo as any)[key] = this.detailPage.form.controls[key].value;
-      } else if (key in this.detailPage.fulldata.FinancialInfo) {
-        (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value;
+      for (let key in this.detailPage.form.controls) {
+        if (key in this.detailPage.fulldata.Patient) {
+          (fulldata.Patient as any)[key] = this.detailPage.form.controls[key].value;
+        } else if (key in this.detailPage.fulldata.SurgeryInfo) {
+          (fulldata.SurgeryInfo as any)[key] = this.detailPage.form.controls[key].value;
+        } else if (key in this.detailPage.fulldata.FinancialInfo) {
+          (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value;
+        }
       }
+
+      this.htmlService.isPageReady = false;
+      this.dataService.addPatient(fulldata).subscribe(
+        (data: any) => {
+          this.htmlService.isPageReady = true;
+          this.router.navigate(['/reportsList']);
+        }
+      );
     }
-
-    this.htmlService.isPageReady = false;
-    this.dataService.addPatient(fulldata).subscribe(
-      (data: any) => {
-        this.htmlService.isPageReady = true;
-        this.router.navigate(['/reportsList']);
-      }
-    );
   }
-
 }

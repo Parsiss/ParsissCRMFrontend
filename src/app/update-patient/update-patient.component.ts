@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { PatientFullInformation } from 'src/types/report';
 import { DataService } from '../data.service';
 import { DetailPageComponent } from '../detail-page-component/detail-page.component';
@@ -25,7 +25,8 @@ export class UpdatePatientComponent implements OnInit {
     route: ActivatedRoute,
     private htmlService: HtmlService,
     private dataService: DataService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router: Router
   ) {
     route.params.subscribe(params => {
       this.id = parseInt(params['id'], 10);
@@ -42,38 +43,42 @@ export class UpdatePatientComponent implements OnInit {
 
     if (this.id == 0) return;
 
-    let fulldata: PatientFullInformation = {
-      Patient: {},
-      SurgeryInfo: {},
-      FinancialInfo: {}
+    if (this.detailPage.form.valid)
+    {
+      let fulldata: PatientFullInformation = {
+        Patient: {},
+        SurgeryInfo: {},
+        FinancialInfo: {}
+      }
+
+      fulldata.Patient["ID"] = this.id;
+
+      for (let key in this.detailPage.form.controls) {
+        if (key == 'CashAmount')
+        {
+          (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value.toString();
+          continue;
+        }
+        if (key in this.detailPage.fulldata.Patient) {
+          (fulldata.Patient as any)[key] = this.detailPage.form.controls[key].value;
+        } else if (key in this.detailPage.fulldata.SurgeryInfo) {
+          (fulldata.SurgeryInfo as any)[key] = this.detailPage.form.controls[key].value;
+        } else if (key in this.detailPage.fulldata.FinancialInfo) {
+          (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value;
+        }
+      }
+
+      this.htmlService.isPageReady = false;
+      this.dataService.updatePatient(fulldata).subscribe(
+        (data: any) => {
+          this.htmlService.isPageReady = true;
+          this._snackBar.open("Profile Updated Successfully", "Close", {
+            duration: 2000,
+          });
+        }
+      );
+      this.router.navigate(['/reportsList']);
     }
-
-    fulldata.Patient["ID"] = this.id;
-
-    for (let key in this.detailPage.form.controls) {
-      if (key == 'CashAmount')
-      {
-        (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value.toString();
-        continue;
-      }
-      if (key in this.detailPage.fulldata.Patient) {
-        (fulldata.Patient as any)[key] = this.detailPage.form.controls[key].value;
-      } else if (key in this.detailPage.fulldata.SurgeryInfo) {
-        (fulldata.SurgeryInfo as any)[key] = this.detailPage.form.controls[key].value;
-      } else if (key in this.detailPage.fulldata.FinancialInfo) {
-        (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value;
-      }
-    }
-
-    this.htmlService.isPageReady = false;
-    this.dataService.updatePatient(fulldata).subscribe(
-      (data: any) => {
-        this.htmlService.isPageReady = true;
-        this._snackBar.open("Profile Updated Successfully", "Close", {
-          duration: 2000,
-        });
-      }
-    );
   }
 
 }

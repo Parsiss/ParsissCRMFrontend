@@ -7,8 +7,8 @@
 .calendar-container
 {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: 1fr repeat(6, 3fr);
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: 1fr repeat(6, auto);
 }
 
 .calendar-cell
@@ -21,11 +21,15 @@
   display: flex;
   width: 30px;
   height: 30px;
-  margin: 6px auto 0;
+  margin: 0px auto 0;
   align-items: center;
   justify-content: center;
   border: 1px solid black;
   border-radius: 100px;
+}
+
+.day-cell {
+  min-height: 150px;
 }
 
 .today-date

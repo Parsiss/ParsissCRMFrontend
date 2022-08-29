@@ -2,6 +2,7 @@ import {Component, Inject, Injectable, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT } from '@angular/common';
+import {AutofillService} from "./autofill.service";
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class AppComponent {
   textDir: 'rtl' | 'ltr' = 'rtl';
 
   date = new Date();
-  
+
   get selectedLanguage(): string {
     return this._selectedLanguage;
   }

@@ -16,14 +16,14 @@ import { filterGroup, KeyListOfValues } from './reports-list-component/interface
   providedIn: 'root'
 })
 export class DataService {
-  public base_url = 'http://localhost:8080/api/';
+  public base_url = 'http://192.168.1.201:8081/api/';
 
   constructor(
     public http: HttpClient,
     public dateAdapter: DateAdapter<moment.Moment>
   ) { }
 
-  public getReports(filters: KeyListOfValues<string> | null): Observable<AllPatientFullInformation> {
+  public getReports(filters: KeyListOfValues<string> | null = null): Observable<AllPatientFullInformation> {
     if (filters === null || Object.keys(filters).length === 0) {
       return this.http.get<AllPatientFullInformation>(this.base_url + 'report');
     }
