@@ -48,6 +48,11 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
       let fulldata: PatientFullInformation = this.detailPage.fulldata;
 
       for (let key in this.detailPage.form.controls) {
+        if (key == 'CashAmount')
+        {
+          (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value.toString();
+          continue;
+        }
         if (key in this.detailPage.fulldata.Patient) {
           (fulldata.Patient as any)[key] = this.detailPage.form.controls[key].value;
         } else if (key in this.detailPage.fulldata.SurgeryInfo) {

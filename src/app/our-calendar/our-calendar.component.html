@@ -27,7 +27,7 @@
         style="height: 100%;"
       >
         <div class="day-container" style="border-top-left-radius: 0px; border-top-right-radius: 0px; border-top: none">
-          <span >{{cell.data.jDate()}}</span>
+          <span>{{cell.data.jDate()}}</span>
         </div>
         <div *ngFor="let event of eventsMap.get(cell.data.unix())">
           <ng-template
@@ -38,12 +38,14 @@
         </div>
       </div>
       <div *ngIf="cell.type == 'empty'"></div>
-      <div *ngIf="cell.type == 'detail'">
-        <span>
-          Public: {{cell.data.Public}} <br/>
-          Private: {{cell.data.Private}} <br/>
-          Tehran: {{cell.data.Tehran}}
-        </span>
+      <div *ngIf="cell.type == 'detail'" class="weekly-report-cell-container">
+        <div class="weekly-report-cell-header">{{'Governmental' | translate }}:</div>
+        <div class="weekly-report-cell-header">{{'Private' | translate }}:</div>
+        <div class="weekly-report-cell-header">{{'Tehran' | translate }}:</div>
+
+        <div class="weekly-report-cell-value">{{cell.data.Public}}</div>
+        <div class="weekly-report-cell-value">{{cell.data.Private}}</div>
+        <div class="weekly-report-cell-value">{{cell.data.Tehran}}</div>
       </div>
     </div>
   </div>

@@ -73,3 +73,49 @@
   color: black;
   margin-left: 9px;
 }
+
+.weekly-report-cell-container
+{
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+  grid-template-columns: repeat(3, auto);
+  justify-content: space-between;
+  padding: 1rem;
+  height: 100%;
+}
+
+.weekly-report-cell-header
+{
+  transform: rotate(-45deg);
+  height: 10px;
+}
+
+.weekly-report-cell-header:nth-of-type(1), .weekly-report-cell-value:nth-of-type(4)
+{
+  color: red;
+}
+
+.weekly-report-cell-header:nth-of-type(2), .weekly-report-cell-value:nth-of-type(5)
+{
+  color: green;
+}
+
+.weekly-report-cell-header:nth-of-type(3), .weekly-report-cell-value:nth-of-type(6)
+{
+  color: #212121;
+}
+
+.weekly-report-cell-value
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.weekly-report-cell
+{
+  display: flex;
+  flex-direction: column;
+}
