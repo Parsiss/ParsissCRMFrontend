@@ -125,9 +125,9 @@ export class OurCalendarComponent implements OnInit {
           }
 
           for(let event of events) {
-            publicHospital += (event.HospitalType == 1) ? 1 : 0;
-            privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital)) ? 1 : 0;
-            tehran += this.isTehran(event.Hospital) ? 1 : 0;
+            publicHospital += (event.HospitalType == 1 && event.SurgeryResult == 1) ? 1 : 0;
+            privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital) && event.SurgeryResult == 1) ? 1 : 0;
+            tehran += this.isTehran(event.Hospital) && event.SurgeryResult == 1 ? 1 : 0;
            }
         }
 
