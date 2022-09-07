@@ -185,30 +185,30 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     this.dataService.getReports(this.internalFilter).subscribe(
       (data) => {
         var temp : tableData[] = [];
-        data.Patient.forEach((report) => {
+        data.SurgeryInfo.forEach((surgery) => {
+          console.log(surgery);
           temp.push({
-            ID: report.ID,
-            Name: report.Name,
-            NationalID: report.NationalID,
-            PhoneNumber: report.PhoneNumber,
-            }
-          )
+            ID: surgery.PatientID,
+            SurgeonFirst: surgery.SurgeonFirst,
+            Hospital: surgery.Hospital,
+            OperatorFirst: surgery.OperatorFirst,
+            SurgeryResult: this.options.get('surgeryresult')!.values.find(f =>
+              f.value == (surgery.SurgeryResult!).toString()) === undefined ?
+              '' : this.options.get('surgeryresult')!.values.find(f => f.value == (surgery.SurgeryResult!).toString())!.text
+          })
+        });
+        data.Patient.forEach((patient) => {
+          temp.find(f => f.ID === patient.ID)!.Name = patient.Name,
+            temp.find(f => f.ID === patient.ID)!.NationalID = patient.NationalID,
+            temp.find(f => f.ID === patient.ID)!.PhoneNumber = patient.PhoneNumber
         });
         data.FinancialInfo.forEach((financial) => {
           temp.find(f => f.ID === financial.ID)!.PaymentStatus = this.options.get('paymentstatus')!.values.find(f =>
             f.value == (financial.PaymentStatus!).toString()) === undefined ?
             '' : this.options.get('paymentstatus')!.values.find(f => f.value == (financial.PaymentStatus!).toString())!.text,
-          temp.find(f => f.ID === financial.ID)!.PaymentCard = financial.LastFourDigitsCard,
-          temp.find(f => f.ID === financial.ID)!.CashAmount = financial.CashAmount
+            temp.find(f => f.ID === financial.ID)!.PaymentCard = financial.LastFourDigitsCard,
+            temp.find(f => f.ID === financial.ID)!.CashAmount = financial.CashAmount
         });
-        data.SurgeryInfo.forEach((surgery) => {
-          temp.find(f => f.ID === surgery.ID)!.SurgeonFirst = surgery.SurgeonFirst,
-          temp.find(f => f.ID === surgery.ID)!.Hospital = surgery.Hospital,
-          temp.find(f => f.ID === surgery.ID)!.OperatorFirst = surgery.OperatorFirst,
-          temp.find(f => f.ID === surgery.ID)!.SurgeryResult = this.options.get('surgeryresult')!.values.find(f =>
-            f.value == (surgery.SurgeryResult!).toString()) === undefined ?
-            '' : this.options.get('surgeryresult')!.values.find(f => f.value == (surgery.SurgeryResult!).toString())!.text
-          });
         this.dataSource.data = temp;
     });
   }
