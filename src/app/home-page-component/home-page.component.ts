@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {SurgeriesInformation} from "../../types/report";
+import {PatientInformation} from "../../types/report";
 import {EventClickArg} from "@fullcalendar/angular";
 import {Router} from "@angular/router";
 import {AutofillService} from "../autofill.service";
@@ -25,7 +25,7 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  calendarEventClicked(calEvent: SurgeriesInformation)
+  calendarEventClicked(calEvent: PatientInformation)
   {
     const id = calEvent.ID;
     this.router.navigate(['/detailPage', id]);

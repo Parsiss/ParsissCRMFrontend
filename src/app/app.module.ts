@@ -51,7 +51,6 @@ import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { CalendarComponent } from './calendar/calendar.component';
 import { JalaliMomentDateAdapter } from './moment-date-adapter';
 import { DialogOverviewComponent } from './dialog-overview/dialog-overview.component';
 import {MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
@@ -81,9 +80,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     NumberfieldDirective,
     AddNewPatientComponent,
     UpdatePatientComponent,
-    CalendarComponent,
     DialogOverviewComponent,
-    OurCalendarComponent
+    OurCalendarComponent,
   ],
   imports: [
     BrowserModule,

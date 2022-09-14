@@ -40,6 +40,7 @@
         </mat-checkbox>
       </div>
     </mat-expansion-panel>
+    <button (click)="prepareExcelData()" class="export-button" mat-stroked-button>Export</button>
   </mat-card>
   <mat-card style="overflow: auto; padding: 0px;">
     <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">

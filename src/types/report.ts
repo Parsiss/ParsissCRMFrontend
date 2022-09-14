@@ -1,6 +1,6 @@
 import { Time } from "@angular/common";
 
-export interface Patient {
+export interface PatientInformation {
     ID?: number;
     Name?: string;
     Family?: string;
@@ -10,11 +10,7 @@ export interface Patient {
     Address?: string;
     Email?: string;
     PlaceOfBirth?: string;
-}
 
-export interface SurgeriesInformation {
-    ID?: number;
-    PatientID?: number;
     SurgeryDate?: number;
     SurgeryDay?: number;
     SurgeryTime?: number;
@@ -43,11 +39,7 @@ export interface SurgeriesInformation {
     CancellationReason?: string;
     FileNumber?: string;
     DateOfHospitalAdmission?: number;
-}
 
-export interface PatientFinancialInformation {
-    ID?: number;
-    PatientID?: number;
     PaymentStatus?: number;
     DateOfFirstContact?: number;
     PaymentNote?: string;
@@ -66,30 +58,18 @@ export interface PatientFinancialInformation {
     ReceiptReceiver?: string;
 }
 
-export interface PatientFullInformation {
-    Patient: Patient;
-    SurgeryInfo: SurgeriesInformation;
-    FinancialInfo: PatientFinancialInformation;
-}
-
-export interface AllPatientFullInformation {
-  Patient: Patient[];
-  SurgeryInfo: SurgeriesInformation[];
-  FinancialInfo: PatientFinancialInformation[];
-}
-
 export interface tableData {
-  ID?: number;
-  PaymentStatus?: string;
-  Name?: string;
-  SurgeonFirst?: string;
-  Hospital?: string;
-  NationalID?: string;
-  PhoneNumber?: string;
-  SurgeryResult?: string;
-  PaymentCard?: string;
-  CashAmount?: string;
-  OperatorFirst?: string;
+    ID?: number;
+    PaymentStatus?: string;
+    Name?: string;
+    SurgeonFirst?: string;
+    Hospital?: string;
+    NationalID?: string;
+    PhoneNumber?: string;
+    SurgeryResult?: string;
+    PaymentCard?: string;
+    CashAmount?: string;
+    OperatorFirst?: string;
 }
 
 export interface Filter {

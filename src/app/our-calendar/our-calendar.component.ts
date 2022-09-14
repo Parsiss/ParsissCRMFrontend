@@ -3,7 +3,7 @@ import { DateAdapter } from '@angular/material/core';
 import { Router } from '@angular/router';
 import * as moment from 'jalali-moment';
 import { DataService } from '../data.service';
-import {SurgeriesInformation} from "../../types/report";
+import {PatientInformation} from "../../types/report";
 import {Moment} from "jalali-moment";
 
 
@@ -38,7 +38,7 @@ export class OurCalendarComponent implements OnInit {
   daysOfWeek: string[];
   daysOfMonth: string[];
 
-  eventsMap: Map<number, SurgeriesInformation[]> = new Map<number, SurgeriesInformation[]>();
+  eventsMap: Map<number, PatientInformation[]> = new Map<number, PatientInformation[]>();
 
   constructor(
     public dateAdapter: DateAdapter<moment.Moment>,
@@ -47,7 +47,6 @@ export class OurCalendarComponent implements OnInit {
   ) {
     this.today = dateAdapter.today().toDate();
     this.currentDate = dateAdapter.today();
-    console.log(this.today)
   }
 
   ngOnInit(): void {

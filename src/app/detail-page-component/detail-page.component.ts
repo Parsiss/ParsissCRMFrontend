@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataService } from '../data.service';
-import { Patient, PatientFinancialInformation, SurgeriesInformation, PatientFullInformation } from 'src/types/report';
+import {PatientInformation} from 'src/types/report';
 
 import { optionGroup } from './interfaces';
 import { HtmlService } from '../html.service';
@@ -38,11 +38,7 @@ export class DetailPageComponent implements OnInit {
     }
   };
 
-  fulldata: PatientFullInformation = {
-    Patient: {},
-    SurgeryInfo: {},
-    FinancialInfo: {}
-  }
+  fulldata: PatientInformation = {}
 
   options: Map<string, optionGroup> = new Map<string, optionGroup>();
 
@@ -146,14 +142,7 @@ export class DetailPageComponent implements OnInit {
           this.form.controls['DateOfHospitalAdmission'].setValue( Math.floor(moment.unix(moment.now()).unix()/1e3)  )
           continue;
         }
-        if (key in fulldata.Patient) {
-          this.form.controls[key].setValue((fulldata.Patient as any)[key]);
-        } else if (key in fulldata.SurgeryInfo) {
-          this.form.controls[key].setValue((fulldata.SurgeryInfo as any)[key]);
-        } else if (key in fulldata.FinancialInfo) {
-          this.form.controls[key].setValue((fulldata.FinancialInfo as any)[key]);
-        }
-
+        this.form.controls[key].setValue((fulldata as any)[key]);
       }
     });
   }

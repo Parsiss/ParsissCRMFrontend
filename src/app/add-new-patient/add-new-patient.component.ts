@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PatientFullInformation } from 'src/types/report';
+import { PatientInformation } from 'src/types/report';
 import { DataService } from '../data.service';
 import { DetailPageComponent } from '../detail-page-component/detail-page.component';
 import { HtmlService } from '../html.service';
@@ -45,21 +45,15 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
   AddNewPatient() {
     if (this.detailPage.form.valid)
     {
-      let fulldata: PatientFullInformation = this.detailPage.fulldata;
+      let fulldata: PatientInformation = this.detailPage.fulldata;
 
       for (let key in this.detailPage.form.controls) {
         if (key == 'CashAmount')
         {
-          (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value.toString();
+          (fulldata as any)[key] = this.detailPage.form.controls[key].value.toString();
           continue;
         }
-        if (key in this.detailPage.fulldata.Patient) {
-          (fulldata.Patient as any)[key] = this.detailPage.form.controls[key].value;
-        } else if (key in this.detailPage.fulldata.SurgeryInfo) {
-          (fulldata.SurgeryInfo as any)[key] = this.detailPage.form.controls[key].value;
-        } else if (key in this.detailPage.fulldata.FinancialInfo) {
-          (fulldata.FinancialInfo as any)[key] = this.detailPage.form.controls[key].value;
-        }
+        (fulldata as any)[key] = this.detailPage.form.controls[key].value;
       }
 
       this.htmlService.isPageReady = false;

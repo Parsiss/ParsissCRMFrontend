@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {tableData} from 'src/types/report';
+import {PatientInformation, tableData} from 'src/types/report';
 import { DataService } from '../data.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -16,6 +16,9 @@ import {MatDialog} from '@angular/material/dialog';
 import { DialogOverviewComponent } from '../dialog-overview/dialog-overview.component';
 import {optionGroup} from "../detail-page-component/interfaces";
 import {getMatIconFailedToSanitizeLiteralError} from "@angular/material/icon";
+import {ExcelService} from "../excel.service";
+import * as moment from "jalali-moment";
+import {DateAdapter} from "@angular/material/core";
 
 @Component({
   selector: 'app-reports-list',
@@ -23,6 +26,7 @@ import {getMatIconFailedToSanitizeLiteralError} from "@angular/material/icon";
   styleUrls: ['./reports-list.component.scss']
 })
 export class ReportsListComponent implements OnInit, AfterViewInit {
+  patientData: PatientInformation[];
 
   dataSource = new MatTableDataSource<tableData>([]);
 
@@ -35,6 +39,8 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   filters: filterGroup[] = [];
 
   options: Map<string, optionGroup> = new Map<string, optionGroup>();
+
+
 
   range = new FormGroup({
     start: new FormControl(null),
@@ -51,6 +57,8 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     private _snackBar: MatSnackBar,
     private router: Router,
     private dialog: MatDialog,
+    public excelService: ExcelService,
+    public dateAdapter: DateAdapter<moment.Moment>,
   ) { }
 
   async ngAfterViewInit() {
@@ -58,29 +66,26 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     await new Promise(f => setTimeout(f, 2000));
     this.dataService.getReports(null).subscribe(
       (data) => {
+        this.patientData = data;
         var temp : tableData[] = [];
-        data.SurgeryInfo.forEach((surgery) => {
+        data.forEach((patient) => {
           temp.push({
-            ID: surgery.PatientID,
-            SurgeonFirst: surgery.SurgeonFirst,
-            Hospital: surgery.Hospital,
-            OperatorFirst: surgery.OperatorFirst,
+            ID: patient.ID,
+            Name: patient.Name,
+            NationalID: patient.NationalID,
+            PhoneNumber: patient.PhoneNumber,
+            SurgeonFirst: patient.SurgeonFirst,
+            Hospital: patient.Hospital,
+            OperatorFirst: patient.OperatorFirst,
             SurgeryResult: this.options.get('surgeryresult')!.values.find(f =>
-              f.value == (surgery.SurgeryResult!).toString()) === undefined ?
-              '' : this.options.get('surgeryresult')!.values.find(f => f.value == (surgery.SurgeryResult!).toString())!.text
+              f.value == (patient.SurgeryResult!).toString()) === undefined ?
+              '' : this.options.get('surgeryresult')!.values.find(f => f.value == (patient.SurgeryResult!).toString())!.text,
+            PaymentStatus: this.options.get('paymentstatus')!.values.find(f =>
+              f.value == (patient.PaymentStatus!).toString()) === undefined ?
+              '' : this.options.get('paymentstatus')!.values.find(f => f.value == (patient.PaymentStatus!).toString())!.text,
+            PaymentCard: patient.LastFourDigitsCard,
+            CashAmount: patient.CashAmount
             })
-        });
-        data.Patient.forEach((patient) => {
-          temp.find(f => f.ID === patient.ID)!.Name = patient.Name,
-            temp.find(f => f.ID === patient.ID)!.NationalID = patient.NationalID,
-            temp.find(f => f.ID === patient.ID)!.PhoneNumber = patient.PhoneNumber
-        });
-        data.FinancialInfo.forEach((financial) => {
-          temp.find(f => f.ID === financial.ID)!.PaymentStatus = this.options.get('paymentstatus')!.values.find(f =>
-            f.value == (financial.PaymentStatus!).toString()) === undefined ?
-            '' : this.options.get('paymentstatus')!.values.find(f => f.value == (financial.PaymentStatus!).toString())!.text,
-            temp.find(f => f.ID === financial.ID)!.PaymentCard = financial.LastFourDigitsCard,
-            temp.find(f => f.ID === financial.ID)!.CashAmount = financial.CashAmount
         });
         this.dataSource.data = temp;
       });
@@ -185,34 +190,29 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     this.dataService.getReports(this.internalFilter).subscribe(
       (data) => {
         var temp : tableData[] = [];
-        data.SurgeryInfo.forEach((surgery) => {
-          console.log(surgery);
+        this.patientData = data;
+        data.forEach((patient) => {
           temp.push({
-            ID: surgery.PatientID,
-            SurgeonFirst: surgery.SurgeonFirst,
-            Hospital: surgery.Hospital,
-            OperatorFirst: surgery.OperatorFirst,
+            ID: patient.ID,
+            Name: patient.Name,
+            NationalID: patient.NationalID,
+            PhoneNumber: patient.PhoneNumber,
+            SurgeonFirst: patient.SurgeonFirst,
+            Hospital: patient.Hospital,
+            OperatorFirst: patient.OperatorFirst,
             SurgeryResult: this.options.get('surgeryresult')!.values.find(f =>
-              f.value == (surgery.SurgeryResult!).toString()) === undefined ?
-              '' : this.options.get('surgeryresult')!.values.find(f => f.value == (surgery.SurgeryResult!).toString())!.text
+              f.value == (patient.SurgeryResult!).toString()) === undefined ?
+              '' : this.options.get('surgeryresult')!.values.find(f => f.value == (patient.SurgeryResult!).toString())!.text,
+            PaymentStatus: this.options.get('paymentstatus')!.values.find(f =>
+              f.value == (patient.PaymentStatus!).toString()) === undefined ?
+              '' : this.options.get('paymentstatus')!.values.find(f => f.value == (patient.PaymentStatus!).toString())!.text,
+            PaymentCard: patient.LastFourDigitsCard,
+            CashAmount: patient.CashAmount
           })
-        });
-        data.Patient.forEach((patient) => {
-          temp.find(f => f.ID === patient.ID)!.Name = patient.Name,
-            temp.find(f => f.ID === patient.ID)!.NationalID = patient.NationalID,
-            temp.find(f => f.ID === patient.ID)!.PhoneNumber = patient.PhoneNumber
-        });
-        data.FinancialInfo.forEach((financial) => {
-          temp.find(f => f.ID === financial.ID)!.PaymentStatus = this.options.get('paymentstatus')!.values.find(f =>
-            f.value == (financial.PaymentStatus!).toString()) === undefined ?
-            '' : this.options.get('paymentstatus')!.values.find(f => f.value == (financial.PaymentStatus!).toString())!.text,
-            temp.find(f => f.ID === financial.ID)!.PaymentCard = financial.LastFourDigitsCard,
-            temp.find(f => f.ID === financial.ID)!.CashAmount = financial.CashAmount
         });
         this.dataSource.data = temp;
     });
   }
-
 
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
@@ -225,5 +225,30 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   doFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  prepareExcelData(){
+    let excelFileData: Map<string, any[]> = new Map<string, any[]>();
+    this.patientData.forEach((patient) =>
+    {
+      for (let [key, value] of Object.entries(patient)) {
+        if (excelFileData.get(key) === undefined) {
+          excelFileData.set(key, []);
+        }
+        if (["SurgeryResult", "PaymentStatus", "SurgeryDay", "SurgeryArea", "HospitalType", "HeadFixType",
+          "SurgeryTime", "CT", "MR", "FMRI", "DTI"].includes(key))
+        {
+          excelFileData.get(key)!.push(this.options.get(key.toLowerCase())!.values.find(f =>
+            f.value == value.toString()) === undefined ?
+            '' : this.options.get(key.toLowerCase())!.values.find(f => f.value == value.toString())!.text);
+        }
+        else if (key.includes("Date")){
+          excelFileData.get(key)!.push(this.dateAdapter.format(moment.unix(value), "YYYY-MM-DD"));
+        }
+        else
+          excelFileData.get(key)!.push(value);
+      }
+    });
+    this.excelService.exportAsXLSX(excelFileData);
   }
 }
