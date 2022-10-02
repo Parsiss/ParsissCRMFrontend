@@ -45,7 +45,7 @@
   <mat-card style="overflow: auto; padding: 0px;">
     <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
       <ng-container [matColumnDef]="name" *ngFor="let name of displayedFields" [sticky]="name == 'Name'">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ name | lowercase | translate }} </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ name | addUnderline | lowercase | translate }} </th>
         <td mat-cell *matCellDef="let element"> {{ element[name] | translate}}</td>
       </ng-container>
 
@@ -66,4 +66,7 @@
       aria-label="Select page of periodic elements">
     </mat-paginator>
   </mat-card>
+</div>
+<div style="display: flex; justify-content: center;" class="container">
+  <app-chart *ngFor="let adopter of chartAdopters" [chartAdopter]="adopter"></app-chart>
 </div>

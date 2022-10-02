@@ -57,7 +57,9 @@ import {MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DE
 import { OurCalendarComponent } from './our-calendar/our-calendar.component';
 import {AutofillService} from "./autofill.service";
 import {MAT_AUTOCOMPLETE_DEFAULT_OPTIONS, MatAutocompleteModule} from "@angular/material/autocomplete";
-
+import { NgApexchartsModule } from "ng-apexcharts";
+import { MyChartComponent } from './chart/chart.component';
+import { AddUnderlinePipe } from './add-underline.pipe';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -82,6 +84,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     UpdatePatientComponent,
     DialogOverviewComponent,
     OurCalendarComponent,
+    MyChartComponent,
+    AddUnderlinePipe,
   ],
   imports: [
     BrowserModule,
@@ -117,6 +121,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatAutocompleteModule,
     FullCalendarModule,
     MatDialogModule,
+    NgApexchartsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

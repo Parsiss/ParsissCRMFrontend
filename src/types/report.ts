@@ -64,7 +64,7 @@ export interface tableData {
     Name?: string;
     SurgeonFirst?: string;
     Hospital?: string;
-    NationalID?: string;
+    NationalId?: string;
     PhoneNumber?: string;
     SurgeryResult?: string;
     PaymentCard?: string;

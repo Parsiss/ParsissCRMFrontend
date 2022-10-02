@@ -69,27 +69,27 @@
       </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: hospital-type;">
-        <mat-label>{{'hospitaltype' | translate}}</mat-label>
+        <mat-label>{{'hospital_type' | translate}}</mat-label>
         <mat-select formControlName="HospitalType">
-          <mat-option *ngFor="let value of options.get('hospitaltype')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('hospital_type')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgery-day;">
-        <mat-label>{{'surgeryday' | translate}}</mat-label>
+        <mat-label>{{'surgery_day' | translate}}</mat-label>
         <mat-select formControlName="SurgeryDay">
-          <mat-option *ngFor="let value of options.get('surgeryday')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('surgery_day')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgery-time;">
-        <mat-label>{{'surgerytime' | translate}}</mat-label>
+        <mat-label>{{'surgery_time' | translate}}</mat-label>
         <mat-select formControlName="SurgeryTime">
-          <mat-option *ngFor="let value of options.get('surgerytime')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('surgery_time')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
@@ -156,9 +156,9 @@
       </mat-autocomplete>
 
       <mat-form-field appearance="fill" style="grid-area: payment-status;">
-        <mat-label>{{'paymentstatus' | translate}}</mat-label>
+        <mat-label>{{'payment_status' | translate}}</mat-label>
         <mat-select formControlName="PaymentStatus">
-          <mat-option *ngFor="let value of options.get('paymentstatus')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('payment_status')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
@@ -240,9 +240,9 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgery-result;">
-        <mat-label>{{'surgeryresult' | translate}}</mat-label>
+        <mat-label>{{'surgery_result' | translate}}</mat-label>
         <mat-select formControlName="SurgeryResult">
-          <mat-option *ngFor="let value of options.get('surgeryresult')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('surgery_result')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
@@ -305,9 +305,9 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgery-area;">
-        <mat-label>{{'surgeryarea' | translate}}</mat-label>
+        <mat-label>{{'surgery_area' | translate}}</mat-label>
         <mat-select formControlName="SurgeryArea">
-          <mat-option *ngFor="let value of options.get('surgeryarea')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('surgery_area')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
@@ -403,9 +403,9 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: headband-fix;">
-        <mat-label>{{'headfixtype' | translate}}</mat-label>
+        <mat-label>{{'head_fix_type' | translate}}</mat-label>
         <mat-select formControlName="HeadFixType">
-          <mat-option *ngFor="let value of options.get('headfixtype')!.values" [value]="value.value">
+          <mat-option *ngFor="let value of options.get('head_fix_type')!.values" [value]="value.value">
             {{ value.text | translate }}
           </mat-option>
         </mat-select>

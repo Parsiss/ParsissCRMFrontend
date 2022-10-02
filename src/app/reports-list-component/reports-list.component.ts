@@ -19,18 +19,23 @@ import {getMatIconFailedToSanitizeLiteralError} from "@angular/material/icon";
 import {ExcelService} from "../excel.service";
 import * as moment from "jalali-moment";
 import {DateAdapter} from "@angular/material/core";
+import {ChartAdopter} from "../chartAdopters/BaseAdopter";
+import {SimplePieAdopter} from "../chartAdopters/Pie";
+import {AddUnderlinePipe} from "../add-underline.pipe";
 
 @Component({
   selector: 'app-reports-list',
   templateUrl: './reports-list.component.html',
   styleUrls: ['./reports-list.component.scss']
 })
-export class ReportsListComponent implements OnInit, AfterViewInit {
+export class ReportsListComponent implements OnInit {
+
+  chartAdopters: ChartAdopter[] = [];
+
   patientData: PatientInformation[];
 
   dataSource = new MatTableDataSource<tableData>([]);
-
-  displayedFields: string[] = ['Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalID', 'PhoneNumber',
+  displayedFields: string[] = ['Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
     'SurgeryResult', 'PaymentCard', 'CashAmount', 'OperatorFirst'];
   displayedColumns: string[] = [...this.displayedFields, 'Actions'];
 
@@ -40,12 +45,12 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
 
   options: Map<string, optionGroup> = new Map<string, optionGroup>();
 
-
-
   range = new FormGroup({
     start: new FormControl(null),
     end: new FormControl(null),
   });
+
+  addUnderlinePipe = new AddUnderlinePipe();
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -61,9 +66,8 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     public dateAdapter: DateAdapter<moment.Moment>,
   ) { }
 
-  async ngAfterViewInit() {
+  getReportData() {
     this.dataSource.paginator = this.paginator;
-    await new Promise(f => setTimeout(f, 2000));
     this.dataService.getReports(null).subscribe(
       (data) => {
         this.patientData = data;
@@ -72,27 +76,27 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
           temp.push({
             ID: patient.ID,
             Name: patient.Name,
-            NationalID: patient.NationalID,
+            NationalId: patient.NationalID,
             PhoneNumber: patient.PhoneNumber,
             SurgeonFirst: patient.SurgeonFirst,
             Hospital: patient.Hospital,
             OperatorFirst: patient.OperatorFirst,
-            SurgeryResult: this.options.get('surgeryresult')!.values.find(f =>
+            SurgeryResult: this.options.get('surgery_result')!.values.find(f =>
               f.value == (patient.SurgeryResult!).toString()) === undefined ?
-              '' : this.options.get('surgeryresult')!.values.find(f => f.value == (patient.SurgeryResult!).toString())!.text,
-            PaymentStatus: this.options.get('paymentstatus')!.values.find(f =>
+              '' : this.options.get('surgery_result')!.values.find(f => f.value == (patient.SurgeryResult!).toString())!.text,
+            PaymentStatus: this.options.get('payment_status')!.values.find(f =>
               f.value == (patient.PaymentStatus!).toString()) === undefined ?
-              '' : this.options.get('paymentstatus')!.values.find(f => f.value == (patient.PaymentStatus!).toString())!.text,
+              '' : this.options.get('payment_status')!.values.find(f => f.value == (patient.PaymentStatus!).toString())!.text,
             PaymentCard: patient.LastFourDigitsCard,
             CashAmount: patient.CashAmount
-            })
+          })
         });
         this.dataSource.data = temp;
+        this.prepareChartData();
       });
   }
 
   ngOnInit(): void {
-
     this.dataService.getOptions().subscribe(
       (data) => {
         data.forEach((filter) => {
@@ -120,6 +124,7 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
             selected: filter.Selected
           });
         });
+        this.getReportData();
       });
     this.dataSource.sort = this.sort;
 
@@ -195,22 +200,23 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
           temp.push({
             ID: patient.ID,
             Name: patient.Name,
-            NationalID: patient.NationalID,
+            NationalId: patient.NationalID,
             PhoneNumber: patient.PhoneNumber,
             SurgeonFirst: patient.SurgeonFirst,
             Hospital: patient.Hospital,
             OperatorFirst: patient.OperatorFirst,
-            SurgeryResult: this.options.get('surgeryresult')!.values.find(f =>
+            SurgeryResult: this.options.get('surgery_result')!.values.find(f =>
               f.value == (patient.SurgeryResult!).toString()) === undefined ?
-              '' : this.options.get('surgeryresult')!.values.find(f => f.value == (patient.SurgeryResult!).toString())!.text,
-            PaymentStatus: this.options.get('paymentstatus')!.values.find(f =>
+              '' : this.options.get('surgery_result')!.values.find(f => f.value == (patient.SurgeryResult!).toString())!.text,
+            PaymentStatus: this.options.get('payment_status')!.values.find(f =>
               f.value == (patient.PaymentStatus!).toString()) === undefined ?
-              '' : this.options.get('paymentstatus')!.values.find(f => f.value == (patient.PaymentStatus!).toString())!.text,
+              '' : this.options.get('payment_status')!.values.find(f => f.value == (patient.PaymentStatus!).toString())!.text,
             PaymentCard: patient.LastFourDigitsCard,
             CashAmount: patient.CashAmount
           })
         });
         this.dataSource.data = temp;
+        this.prepareChartData();
     });
   }
 
@@ -238,9 +244,9 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
         if (["SurgeryResult", "PaymentStatus", "SurgeryDay", "SurgeryArea", "HospitalType", "HeadFixType",
           "SurgeryTime", "CT", "MR", "FMRI", "DTI"].includes(key))
         {
-          excelFileData.get(key)!.push(this.options.get(key.toLowerCase())!.values.find(f =>
+          excelFileData.get(key)!.push(this.options.get(this.addUnderlinePipe.transform(key).toLowerCase())!.values.find(f =>
             f.value == value.toString()) === undefined ?
-            '' : this.options.get(key.toLowerCase())!.values.find(f => f.value == value.toString())!.text);
+            '' : this.options.get(this.addUnderlinePipe.transform(key).toLowerCase())!.values.find(f => f.value == value.toString())!.text);
         }
         else if (key.includes("Date")){
           excelFileData.get(key)!.push(this.dateAdapter.format(moment.unix(value), "YYYY-MM-DD"));
@@ -250,5 +256,11 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
       }
     });
     this.excelService.exportAsXLSX(excelFileData);
+  }
+
+  prepareChartData(){
+    this.chartAdopters = [
+      new SimplePieAdopter(this.patientData, ["SurgeryResult"])
+    ]
   }
 }
