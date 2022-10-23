@@ -48,8 +48,8 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgeon-first;">
-        <mat-label>{{'surgeonfirst' | translate}}</mat-label>
-        <input matInput placeholder="{{'surgeonfirst' | translate}}" formControlName="SurgeonFirst" [matAutocomplete]="SurgeonFirstAuto">
+        <mat-label>{{'surgeon_first' | translate}}</mat-label>
+        <input matInput placeholder="{{'surgeon_first' | translate}}" formControlName="SurgeonFirst" [matAutocomplete]="SurgeonFirstAuto">
       </mat-form-field>
       <mat-autocomplete #SurgeonFirstAuto="matAutocomplete">
         <mat-option *ngFor="let option of autofill.get('SurgeonFirst', form.controls['SurgeonFirst']!.value, 2)" [value]="option">
@@ -114,8 +114,8 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: operator-first;">
-        <mat-label>{{'operatorfirst' | translate}}</mat-label>
-        <input matInput placeholder="{{'operatorfirst' | translate}}" formControlName="OperatorFirst" [matAutocomplete]="OperatorFirstAuto">
+        <mat-label>{{'operator_first' | translate}}</mat-label>
+        <input matInput placeholder="{{'operator_first' | translate}}" formControlName="OperatorFirst" [matAutocomplete]="OperatorFirstAuto">
       </mat-form-field>
       <mat-autocomplete #OperatorFirstAuto="matAutocomplete">
         <mat-option *ngFor="let option of autofill.get('OperatorFirst', form.controls['OperatorFirst']!.value, 0)" [value]="option">
@@ -174,15 +174,15 @@
       </mat-form-field>
 
       <mat-form-field appearance="fill" floatLabel="always">
-        <mat-label>{{'cashamount' | translate}}</mat-label>
+        <mat-label>{{'cash_amount' | translate}}</mat-label>
         <input matInput type="text" currencyMask [options]="{ prefix: '', thousands: ',', precision: 0 }"
           formControlName="CashAmount" placeholder="0">
         <span matSuffix>ریال</span>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: payment-card;">
-        <mat-label>{{'paymentcard' | translate}}</mat-label>
-        <input matInput placeholder="{{'paymentcard' | translate}}" formControlName="LastFourDigitsCard">
+        <mat-label>{{'payment_card' | translate}}</mat-label>
+        <input matInput placeholder="{{'payment_card' | translate}}" formControlName="LastFourDigitsCard">
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: bank;">
@@ -409,6 +409,11 @@
             {{ value.text | translate }}
           </mat-option>
         </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: FRE;">
+        <mat-label>{{'FRE' | translate}}</mat-label>
+        <input matInput type="number" min="0" max="150" formControlName="FRE" placeholder="{{'FRE' | translate}}">
       </mat-form-field>
 
     </form>

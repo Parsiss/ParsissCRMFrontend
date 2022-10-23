@@ -41,6 +41,15 @@
       </div>
     </mat-expansion-panel>
     <button (click)="prepareExcelData()" class="export-button" mat-stroked-button>Export</button>
+    <div class="text-center">
+      <input class="form-control" type="file" accept=".db"
+             (change)="onChange($event)">
+
+      <button (click)="onUpload()"
+              class="btn btn-success" mat-stroked-button>
+        Upload
+      </button>
+    </div>
   </mat-card>
   <mat-card style="overflow: auto; padding: 0px;">
     <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">

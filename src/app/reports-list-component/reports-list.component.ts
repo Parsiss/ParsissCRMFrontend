@@ -22,6 +22,7 @@ import {DateAdapter} from "@angular/material/core";
 import {ChartAdopter} from "../chartAdopters/BaseAdopter";
 import {SimplePieAdopter} from "../chartAdopters/Pie";
 import {AddUnderlinePipe} from "../add-underline.pipe";
+import {UploadService} from "../upload.service";
 
 @Component({
   selector: 'app-reports-list',
@@ -56,6 +57,10 @@ export class ReportsListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  shortLink: string = "";
+  loading: boolean = false;
+  file: File;
+
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private dataService: DataService,
@@ -64,6 +69,7 @@ export class ReportsListComponent implements OnInit {
     private dialog: MatDialog,
     public excelService: ExcelService,
     public dateAdapter: DateAdapter<moment.Moment>,
+    private uploadService: UploadService,
   ) { }
 
   getReportData() {
@@ -262,5 +268,15 @@ export class ReportsListComponent implements OnInit {
     this.chartAdopters = [
       new SimplePieAdopter(this.patientData, ["SurgeryResult"])
     ]
+  }
+  onChange(event: Event) {
+    // @ts-ignore
+    this.file = event.target.files[0];
+  }
+
+  onUpload() {
+    this.loading = !this.loading;
+    console.log(this.file);
+    this.uploadService.upload(this.file)
   }
 }

@@ -51,4 +51,8 @@ export class DataService {
   public getCalendarEvent(): Observable<PatientInformation[]> {
     return this.http.get<PatientInformation[]>(this.base_url + 'home/calendar_event');
   }
+
+  public uploadFile(file: File): Observable<object> {
+    return this.http.post<any>(this.base_url + 'report/upload', file);
+  }
 }

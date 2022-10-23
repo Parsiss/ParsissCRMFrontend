@@ -96,6 +96,7 @@ export class DetailPageComponent implements OnInit {
       ExitTime: new FormControl(''),
       PatientEnterTime: new FormControl(''),
       HeadFixType: new FormControl(''),
+      FRE: new FormControl(''),
     });
 
     this.form.controls['SurgeryDate'].valueChanges.subscribe(value => {
