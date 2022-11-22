@@ -3,9 +3,9 @@
     <button mat-mini-fab (click)="previousMonth()" class="my-fab">
       <mat-icon class="button-icon">arrow_forward_ios</mat-icon>
     </button>
-    <span class="title-content">
-      {{daysOfMonth[currentDate.jMonth()]}} {{currentDate.jYear()}}
-    </span>
+      <p class="title-content" (click)="dialogReportClick(monthlyReportData.data)">
+        {{daysOfMonth[currentDate.jMonth()]}} {{currentDate.jYear()}}
+      </p>
     <button mat-mini-fab (click)="nextMonth()" class="my-fab">
       <mat-icon class="button-icon">arrow_back_ios</mat-icon>
     </button>
@@ -38,7 +38,7 @@
         </div>
       </div>
       <div *ngIf="cell.type == 'empty'"></div>
-      <div *ngIf="cell.type == 'detail'" class="weekly-report-cell-container">
+      <div *ngIf="cell.type == 'detail'" class="weekly-report-cell-container" (click)="dialogReportClick(cell.data)">
         <div class="weekly-report-cell-header">{{'Governmental' | translate }}:</div>
         <div class="weekly-report-cell-header">{{'Private' | translate }}:</div>
         <div class="weekly-report-cell-header">{{'Tehran' | translate }}:</div>

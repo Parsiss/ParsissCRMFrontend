@@ -276,7 +276,6 @@ export class ReportsListComponent implements OnInit {
 
   onUpload() {
     this.loading = !this.loading;
-    console.log(this.file);
     this.uploadService.upload(this.file)
   }
 }

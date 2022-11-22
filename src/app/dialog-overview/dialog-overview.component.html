@@ -1,8 +1,9 @@
-<h1 mat-dialog-title>{{data.title}}</h1>
-<div mat-dialog-content>
-  <p>{{data.content}}</p>
+<h1 style="text-align: center" mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content >
+  <div [innerHtml]="data.content" id="dialog_content" class="text_center">
+  </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button mat-dialog-close="success" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button mat-dialog-close="success" >Save</button>
 </div>

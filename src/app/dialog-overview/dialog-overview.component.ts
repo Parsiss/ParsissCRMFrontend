@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 export interface DialogData {
   title: string;
@@ -9,7 +9,8 @@ export interface DialogData {
 @Component({
   selector: 'app-dialog-overview',
   templateUrl: './dialog-overview.component.html',
-  styleUrls: ['./dialog-overview.component.scss']
+  styleUrls: ['./dialog-overview.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DialogOverviewComponent implements OnInit {
 

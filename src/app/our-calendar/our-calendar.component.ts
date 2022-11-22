@@ -1,10 +1,14 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { Router } from '@angular/router';
 import * as moment from 'jalali-moment';
 import { DataService } from '../data.service';
 import {PatientInformation} from "../../types/report";
-import {Moment} from "jalali-moment";
+import {DialogOverviewComponent} from "../dialog-overview/dialog-overview.component";
+import {MatDialog} from "@angular/material/dialog";
+import { saveAs } from 'file-saver';
+import { NgxCaptureService } from 'ngx-capture';
+import renderReport from "./dialog_content";
 
 
 interface CalendarCell
@@ -28,6 +32,7 @@ export class OurCalendarComponent implements OnInit {
 
   calendarCells: CalendarCell[] = [];
 
+  monthlyReportData: CalendarCell;
   today: Date;
 
   firstDayOfMonth: number;
@@ -43,7 +48,9 @@ export class OurCalendarComponent implements OnInit {
   constructor(
     public dateAdapter: DateAdapter<moment.Moment>,
     public dataService: DataService,
-    public router: Router
+    public router: Router,
+    private dialog: MatDialog,
+    private captureService:NgxCaptureService
   ) {
     this.today = dateAdapter.today().toDate();
     this.currentDate = dateAdapter.today();
@@ -52,7 +59,7 @@ export class OurCalendarComponent implements OnInit {
   ngOnInit(): void {
     this.daysOfWeek = this.dateAdapter.getDayOfWeekNames('long');
     this.daysOfMonth = this.dateAdapter.getMonthNames('long');
-    this.fillCalendarCells()
+    this.fillCalendarCells();
 
     this.dataService.getCalendarEvent().subscribe(
       (data) => {
@@ -63,6 +70,7 @@ export class OurCalendarComponent implements OnInit {
           this.eventsMap.get(event.SurgeryDate as number)!.push(event);
         })
         this.fillWeeklyReports();
+        this.fillMonthlyReports();
     });
 
   }
@@ -71,12 +79,10 @@ export class OurCalendarComponent implements OnInit {
     const year = this.currentDate.jYear();
     const month = this.currentDate.jMonth();
     const daysInMonth = this.dateAdapter.getNumDaysInMonth(this.dateAdapter.createDate(year, month, 1));
-
     let currentMonthDays= [];
     for (let i = 0; i < daysInMonth; i++) {
       currentMonthDays.push(this.dateAdapter.createDate(year, month, i + 1));
     }
-
     return currentMonthDays;
   }
 
@@ -112,36 +118,73 @@ export class OurCalendarComponent implements OnInit {
       throw Error("this method should be called after fillCalendarCells")
     }
 
-    let daysOfThisWeek: moment.Moment[] = [];
-    for(let i = 0; i < this.calendarCells.length + 1; ++i) {
+    let endOfWeekNotDetail = false;
+    for(let i = 0; i < this.calendarCells.length; ++i) {
       if(i % 8 == 7) {
-        let publicHospital = 0, privateHospital = 0, tehran = 0;
-
-        for(let day of daysOfThisWeek) {
-          let events = this.eventsMap.get(day.unix());
-          if(events == undefined) {
-            events = [];
+        if(endOfWeekNotDetail) {
+          this.calendarCells.splice(i, 0, {type: "empty", data: null});
+          endOfWeekNotDetail = false;
+        }
+        else {
+          let publicHospital = 0, privateHospital = 0, tehran = 0;
+          var optList = [
+            {name:'mohammadi',public:0,private:0,tehran:0},
+            {name:'givkey',public:0,private:0,tehran:0},
+            {name:'hosseini',public:0,private:0,tehran:0},
+            {name:'moradi',public:0,private:0,tehran:0}
+          ]
+          for(let j = 1; j < 8; ++j) {
+            let events = this.eventsMap.get(this.calendarCells[i].data.unix() - (86400 * j));
+            if(events == undefined) {
+              events = [];
+            }
+            for(let event of events) {
+              publicHospital += (event.HospitalType == 1 && event.SurgeryResult == 1) ? 1 : 0;
+              privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital) && event.SurgeryResult == 1) ? 1 : 0;
+              tehran += this.isTehran(event.Hospital) && event.SurgeryResult == 1 ? 1 : 0;
+              if(event.SurgeryResult == 1){
+                if(event.OperatorFirst == 'م.محمدی'){
+                  optList[0].public += event.HospitalType == 1 ? 1 : 0;
+                  optList[0].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
+                  optList[0].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+                }
+                if(event.OperatorFirst == 'م.گیوکی'){
+                  optList[1].public += event.HospitalType == 1 ? 1 : 0;
+                  optList[1].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
+                  optList[1].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+                }
+                if(event.OperatorFirst == 'م.حسینی'){
+                  optList[2].public += event.HospitalType == 1 ? 1 : 0;
+                  optList[2].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
+                  optList[2].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+                }
+                if(event.OperatorFirst == 'م.مرادی'){
+                  optList[3].public += event.HospitalType == 1 ? 1 : 0;
+                  optList[3].private += event.HospitalType == 0 && !this.isTehran(event.Hospital)? 1 : 0;
+                  optList[3].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+                }
+              }
+            }
           }
 
-          for(let event of events) {
-            publicHospital += (event.HospitalType == 1 && event.SurgeryResult == 1) ? 1 : 0;
-            privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital) && event.SurgeryResult == 1) ? 1 : 0;
-            tehran += this.isTehran(event.Hospital) && event.SurgeryResult == 1 ? 1 : 0;
-           }
+          let to = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
+          let from = this.calendarCells[i].data.subtract(7, 'days').format('jYYYY/jMM/jDD');
+          this.calendarCells[i].data.add(7, 'days');
+          this.calendarCells.splice(i, 0, {type: "detail", data: {
+              'Public': publicHospital,
+              'Private': privateHospital,
+              'Tehran': tehran,
+              'Total': publicHospital + privateHospital + tehran,
+              'optList':optList,
+              'fromDate': from,
+              'toDate': to
+            }});
         }
-
-
-        this.calendarCells.splice(i, 0, {type: "detail", data: {
-            'Public': publicHospital,
-            'Private': privateHospital,
-            'Tehran': tehran
-        }});
-
-        daysOfThisWeek = [];
-        ++i;
       }
-      if(i < this.calendarCells.length && this.calendarCells[i].type == 'date') {
-        daysOfThisWeek.push(this.calendarCells[i].data)
+      if (i < this.calendarCells.length){
+        if (this.calendarCells[i].type == "date" && this.calendarCells[i+1].type == "empty") {
+          endOfWeekNotDetail = true;
+        }
       }
     }
 
@@ -152,6 +195,7 @@ export class OurCalendarComponent implements OnInit {
     this.currentDate = this.currentDate.add(1, "jmonth")
     this.fillCalendarCells();
     this.fillWeeklyReports();
+    this.fillMonthlyReports();
   }
 
   previousMonth()
@@ -159,9 +203,115 @@ export class OurCalendarComponent implements OnInit {
     this.currentDate = this.currentDate.add(-1, "jmonth")
     this.fillCalendarCells();
     this.fillWeeklyReports();
+    this.fillMonthlyReports();
   }
 
   cliecked(date: any) {
     this.router.navigate(['/add_new_patient', { date: date.unix()}])
+  }
+
+  @ViewChild('screen', { static: true }) screen: any;
+  convertBase64ToFile(base64String: string, fileName: string): File {
+    let arr = base64String.split(',');
+    // @ts-ignore
+    let mime = arr[0].match(/:(.*?);/)[1];
+    let bstr = atob(arr[1]);
+    let n = bstr.length;
+    let uint8Array = new Uint8Array(n);
+    while (n--) {
+      uint8Array[n] = bstr.charCodeAt(n);
+    }
+    return new File([uint8Array], fileName, {type: mime});
+  }
+  downloadBase64Data(base64String: string, fileName: string): void {
+    let file = this.convertBase64ToFile(base64String, fileName);
+    saveAs(file, fileName);
+  }
+
+  dialogReportClick(data: any) {
+    console.log(data);
+    const dialogRef = this.dialog.open(DialogOverviewComponent, {
+      width: '800px',
+      height: '300px',
+      direction: 'rtl',
+      data: {title: "Weekly Report", content: renderReport(data)}
+    });
+    let base64_img: string;
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == 'Canceled') {
+        return;
+      }
+      this.downloadBase64Data(base64_img, "Weekly Report");
+    });
+    dialogRef.afterOpened().subscribe(result => {
+      this.captureService.getImage(document.getElementById('dialog_content')!, true).subscribe(img=>{
+        base64_img = img
+      })
+    });
+  }
+
+  private fillMonthlyReports() {
+    let publicHospital = 0, privateHospital = 0, tehran = 0;
+    var optList = [
+      {name: 'mohammadi', public: 0, private: 0, tehran: 0},
+      {name: 'givkey', public: 0, private: 0, tehran: 0},
+      {name: 'hosseini', public: 0, private: 0, tehran: 0},
+      {name: 'moradi', public: 0, private: 0, tehran: 0}
+    ]
+    let from: any, to: any;
+    for (let i = 0; i < this.calendarCells.length; ++i) {
+      if ((this.calendarCells[i].type == "date" && i == 0) ||
+        (this.calendarCells[i].type == "date" && this.calendarCells[i-1].type == "empty")) {
+        from = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
+      }
+      if ((this.calendarCells[i].type == "date" && i == this.calendarCells.length - 1) ||
+        (this.calendarCells[i].type == "date" && this.calendarCells[i+1].type == "empty")) {
+        to = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
+      }
+      if (this.calendarCells[i].type == "date") {
+        let events = this.eventsMap.get(this.calendarCells[i].data.unix());
+        if (events == undefined) {
+          events = [];
+        }
+        for (let event of events) {
+          publicHospital += (event.HospitalType == 1 && event.SurgeryResult == 1) ? 1 : 0;
+          privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital) && event.SurgeryResult == 1) ? 1 : 0;
+          tehran += this.isTehran(event.Hospital) && event.SurgeryResult == 1 ? 1 : 0;
+          if (event.SurgeryResult == 1) {
+            if (event.OperatorFirst == 'م.محمدی') {
+              optList[0].public += event.HospitalType == 1 ? 1 : 0;
+              optList[0].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
+              optList[0].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+            }
+            if (event.OperatorFirst == 'م.گیوکی') {
+              optList[1].public += event.HospitalType == 1 ? 1 : 0;
+              optList[1].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
+              optList[1].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+            }
+            if (event.OperatorFirst == 'م.حسینی') {
+              optList[2].public += event.HospitalType == 1 ? 1 : 0;
+              optList[2].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
+              optList[2].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+            }
+            if (event.OperatorFirst == 'م.مرادی') {
+              optList[3].public += event.HospitalType == 1 ? 1 : 0;
+              optList[3].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
+              optList[3].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+            }
+          }
+        }
+      }
+    }
+    this.monthlyReportData = {
+      type: "detail", data: {
+        'Public': publicHospital,
+        'Private': privateHospital,
+        'Tehran': tehran,
+        'Total': publicHospital + privateHospital + tehran,
+        'optList': optList,
+        'fromDate': from,
+        'toDate': to
+      }
+    }
   }
 }
