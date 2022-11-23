@@ -228,13 +228,12 @@ export class OurCalendarComponent implements OnInit {
     saveAs(file, fileName);
   }
 
-  dialogReportClick(data: any) {
-    console.log(data);
+  dialogReportClick(title: string, data: any) {
     const dialogRef = this.dialog.open(DialogOverviewComponent, {
       width: '800px',
       height: '300px',
       direction: 'rtl',
-      data: {title: "Weekly Report", content: renderReport(data)}
+      data: {title: title, content: renderReport(data)}
     });
     let base64_img: string;
     dialogRef.afterClosed().subscribe(result => {
