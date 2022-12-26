@@ -153,7 +153,6 @@ export class OurCalendarComponent implements OnInit {
               }
             }
           }
-          console.log(optList);
           let to = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
           let from = this.calendarCells[i].data.subtract(7, 'days').format('jYYYY/jMM/jDD');
           this.calendarCells[i].data.add(7, 'days');
@@ -241,12 +240,13 @@ export class OurCalendarComponent implements OnInit {
 
   private fillMonthlyReports() {
     let publicHospital = 0, privateHospital = 0, tehran = 0;
-    var optList = [
-      {name: 'mohammadi', public: 0, private: 0, tehran: 0},
-      {name: 'givkey', public: 0, private: 0, tehran: 0},
-      {name: 'hosseini', public: 0, private: 0, tehran: 0},
-      {name: 'moradi', public: 0, private: 0, tehran: 0}
-    ]
+    interface IHospitalType {
+      public: number;
+      private: number;
+      tehran: number;
+    }
+    var optList: { [name: string] : IHospitalType;} = {};
+
     let from: any, to: any;
     for (let i = 0; i < this.calendarCells.length; ++i) {
       if ((this.calendarCells[i].type == "date" && i == 0) ||
@@ -266,27 +266,13 @@ export class OurCalendarComponent implements OnInit {
           publicHospital += (event.HospitalType == 1 && event.SurgeryResult == 1) ? 1 : 0;
           privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital) && event.SurgeryResult == 1) ? 1 : 0;
           tehran += this.isTehran(event.Hospital) && event.SurgeryResult == 1 ? 1 : 0;
-          if (event.SurgeryResult == 1) {
-            if (event.OperatorFirst == 'م.محمدی') {
-              optList[0].public += event.HospitalType == 1 ? 1 : 0;
-              optList[0].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
-              optList[0].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+          if(event.SurgeryResult == 1){
+            if (optList[event.OperatorFirst!] == undefined){
+              optList[event.OperatorFirst!] = {public:0,private:0,tehran:0}
             }
-            if (event.OperatorFirst == 'م.گیوکی') {
-              optList[1].public += event.HospitalType == 1 ? 1 : 0;
-              optList[1].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
-              optList[1].tehran += this.isTehran(event.Hospital) ? 1 : 0;
-            }
-            if (event.OperatorFirst == 'م.حسینی') {
-              optList[2].public += event.HospitalType == 1 ? 1 : 0;
-              optList[2].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
-              optList[2].tehran += this.isTehran(event.Hospital) ? 1 : 0;
-            }
-            if (event.OperatorFirst == 'م.مرادی') {
-              optList[3].public += event.HospitalType == 1 ? 1 : 0;
-              optList[3].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
-              optList[3].tehran += this.isTehran(event.Hospital) ? 1 : 0;
-            }
+            optList[event.OperatorFirst!].public += event.HospitalType == 1 ? 1 : 0;
+            optList[event.OperatorFirst!].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
+            optList[event.OperatorFirst!].tehran += this.isTehran(event.Hospital) ? 1 : 0;
           }
         }
       }
@@ -298,6 +284,7 @@ export class OurCalendarComponent implements OnInit {
         'Tehran': tehran,
         'Total': publicHospital + privateHospital + tehran,
         'optList': optList,
+        'optName': Object.keys(optList),
         'fromDate': from,
         'toDate': to
       }
