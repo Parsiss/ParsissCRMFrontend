@@ -20,8 +20,8 @@
 
     <div *ngFor="let cell of calendarCells; let index = index" class="calendar-cell day-cell">
       <div
-        *ngIf="cell.type == 'date'"
-        (click)="cliecked(cell.data)"
+        *ngIf="cell.type == 'date' || cell.type == 'transparent-date'"
+        (click)="cell.type == 'date' && cliecked(cell.data)"
         [ngClass]="cell.data.toDate().getFullYear() == today.getFullYear() && cell.data.toDate().getMonth() == today.getMonth() &&
             cell.data.toDate().getDate() == today.getDate() ? 'today-date' : ''"
         style="height: 100%;"
@@ -32,12 +32,11 @@
         <div *ngFor="let event of eventsMap.get(cell.data.unix())">
           <ng-template
             [ngTemplateOutlet]="templateRef"
-            [ngTemplateOutletContext]="{event: event, date: cell.data}"
+            [ngTemplateOutletContext]="{event: event, date: cell.data, transparent: cell.type == 'transparent-date'}"
           >
           </ng-template>
         </div>
       </div>
-      <div *ngIf="cell.type == 'empty'"></div>
       <div *ngIf="cell.type == 'detail'" class="weekly-report-cell-container" (click)='dialogReportClick("Weekly Report", cell.data)'>
         <div class="weekly-report-cell-header">{{'Governmental' | translate }}:</div>
         <div class="weekly-report-cell-header">{{'Private' | translate }}:</div>

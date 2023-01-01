@@ -13,7 +13,7 @@ import renderReport from "./dialog_content";
 
 interface CalendarCell
 {
-  type: "empty" | "date" | "detail";
+  type: "date" | "detail" | "transparent-date";
   data: any;
 }
 
@@ -91,8 +91,13 @@ export class OurCalendarComponent implements OnInit {
     const currentMonthDays = this.getListOfDaysInMonth();
     this.firstDayOfMonth =  this.daysOrder.findIndex((index) => index === currentMonthDays[0].day())
     for(let i = 0; i < this.firstDayOfMonth; i++) {
-      this.calendarCells.push({type: "empty", data: null});
+      let date = currentMonthDays[0].clone().subtract(this.firstDayOfMonth - i, 'days');
+      this.calendarCells.push({
+        type: "transparent-date",
+        data: date
+      })
     }
+
     currentMonthDays.forEach((date) => {
       this.calendarCells.push({
         type: "date",
@@ -101,7 +106,8 @@ export class OurCalendarComponent implements OnInit {
     })
     this.lastDayOfMonth = this.daysOrder.findIndex((index) => index === currentMonthDays[currentMonthDays.length - 1].day());
     for(let i = 1; i < 7 - this.lastDayOfMonth; i++) {
-      this.calendarCells.push({type: "empty", data: null});
+      let date = currentMonthDays[currentMonthDays.length - 1].clone().add(i, 'days');
+      this.calendarCells.push({type: "transparent-date", data: date});
     }
   }
 
@@ -118,14 +124,8 @@ export class OurCalendarComponent implements OnInit {
       throw Error("this method should be called after fillCalendarCells")
     }
 
-    let endOfWeekNotDetail = false;
     for(let i = 0; i < this.calendarCells.length; ++i) {
       if(i % 8 == 7) {
-        if(endOfWeekNotDetail) {
-          this.calendarCells.splice(i, 0, {type: "empty", data: null});
-          endOfWeekNotDetail = false;
-        }
-        else {
           let publicHospital = 0, privateHospital = 0, tehran = 0;
           interface IHospitalType {
             public: number;
@@ -168,13 +168,6 @@ export class OurCalendarComponent implements OnInit {
             }});
         }
       }
-      if (i < this.calendarCells.length){
-        if (this.calendarCells[i].type == "date" && this.calendarCells[i+1].type == "empty") {
-          endOfWeekNotDetail = true;
-        }
-      }
-    }
-
   }
 
   nextMonth()
@@ -210,6 +203,7 @@ export class OurCalendarComponent implements OnInit {
     }
     return new File([uint8Array], fileName, {type: mime});
   }
+
   downloadBase64Data(base64String: string, fileName: string): void {
     let file = this.convertBase64ToFile(base64String, fileName);
     saveAs(file, fileName);
@@ -250,13 +244,15 @@ export class OurCalendarComponent implements OnInit {
     let from: any, to: any;
     for (let i = 0; i < this.calendarCells.length; ++i) {
       if ((this.calendarCells[i].type == "date" && i == 0) ||
-        (this.calendarCells[i].type == "date" && this.calendarCells[i-1].type == "empty")) {
+        (this.calendarCells[i].type == "date" && this.calendarCells[i-1].type == "transparent-date")) {
         from = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
       }
+
       if ((this.calendarCells[i].type == "date" && i == this.calendarCells.length - 1) ||
-        (this.calendarCells[i].type == "date" && this.calendarCells[i+1].type == "empty")) {
+        (this.calendarCells[i].type == "date" && this.calendarCells[i+1].type == "transparent-date")) {
         to = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
       }
+
       if (this.calendarCells[i].type == "date") {
         let events = this.eventsMap.get(this.calendarCells[i].data.unix());
         if (events == undefined) {
@@ -277,6 +273,7 @@ export class OurCalendarComponent implements OnInit {
         }
       }
     }
+
     this.monthlyReportData = {
       type: "detail", data: {
         'Public': publicHospital,
@@ -289,5 +286,6 @@ export class OurCalendarComponent implements OnInit {
         'toDate': to
       }
     }
+
   }
 }
