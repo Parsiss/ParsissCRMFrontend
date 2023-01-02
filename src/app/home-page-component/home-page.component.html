@@ -4,7 +4,7 @@
   <app-our-calendar [templateRef]="eventIcon"></app-our-calendar>
   <ng-template #eventIcon let-event='event' let-date='date' let-transparent='transparent'
   >
-    <div class="event-container" (click)="(!transparent && calendarEventClicked(event))" [style.opacity]="transparent ? 0.3 : 1"
+    <div class="event-container" (click)="(!transparent && calendarEventClicked(event))"
       [style.pointer-events]="transparent ? 'none' : 'auto'"
     >
       <mat-icon *ngIf="event.SurgeryResult == 1" style="color:green;">done</mat-icon>

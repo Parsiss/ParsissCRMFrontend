@@ -1,5 +1,5 @@
 export interface option {
-    value: string;
+    value: number;
     text: string;
     selected: string;
 }

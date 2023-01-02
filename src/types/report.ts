@@ -54,8 +54,6 @@ export interface PatientInformation {
     TypeOfInsurance?: string;
     FinancialVerifier?: string;
     ReceiptNumber?: number;
-    ReceiptDate?: number;
-    ReceiptReceiver?: string;
 }
 
 export interface tableData {
@@ -73,7 +71,7 @@ export interface tableData {
 }
 
 export interface Filter {
-    Value: string;
+    Value: number;
     Text: string;
     Selected: string;
     Group: string;

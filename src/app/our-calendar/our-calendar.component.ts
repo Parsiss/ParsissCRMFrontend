@@ -64,15 +64,15 @@ export class OurCalendarComponent implements OnInit {
     this.dataService.getCalendarEvent().subscribe(
       (data) => {
         data.forEach(event => {
-          if(!this.eventsMap.has(event.SurgeryDate as number)) {
-            this.eventsMap.set(event.SurgeryDate as number, []);
+          let unix = event.SurgeryDate ? event.SurgeryDate : 0;
+          if(!this.eventsMap.has(unix)) {
+            this.eventsMap.set(unix, []);
           }
-          this.eventsMap.get(event.SurgeryDate as number)!.push(event);
+          this.eventsMap.get(unix)!.push(event);
         })
         this.fillWeeklyReports();
         this.fillMonthlyReports();
     });
-
   }
 
   getListOfDaysInMonth() {
@@ -124,6 +124,7 @@ export class OurCalendarComponent implements OnInit {
       throw Error("this method should be called after fillCalendarCells")
     }
 
+
     for(let i = 0; i < this.calendarCells.length; ++i) {
       if(i % 8 == 7) {
           let publicHospital = 0, privateHospital = 0, tehran = 0;
@@ -135,15 +136,18 @@ export class OurCalendarComponent implements OnInit {
           var optList: { [name: string] : IHospitalType;} = {};
 
           for(let j = 1; j < 8; ++j) {
-            let events = this.eventsMap.get(this.calendarCells[i].data.unix() - (86400 * j));
+            let day = this.calendarCells[i - j].data;
+            let events = this.eventsMap.get(day.unix());
+            
             if(events == undefined) {
               events = [];
             }
             for(let event of events) {
-              publicHospital += (event.HospitalType == 1 && event.SurgeryResult == 1) ? 1 : 0;
-              privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital) && event.SurgeryResult == 1) ? 1 : 0;
-              tehran += this.isTehran(event.Hospital) && event.SurgeryResult == 1 ? 1 : 0;
               if(event.SurgeryResult == 1){
+                publicHospital += (event.HospitalType == 1) ? 1 : 0;
+                privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital)) ? 1 : 0;
+                tehran += this.isTehran(event.Hospital) ? 1 : 0;
+
                 if (optList[event.OperatorFirst!] == undefined){
                   optList[event.OperatorFirst!] = {public:0,private:0,tehran:0}
                 }
@@ -153,6 +157,7 @@ export class OurCalendarComponent implements OnInit {
               }
             }
           }
+
           let to = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
           let from = this.calendarCells[i].data.subtract(7, 'days').format('jYYYY/jMM/jDD');
           this.calendarCells[i].data.add(7, 'days');
@@ -210,10 +215,8 @@ export class OurCalendarComponent implements OnInit {
   }
 
   dialogReportClick(title: string, data: any) {
-    console.log(data)
     const dialogRef = this.dialog.open(DialogOverviewComponent, {
       width: '800px',
-
       height: '300px',
       direction: 'rtl',
       data: {title: title, content: renderReport(data)}
@@ -244,17 +247,17 @@ export class OurCalendarComponent implements OnInit {
     let from: any, to: any;
     for (let i = 0; i < this.calendarCells.length; ++i) {
       if ((this.calendarCells[i].type == "date" && i == 0) ||
-        (this.calendarCells[i].type == "date" && this.calendarCells[i-1].type == "transparent-date")) {
+        (this.calendarCells[i].type == "date" && this.calendarCells[i - 1].type == "transparent-date")) {
         from = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
       }
 
       if ((this.calendarCells[i].type == "date" && i == this.calendarCells.length - 1) ||
-        (this.calendarCells[i].type == "date" && this.calendarCells[i+1].type == "transparent-date")) {
+        (this.calendarCells[i].type == "date" && this.calendarCells[i + 1].type == "transparent-date")) {
         to = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
       }
 
       if (this.calendarCells[i].type == "date") {
-        let events = this.eventsMap.get(this.calendarCells[i].data.unix());
+        let events = this.eventsMap.get(this.calendarCells[i].data.unix())
         if (events == undefined) {
           events = [];
         }

@@ -35,21 +35,23 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
     this.activatedRoute.params.subscribe(data => {
       let surgery_date = data['date']
       if(surgery_date != null) {
-        this.detailPage.form.controls['SurgeryDate'].setValue(Number(surgery_date))
+        this.detailPage.form.controls['SurgeryDate'].setValue(moment.unix(surgery_date));
       } else{
-        this.detailPage.form.controls['SurgeryDate'].setValue( Math.floor(moment.unix(moment.now()).unix()/1e3))
+        this.detailPage.form.controls['SurgeryDate'].setValue(moment.unix(moment.now() / 1000));
       }
     });
+    let now = moment.unix(moment.now() / 1000)
+    this.detailPage.form.controls['DateOfPayment'].setValue(now);
+    this.detailPage.form.controls['DateOfFirstContact'].setValue(now);
+    this.detailPage.form.controls['DateOfHospitalAdmission'].setValue(now);
   }
 
   AddNewPatient() {
-    if (this.detailPage.form.valid)
-    {
-      let fulldata: PatientInformation = this.detailPage.fulldata;
+    if (this.detailPage.form.valid) {
+      let fulldata: PatientInformation = {};
 
       for (let key in this.detailPage.form.controls) {
-        if (key == 'CashAmount')
-        {
+        if (key == 'CashAmount') {
           (fulldata as any)[key] = this.detailPage.form.controls[key].value.toString();
           continue;
         }
@@ -63,6 +65,8 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
           this.router.navigate(['/reportsList']);
         }
       );
+    } else {
+      this.detailPage.form.markAllAsTouched();
     }
   }
 }

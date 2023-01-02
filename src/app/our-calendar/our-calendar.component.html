@@ -18,8 +18,10 @@
     <div class="calendar-cell week-days-cell"></div>
 
 
-    <div *ngFor="let cell of calendarCells; let index = index" class="calendar-cell day-cell">
-      <div
+    <div *ngFor="let cell of calendarCells; let index = index" class="calendar-cell"
+      [ngClass]="cell.type != 'transparent-date' ? 'day-cell' : ''"
+    >
+      <div [style.opacity]="cell.type == 'transparent-date' ? 0.3 : 1"
         *ngIf="cell.type == 'date' || cell.type == 'transparent-date'"
         (click)="cell.type == 'date' && cliecked(cell.data)"
         [ngClass]="cell.data.toDate().getFullYear() == today.getFullYear() && cell.data.toDate().getMonth() == today.getMonth() &&

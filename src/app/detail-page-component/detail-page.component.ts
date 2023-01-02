@@ -21,8 +21,6 @@ export class DetailPageComponent implements OnInit {
   @Input() id: number;
   @Input() patientName: FormControl;
 
-  time = { hour: 13, minute: 30 };
-
   darkTheme: NgxMaterialTimepickerTheme = {
     container: {
       bodyBackgroundColor: '#424242',
@@ -38,10 +36,8 @@ export class DetailPageComponent implements OnInit {
     }
   };
 
-  fulldata: PatientInformation = {}
-
-  options: Map<string, optionGroup> = new Map<string, optionGroup>();
-
+  fulldata: PatientInformation = {};
+  options: Map<string, optionGroup> = new Map<string, optionGroup>();  
   form: FormGroup;
 
   constructor(
@@ -53,50 +49,52 @@ export class DetailPageComponent implements OnInit {
     this.form = new FormGroup({
       NationalID: new FormControl(''),
       PhoneNumber: new FormControl('', Validators.pattern('^[0-9]{11}$')),
-      SurgeryDate: new FormControl(''),
+      SurgeryDate: new FormControl(0),
       Address: new FormControl(''),
       PlaceOfBirth: new FormControl(''),
       SurgeonFirst: new FormControl(''),
       Hospital: new FormControl(''),
-      HospitalType: new FormControl(''),
-      SurgeryDay: new FormControl(''),
-      SurgeryTime: new FormControl(''),
-      MR: new FormControl(''),
-      CT: new FormControl(''),
+      // THIS DEFAULT VALUE HAS TO CHANGE TO ZERO
+      // CHANGE OPTIONS FILE IN BACKEND
+      HospitalType: new FormControl(-1),
+      SurgeryDay: new FormControl(null),
+      SurgeryTime: new FormControl(0), // TODO: change to time
+      MR: new FormControl(0),
+      CT: new FormControl(0),
       OperatorFirst: new FormControl(''),
       OperatorSecond: new FormControl(''),
-      DateOfFirstContact: new FormControl(''),
+      DateOfFirstContact: new FormControl(0),
       FirstCaller: new FormControl(''),
-      PaymentStatus: new FormControl(''),
-      DateOfPayment: new FormControl(''),
+      PaymentStatus: new FormControl(0),
+      DateOfPayment: new FormControl(0),
       CashAmount: new FormControl(''),
       LastFourDigitsCard: new FormControl('', Validators.pattern('^[0-9]{4}(-[0-9]{4})*$')),
       Bank: new FormControl(''),
-      DiscountPercent: new FormControl(''),
+      DiscountPercent: new FormControl(0),
       ReasonForDiscount: new FormControl(''),
       TypeOfInsurance: new FormControl(''),
       FinancialVerifier: new FormControl(''),
-      ReceiptNumber: new FormControl(''),
-      SurgeryResult: new FormControl(''),
+      ReceiptNumber: new FormControl(0),
+      SurgeryResult: new FormControl(0),
       CancellationReason: new FormControl(''),
       FileNumber: new FormControl(''),
-      DateOfHospitalAdmission: new FormControl(''),
-      Age: new FormControl(''),
+      DateOfHospitalAdmission: new FormControl(0),
+      Age: new FormControl(0),
       SurgeryType: new FormControl(''),
-      SurgeryArea: new FormControl(''),
+      SurgeryArea: new FormControl(0),
       SurgeryDescription: new FormControl(''),
       SurgeonSecond: new FormControl(''),
       Resident: new FormControl(''),
       HospitalAddress: new FormControl(''),
-      FMRI: new FormControl(''),
-      DTI: new FormControl(''),
-      StartTime: new FormControl(''),
-      StopTime: new FormControl(''),
-      EnterTime: new FormControl(''),
-      ExitTime: new FormControl(''),
-      PatientEnterTime: new FormControl(''),
-      HeadFixType: new FormControl(''),
-      FRE: new FormControl(''),
+      FMRI: new FormControl(0),
+      DTI: new FormControl(0),
+      StartTime: new FormControl('00:00:00'),
+      StopTime: new FormControl('00:00:00'),
+      EnterTime: new FormControl('00:00:00'),
+      ExitTime: new FormControl('00:00:00'),
+      PatientEnterTime: new FormControl('00:00:00'),
+      HeadFixType: new FormControl(0),
+      FRE: new FormControl(0),
     });
 
     this.form.controls['SurgeryDate'].valueChanges.subscribe(value => {
@@ -130,31 +128,14 @@ export class DetailPageComponent implements OnInit {
         this.htmlService.isPageReady = true;
       });
 
-    this.dataService.getPatient(this.id).subscribe(fulldata => {
-      this.fulldata = fulldata;
-      for (let key in this.form.controls) {
-        if((key == 'SurgeryDate' || key == 'SurgeryDay') && this.id == -1) {
-          continue;
+    if (this.id != -1) {
+      this.dataService.getPatient(this.id).subscribe(fulldata => {
+        this.fulldata = fulldata;
+        for (let key in this.form.controls) {
+          this.form.controls[key].setValue((fulldata as any)[key]);
         }
-        if ((key == 'DateOfPayment' || key == 'DateOfFirstContact' || key == 'DateOfHospitalAdmission') && this.id == -1)
-        {
-          this.form.controls['DateOfPayment'].setValue( Math.floor(moment.unix(moment.now()).unix()/1e3) )
-          this.form.controls['DateOfFirstContact'].setValue( Math.floor(moment.unix(moment.now()).unix()/1e3)  )
-          this.form.controls['DateOfHospitalAdmission'].setValue( Math.floor(moment.unix(moment.now()).unix()/1e3)  )
-          continue;
-        }
-        this.form.controls[key].setValue((fulldata as any)[key]);
-      }
-    });
-  }
-
-  timestampToDate(timestamp: number): Date | null {
-    return moment.unix(timestamp).toDate();
-  }
-
-  onDateChange(event: MatDatepickerInputEvent<moment.Moment>, control: AbstractControl) {
-    const timestamp = event.value!.unix();
-    control.setValue(timestamp);
+      });
+    }
   }
 
   onTimeChange(event: string, control: AbstractControl) {

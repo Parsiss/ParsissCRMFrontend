@@ -26,7 +26,6 @@
         </mat-option>
       </mat-autocomplete>
 
-
       <mat-form-field appearance="fill" style="grid-area: phone;">
         <mat-label>{{'phone' | translate}}</mat-label>
         <input matInput placeholder="{{'phone' | translate}}" formControlName="PhoneNumber" numberfield [matAutocomplete]="phoneauto">
@@ -40,8 +39,8 @@
 
       <mat-form-field appearance="fill" style="grid-area: surgery-date;">
         <mat-label>{{'surgery_date' | translate}}</mat-label>
-        <input matInput [matDatepicker]="picker" [value]="timestampToDate(form.controls['SurgeryDate'].value)"
-          (dateChange)="onDateChange($event, form.controls['SurgeryDate'])"
+        <input matInput [matDatepicker]="picker" 
+          formControlName="SurgeryDate"
           placeholder="{{'surgery_date' | translate}}">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
@@ -56,7 +55,6 @@
           {{option}}
         </mat-option>
       </mat-autocomplete>
-
 
       <mat-form-field appearance="fill" style="grid-area: hospital;">
         <mat-label>{{'hospital' | translate}}</mat-label>
@@ -138,12 +136,11 @@
       <mat-form-field appearance="fill" style="grid-area: first-contact;">
         <mat-label>{{'first_contact' | translate}}</mat-label>
         <input matInput [matDatepicker]="firstContactpicker" placeholder="{{'first_contact' | translate}}"
-          [value]="timestampToDate(form.controls['DateOfFirstContact'].value)"
-          (dateChange)="onDateChange($event, form.controls['DateOfFirstContact'])">
+          formControlName="DateOfFirstContact"
+        >
         <mat-datepicker-toggle matSuffix [for]="firstContactpicker"></mat-datepicker-toggle>
         <mat-datepicker #firstContactpicker></mat-datepicker>
       </mat-form-field>
-
 
       <mat-form-field appearance="fill" style="grid-area: first-caller;">
         <mat-label>{{'first_caller' | translate}}</mat-label>
@@ -166,9 +163,10 @@
 
       <mat-form-field appearance="fill" style="grid-area: payment-date;">
         <mat-label>{{'payment_date' | translate}}</mat-label>
-        <input matInput [matDatepicker]="paymentpicker" [value]="timestampToDate(form.controls['DateOfPayment'].value)"
-          (dateChange)="onDateChange($event, form.controls['DateOfPayment'])"
-          placeholder="{{'payment_date' | translate}}">
+        <input matInput [matDatepicker]="paymentpicker"
+          formControlName="DateOfPayment"
+          placeholder="{{'payment_date' | translate}}"
+          >
         <mat-datepicker-toggle matSuffix [for]="paymentpicker"></mat-datepicker-toggle>
         <mat-datepicker #paymentpicker></mat-datepicker>
       </mat-form-field>
@@ -211,7 +209,6 @@
           {{option}}
         </mat-option>
       </mat-autocomplete>
-
 
       <mat-form-field appearance="fill" style="grid-area: insurance;">
         <mat-label>{{'insurance' | translate}}</mat-label>
@@ -288,8 +285,8 @@
         <mat-label>{{'date_of_hospital_admission' | translate}}</mat-label>
         <input matInput [matDatepicker]="hospitalAdmissionDatepicker"
           placeholder="{{'date_of_hospital_admission' | translate}}"
-          [value]="timestampToDate(form.controls['DateOfHospitalAdmission'].value)"
-          (dateChange)="onDateChange($event, form.controls['DateOfHospitalAdmission'])">
+          formControlName="DateOfHospitalAdmission"
+        >
         <mat-datepicker-toggle matSuffix [for]="hospitalAdmissionDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #hospitalAdmissionDatepicker></mat-datepicker>
       </mat-form-field>

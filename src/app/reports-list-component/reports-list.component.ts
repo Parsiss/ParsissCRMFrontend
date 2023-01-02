@@ -87,12 +87,14 @@ export class ReportsListComponent implements OnInit {
             SurgeonFirst: patient.SurgeonFirst,
             Hospital: patient.Hospital,
             OperatorFirst: patient.OperatorFirst,
-            SurgeryResult: this.options.get('surgery_result')!.values.find(f =>
-              f.value == (patient.SurgeryResult!).toString()) === undefined ?
-              '' : this.options.get('surgery_result')!.values.find(f => f.value == (patient.SurgeryResult!).toString())!.text,
-            PaymentStatus: this.options.get('payment_status')!.values.find(f =>
-              f.value == (patient.PaymentStatus!).toString()) === undefined ?
-              '' : this.options.get('payment_status')!.values.find(f => f.value == (patient.PaymentStatus!).toString())!.text,
+            SurgeryResult: 
+              this.options.get('surgery_result')!.values.find(f => f.value == (patient.SurgeryResult)) === undefined ? 
+              '' : this.options.get('surgery_result')!.values.find(f => f.value == patient.SurgeryResult)!.text,
+            
+            PaymentStatus: 
+              this.options.get('payment_status')!.values.find(f =>
+              f.value == patient.PaymentStatus) === undefined ?
+              '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus!)!.text,
             PaymentCard: patient.LastFourDigitsCard,
             CashAmount: patient.CashAmount
           })
@@ -113,7 +115,7 @@ export class ReportsListComponent implements OnInit {
             });
           }
           this.filters.find((f) => f.name === filter.Group)!.values.push({
-            value: filter.Value,
+            value: filter.Value.toString(),
             text: filter.Text,
             selected: filter.Selected
           });
@@ -173,17 +175,11 @@ export class ReportsListComponent implements OnInit {
           return;
         }
         this.dataService.deletePatient(id).subscribe(
-          (data) => {
-            if ((data as any)['success']) {
-              this.dataSource.data = this.dataSource.data.filter(p => p.ID !== id);
-              this._snackBar.open('Patient removed successfully', 'close', {
-                duration: 2000,
-              });
-            } else {
-              this._snackBar.open('Error removing patient', 'close', {
-                duration: 2000,
-              });
-            }
+          (_) => {
+            this._snackBar.open("Report removed successfully", "Close", {
+              duration: 2000,
+            });
+            this.getReportData();
           });
       }
     );
@@ -212,11 +208,12 @@ export class ReportsListComponent implements OnInit {
             Hospital: patient.Hospital,
             OperatorFirst: patient.OperatorFirst,
             SurgeryResult: this.options.get('surgery_result')!.values.find(f =>
-              f.value == (patient.SurgeryResult!).toString()) === undefined ?
-              '' : this.options.get('surgery_result')!.values.find(f => f.value == (patient.SurgeryResult!).toString())!.text,
+              f.value == patient.SurgeryResult) === undefined ?
+              '' : this.options.get('surgery_result')!.values.find(f => f.value == patient.SurgeryResult)!.text,
+            
             PaymentStatus: this.options.get('payment_status')!.values.find(f =>
-              f.value == (patient.PaymentStatus!).toString()) === undefined ?
-              '' : this.options.get('payment_status')!.values.find(f => f.value == (patient.PaymentStatus!).toString())!.text,
+              f.value == patient.PaymentStatus) === undefined ?
+              '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus)!.text,
             PaymentCard: patient.LastFourDigitsCard,
             CashAmount: patient.CashAmount
           })
