@@ -79,3 +79,19 @@ export interface Filter {
 
 
 export type Option = Filter;
+
+
+export interface DatedReportData {
+    types: string[];
+    result: { [key: string]: number[] };
+}
+
+
+export interface DatedReportDialogData {
+    title: string;
+    types: string[];
+    operators: string[];
+    result: { [key: string]: number[] };
+    from: string;
+    to: string;
+}

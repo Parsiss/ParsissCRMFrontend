@@ -1,18 +1,18 @@
-import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { Router } from '@angular/router';
 import * as moment from 'jalali-moment';
 import { DataService } from '../data.service';
-import {PatientInformation} from "../../types/report";
-import {DialogOverviewComponent} from "../dialog-overview/dialog-overview.component";
-import {MatDialog} from "@angular/material/dialog";
+import { DatedReportDialogData, PatientInformation } from "../../types/report";
+import { DialogOverviewComponent } from "../dialog-overview/dialog-overview.component";
+import { MatDialog } from "@angular/material/dialog";
 import { saveAs } from 'file-saver';
 import { NgxCaptureService } from 'ngx-capture';
 import renderReport from "./dialog_content";
+import { ReportOverviewDialogComponent } from '../report-overview-dialog/report-overview-dialog.component';
 
 
-interface CalendarCell
-{
+interface CalendarCell {
   type: "date" | "detail" | "transparent-date";
   data: any;
 }
@@ -21,7 +21,8 @@ interface CalendarCell
 @Component({
   selector: 'app-our-calendar',
   templateUrl: './our-calendar.component.html',
-  styleUrls: ['./our-calendar.component.scss']
+  styleUrls: ['./our-calendar.component.scss'],
+  providers: [Document]
 })
 export class OurCalendarComponent implements OnInit {
 
@@ -32,11 +33,12 @@ export class OurCalendarComponent implements OnInit {
 
   calendarCells: CalendarCell[] = [];
 
-  monthlyReportData: CalendarCell;
+  dialogRef: any;
+
+  monthlyReportData: DatedReportDialogData;
   today: Date;
 
-  firstDayOfMonth: number;
-  lastDayOfMonth: number;
+  currentMonthDays: moment.Moment[] = [];
 
   daysOrder = [6, 0, 1, 2, 3, 4, 5]
 
@@ -50,7 +52,6 @@ export class OurCalendarComponent implements OnInit {
     public dataService: DataService,
     public router: Router,
     private dialog: MatDialog,
-    private captureService:NgxCaptureService
   ) {
     this.today = dateAdapter.today().toDate();
     this.currentDate = dateAdapter.today();
@@ -65,54 +66,65 @@ export class OurCalendarComponent implements OnInit {
       (data) => {
         data.forEach(event => {
           let unix = event.SurgeryDate ? event.SurgeryDate : 0;
-          if(!this.eventsMap.has(unix)) {
+          if (!this.eventsMap.has(unix)) {
             this.eventsMap.set(unix, []);
           }
           this.eventsMap.get(unix)!.push(event);
         })
         this.fillWeeklyReports();
         this.fillMonthlyReports();
-    });
+      });
   }
 
-  getListOfDaysInMonth() {
+  fillListOfDaysInMonth() {
     const year = this.currentDate.jYear();
     const month = this.currentDate.jMonth();
     const daysInMonth = this.dateAdapter.getNumDaysInMonth(this.dateAdapter.createDate(year, month, 1));
-    let currentMonthDays= [];
+    this.currentMonthDays = [];
     for (let i = 0; i < daysInMonth; i++) {
-      currentMonthDays.push(this.dateAdapter.createDate(year, month, i + 1));
+      this.currentMonthDays.push(this.dateAdapter.createDate(year, month, i + 1));
     }
-    return currentMonthDays;
   }
 
   fillCalendarCells() {
     this.calendarCells = [];
-    const currentMonthDays = this.getListOfDaysInMonth();
-    this.firstDayOfMonth =  this.daysOrder.findIndex((index) => index === currentMonthDays[0].day())
-    for(let i = 0; i < this.firstDayOfMonth; i++) {
-      let date = currentMonthDays[0].clone().subtract(this.firstDayOfMonth - i, 'days');
+    this.fillListOfDaysInMonth();
+    let firstDayOfMonth = this.daysOrder.findIndex((index) => index === this.currentMonthDays[0].day())
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      let date = this.currentMonthDays[0].clone().subtract(firstDayOfMonth - i, 'days');
       this.calendarCells.push({
         type: "transparent-date",
         data: date
       })
     }
 
-    currentMonthDays.forEach((date) => {
+    this.currentMonthDays.forEach((date) => {
       this.calendarCells.push({
         type: "date",
         data: date
       })
     })
-    this.lastDayOfMonth = this.daysOrder.findIndex((index) => index === currentMonthDays[currentMonthDays.length - 1].day());
-    for(let i = 1; i < 7 - this.lastDayOfMonth; i++) {
-      let date = currentMonthDays[currentMonthDays.length - 1].clone().add(i, 'days');
-      this.calendarCells.push({type: "transparent-date", data: date});
+
+    let lastDayOfMonth = this.daysOrder.findIndex((index) => index === this.currentMonthDays[this.currentMonthDays.length - 1].day());
+    for (let i = 1; i < 7 - lastDayOfMonth; i++) {
+      let date = this.currentMonthDays[this.currentMonthDays.length - 1].clone().add(i, 'days');
+      this.calendarCells.push({ type: "transparent-date", data: date });
+    }
+
+    for (let i = 0; i < this.calendarCells.length; i++) {
+      if (i % 8 == 7) {
+        this.calendarCells.splice(i, 0, { type: "detail", data: {
+          'date': this.calendarCells[i - 1].data,
+          'Public': 0,
+          'Private': 0,
+          'Total': 0,
+        }});
+      }
     }
   }
 
   isTehran(str?: string): boolean {
-    if(str == null) {
+    if (str == null) {
       return false;
     }
 
@@ -120,71 +132,44 @@ export class OurCalendarComponent implements OnInit {
   }
 
   fillWeeklyReports() {
-    if(this.calendarCells.length == 0) {
+    if (this.calendarCells.length == 0) {
       throw Error("this method should be called after fillCalendarCells")
     }
 
+    for (let i = 0; i < this.calendarCells.length; ++i) {
+      if (this.calendarCells[i].type == "detail") {
+        let to = this.calendarCells[i].data.date;
+        let from = this.calendarCells[i].data.date.clone().subtract(6, 'days');
 
-    for(let i = 0; i < this.calendarCells.length; ++i) {
-      if(i % 8 == 7) {
-          let publicHospital = 0, privateHospital = 0, tehran = 0;
-          interface IHospitalType {
-            public: number;
-            private: number;
-            tehran: number;
-          }
-          var optList: { [name: string] : IHospitalType;} = {};
-
-          for(let j = 1; j < 8; ++j) {
-            let day = this.calendarCells[i - j].data;
-            let events = this.eventsMap.get(day.unix());
-            
-            if(events == undefined) {
-              events = [];
-            }
-            for(let event of events) {
-              if(event.SurgeryResult == 1){
-                publicHospital += (event.HospitalType == 1) ? 1 : 0;
-                privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital)) ? 1 : 0;
-                tehran += this.isTehran(event.Hospital) ? 1 : 0;
-
-                if (optList[event.OperatorFirst!] == undefined){
-                  optList[event.OperatorFirst!] = {public:0,private:0,tehran:0}
-                }
-                optList[event.OperatorFirst!].public += event.HospitalType == 1 ? 1 : 0;
-                optList[event.OperatorFirst!].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
-                optList[event.OperatorFirst!].tehran += this.isTehran(event.Hospital) ? 1 : 0;
+        this.dataService.getDatedReports(from.unix(), to.unix()).subscribe(
+          (data) => {
+            let total = data.result['مجموع'];
+            this.calendarCells[i].data = {
+              'Public': total[0],
+              'Private': total[1],
+              'Tehran': total[2],
+              'data': {
+                title: 'گزارش هفتگی',
+                result: data.result,
+                types: data.types,
+                operators: Object.keys(data.result),
+                from: from.format('jYYYY/jMM/jDD'),
+                to: to.format('jYYYY/jMM/jDD')
               }
             }
-          }
-
-          let to = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
-          let from = this.calendarCells[i].data.subtract(7, 'days').format('jYYYY/jMM/jDD');
-          this.calendarCells[i].data.add(7, 'days');
-          this.calendarCells.splice(i, 0, {type: "detail", data: {
-              'Public': publicHospital,
-              'Private': privateHospital,
-              'Tehran': tehran,
-              'Total': publicHospital + privateHospital + tehran,
-              'optList':optList,
-              'optName': Object.keys(optList),
-              'fromDate': from,
-              'toDate': to
-            }});
-        }
+          });
       }
+    }
   }
 
-  nextMonth()
-  {
+  nextMonth() {
     this.currentDate = this.currentDate.add(1, "jmonth")
     this.fillCalendarCells();
     this.fillWeeklyReports();
     this.fillMonthlyReports();
   }
 
-  previousMonth()
-  {
+  previousMonth() {
     this.currentDate = this.currentDate.add(-1, "jmonth")
     this.fillCalendarCells();
     this.fillWeeklyReports();
@@ -192,103 +177,35 @@ export class OurCalendarComponent implements OnInit {
   }
 
   cliecked(date: any) {
-    this.router.navigate(['/add_new_patient', { date: date.unix()}])
+    this.router.navigate(['/add_new_patient', { date: date.unix() }])
   }
 
-  @ViewChild('screen', { static: true }) screen: any;
-  convertBase64ToFile(base64String: string, fileName: string): File {
-    let arr = base64String.split(',');
-    // @ts-ignore
-    let mime = arr[0].match(/:(.*?);/)[1];
-    let bstr = atob(arr[1]);
-    let n = bstr.length;
-    let uint8Array = new Uint8Array(n);
-    while (n--) {
-      uint8Array[n] = bstr.charCodeAt(n);
+  dialogReportClick(data: DatedReportDialogData) {
+    if(this.dialogRef != null) {
+      this.dialogRef.close();
     }
-    return new File([uint8Array], fileName, {type: mime});
-  }
 
-  downloadBase64Data(base64String: string, fileName: string): void {
-    let file = this.convertBase64ToFile(base64String, fileName);
-    saveAs(file, fileName);
-  }
-
-  dialogReportClick(title: string, data: any) {
-    const dialogRef = this.dialog.open(DialogOverviewComponent, {
+    this.dialogRef = this.dialog.open(ReportOverviewDialogComponent, {
       width: '800px',
       height: '300px',
       direction: 'rtl',
-      data: {title: title, content: renderReport(data)}
-    });
-    let base64_img: string;
-    dialogRef.afterClosed().subscribe(result => {
-      if (result == 'Canceled') {
-        return;
-      }
-      this.downloadBase64Data(base64_img, "Weekly Report");
-    });
-    dialogRef.afterOpened().subscribe(result => {
-      this.captureService.getImage(document.getElementById('dialog_content')!, true).subscribe(img=>{
-        base64_img = img
-      })
+      data: data
     });
   }
 
   private fillMonthlyReports() {
-    let publicHospital = 0, privateHospital = 0, tehran = 0;
-    interface IHospitalType {
-      public: number;
-      private: number;
-      tehran: number;
-    }
-    var optList: { [name: string] : IHospitalType;} = {};
-
-    let from: any, to: any;
-    for (let i = 0; i < this.calendarCells.length; ++i) {
-      if ((this.calendarCells[i].type == "date" && i == 0) ||
-        (this.calendarCells[i].type == "date" && this.calendarCells[i - 1].type == "transparent-date")) {
-        from = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
-      }
-
-      if ((this.calendarCells[i].type == "date" && i == this.calendarCells.length - 1) ||
-        (this.calendarCells[i].type == "date" && this.calendarCells[i + 1].type == "transparent-date")) {
-        to = this.calendarCells[i].data.format('jYYYY/jMM/jDD');
-      }
-
-      if (this.calendarCells[i].type == "date") {
-        let events = this.eventsMap.get(this.calendarCells[i].data.unix())
-        if (events == undefined) {
-          events = [];
-        }
-        for (let event of events) {
-          publicHospital += (event.HospitalType == 1 && event.SurgeryResult == 1) ? 1 : 0;
-          privateHospital += (event.HospitalType == 0 && !this.isTehran(event.Hospital) && event.SurgeryResult == 1) ? 1 : 0;
-          tehran += this.isTehran(event.Hospital) && event.SurgeryResult == 1 ? 1 : 0;
-          if(event.SurgeryResult == 1){
-            if (optList[event.OperatorFirst!] == undefined){
-              optList[event.OperatorFirst!] = {public:0,private:0,tehran:0}
-            }
-            optList[event.OperatorFirst!].public += event.HospitalType == 1 ? 1 : 0;
-            optList[event.OperatorFirst!].private += event.HospitalType == 0 && !this.isTehran(event.Hospital) ? 1 : 0;
-            optList[event.OperatorFirst!].tehran += this.isTehran(event.Hospital) ? 1 : 0;
-          }
+    let from = this.currentMonthDays[0], to = this.currentMonthDays[this.currentMonthDays.length - 1];
+    this.dataService.getDatedReports(from.unix(), to.unix()).subscribe(
+      (data) => {
+        this.monthlyReportData = {
+          title: 'گزارش ماهانه',
+          result: data.result,
+          types: data.types,
+          operators: Object.keys(data.result),
+          from: from.format('jYYYY/jMM/jDD'),
+          to: to.format('jYYYY/jMM/jDD')
         }
       }
-    }
-
-    this.monthlyReportData = {
-      type: "detail", data: {
-        'Public': publicHospital,
-        'Private': privateHospital,
-        'Tehran': tehran,
-        'Total': publicHospital + privateHospital + tehran,
-        'optList': optList,
-        'optName': Object.keys(optList),
-        'fromDate': from,
-        'toDate': to
-      }
-    }
-
+    );
   }
 }

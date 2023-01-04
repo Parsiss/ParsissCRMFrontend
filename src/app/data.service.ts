@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import * as moment from 'moment';
 import { map, Observable, of } from 'rxjs';
-import { Filter, PatientInformation} from '../types/report';
+import { DatedReportData, Filter, PatientInformation} from '../types/report';
 import { DateConversionService } from './date-conversion.service';
 
 import { KeyListOfValues } from './reports-list-component/interfaces';
@@ -67,6 +67,10 @@ export class DataService {
 
   public uploadFile(file: File): Observable<object> {
     return this.http.post<any>(this.base_url + 'report/upload/', file);
+  }
+
+  public getDatedReports(start: number, end: number): Observable<DatedReportData> {
+    return this.http.get<DatedReportData>(this.base_url + `reports/dated/?start_date=${start}&end_date=${end}`);
   }
 
 }

@@ -60,6 +60,7 @@ import {MAT_AUTOCOMPLETE_DEFAULT_OPTIONS, MatAutocompleteModule} from "@angular/
 import { NgApexchartsModule } from "ng-apexcharts";
 import { MyChartComponent } from './chart/chart.component';
 import { AddUnderlinePipe } from './add-underline.pipe';
+import { ReportOverviewDialogComponent } from './report-overview-dialog/report-overview-dialog.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -86,6 +87,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     OurCalendarComponent,
     MyChartComponent,
     AddUnderlinePipe,
+    ReportOverviewDialogComponent,
   ],
   imports: [
     BrowserModule,

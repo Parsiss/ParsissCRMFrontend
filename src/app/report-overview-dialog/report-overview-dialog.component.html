@@ -1,0 +1,26 @@
+<div>
+    <h1 style="text-align: center" class="text-center" mat-dialog-title>{{data.title}}</h1>
+
+    <div class="table-responsive w-100 h-100" #dialogContent>
+        <table class="table-bordered w-100">
+            <thead>
+                <tr>
+                    <th class="date-color">{{data.from}}<br />{{data.to}}</th>
+                    <th *ngFor="let item of data.operators" class="operator-color">{{item}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let type of data.types; let i = index">
+                    <td class="hospital-color"> {{ type }} </td>
+                    <td *ngFor="let operator of data.operators; let j = index" [ngClass]="i == 3 || j ==  data.operators.length - 1 ? 'sum-color' : ''">
+                        {{data.result[operator][i]}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()">Cancel</button>
+        <button mat-button (click)="saveImage()" mat-dialog-close="success">Save</button>
+    </div>
+</div>
