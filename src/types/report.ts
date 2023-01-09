@@ -58,6 +58,7 @@ export interface PatientInformation {
 
 export interface tableData {
     ID?: number;
+    SurgeryDay?: string;
     PaymentStatus?: string;
     Name?: string;
     SurgeonFirst?: string;
@@ -69,6 +70,13 @@ export interface tableData {
     CashAmount?: string;
     OperatorFirst?: string;
 }
+
+
+export interface groupedTableData {
+    weekday: string;
+    data: tableData[];
+}
+
 
 export interface Filter {
     Value: number;
@@ -94,4 +102,10 @@ export interface DatedReportDialogData {
     result: { [key: string]: number[] };
     from: string;
     to: string;
+}
+
+export interface HospitalsPeriodicReportData {
+    hospitals: string[];
+    first_period: number[];
+    second_period: number[];
 }

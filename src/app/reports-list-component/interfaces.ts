@@ -1,6 +1,6 @@
 
 export interface filterOption {
-    value: string;
+    value: number;
     text: string;
     selected: string;
 }
@@ -12,6 +12,14 @@ export interface filterGroup {
   
 export interface KeyListOfValues <T> {
     [key: string]: T[];
+}
+
+export interface KeyOfValues <T> {
+    [key: string]: T;
+}
+
+export interface AutolFillOptions {
+    [key: string]: [string, number][];
 }
 
 

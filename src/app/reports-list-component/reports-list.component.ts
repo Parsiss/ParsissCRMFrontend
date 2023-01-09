@@ -1,26 +1,21 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import {PatientInformation, tableData} from 'src/types/report';
 import { DataService } from '../data.service';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import { filterGroup, KeyListOfValues } from './interfaces';
 import { Router } from '@angular/router';
-import { HtmlService } from '../html.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {MatDialog} from '@angular/material/dialog';
 import { DialogOverviewComponent } from '../dialog-overview/dialog-overview.component';
 import {optionGroup} from "../detail-page-component/interfaces";
-import {getMatIconFailedToSanitizeLiteralError} from "@angular/material/icon";
 import {ExcelService} from "../excel.service";
 import * as moment from "jalali-moment";
 import {DateAdapter} from "@angular/material/core";
-import {ChartAdopter} from "../chartAdopters/BaseAdopter";
-import {SimplePieAdopter} from "../chartAdopters/Pie";
+
 import {AddUnderlinePipe} from "../add-underline.pipe";
 import {UploadService} from "../upload.service";
 
@@ -30,17 +25,17 @@ import {UploadService} from "../upload.service";
   styleUrls: ['./reports-list.component.scss']
 })
 export class ReportsListComponent implements OnInit {
-
-  chartAdopters: ChartAdopter[] = [];
-
   patientData: PatientInformation[];
 
   dataSource = new MatTableDataSource<tableData>([]);
-  displayedFields: string[] = ['Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
-    'SurgeryResult', 'PaymentCard', 'CashAmount', 'OperatorFirst'];
+  displayedFields: string[] = [
+    'SurgeryDay', 'Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
+    'SurgeryResult', 'PaymentCard', 'CashAmount', 'OperatorFirst'
+  ];
+
   displayedColumns: string[] = [...this.displayedFields, 'Actions'];
 
-  internalFilter: KeyListOfValues<string> = {};
+  public internalFilter: KeyListOfValues<number> = {};
 
   filters: filterGroup[] = [];
 
@@ -53,8 +48,6 @@ export class ReportsListComponent implements OnInit {
 
   addUnderlinePipe = new AddUnderlinePipe();
 
-  @ViewChild(MatSort) sort: MatSort;
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   shortLink: string = "";
@@ -62,7 +55,6 @@ export class ReportsListComponent implements OnInit {
   file: File;
 
   constructor(
-    private _liveAnnouncer: LiveAnnouncer,
     private dataService: DataService,
     private _snackBar: MatSnackBar,
     private router: Router,
@@ -74,7 +66,7 @@ export class ReportsListComponent implements OnInit {
 
   getReportData() {
     this.dataSource.paginator = this.paginator;
-    this.dataService.getReports(null).subscribe(
+    this.dataService.getReports().subscribe(
       (data) => {
         this.patientData = data;
         var temp : tableData[] = [];
@@ -95,12 +87,15 @@ export class ReportsListComponent implements OnInit {
               this.options.get('payment_status')!.values.find(f =>
               f.value == patient.PaymentStatus) === undefined ?
               '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus!)!.text,
+            
+            SurgeryDay: 
+              this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay) === undefined ?
+              '' : this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay)!.text,
             PaymentCard: patient.LastFourDigitsCard,
             CashAmount: patient.CashAmount
           })
         });
         this.dataSource.data = temp;
-        this.prepareChartData();
       });
   }
 
@@ -115,7 +110,7 @@ export class ReportsListComponent implements OnInit {
             });
           }
           this.filters.find((f) => f.name === filter.Group)!.values.push({
-            value: filter.Value.toString(),
+            value: filter.Value,
             text: filter.Text,
             selected: filter.Selected
           });
@@ -134,7 +129,6 @@ export class ReportsListComponent implements OnInit {
         });
         this.getReportData();
       });
-    this.dataSource.sort = this.sort;
 
     this.range.controls['start'].valueChanges.subscribe(() => {
       this.dateChanged();
@@ -146,7 +140,7 @@ export class ReportsListComponent implements OnInit {
 
   }
 
-  checkboxChanged(group: string, value: string) {
+  checkboxChanged(group: string, value: number) {
     if (this.internalFilter[group] === undefined) {
       this.internalFilter[group] = [];
     }
@@ -186,14 +180,31 @@ export class ReportsListComponent implements OnInit {
   }
 
   dateChanged() {
-    this.internalFilter["surgery_date"] = [
-      this.range.controls['start'].value,
-      this.range.controls['end'].value
-    ];
+    if(this.range.controls['start'].value === null && this.range.controls['end'].value === null) {
+      delete this.internalFilter["surgery_date"];
+    } else if(this.range.controls['start'].value === null) {
+      this.internalFilter["surgery_date"] = [
+        null,
+        this.range.controls['end'].value.unix()
+      ];
+    } else if(this.range.controls['end'].value === null) {
+      this.internalFilter["surgery_date"] = [
+        this.range.controls['start'].value.unix(),
+        null
+      ];
+    } else {
+      this.internalFilter["surgery_date"] = [
+        this.range.controls['start'].value.unix(),
+        this.range.controls['end'].value.unix()
+      ];
+    }
+    
     this.applyFilters();
   }
 
   applyFilters() {
+    this.internalFilter = {...this.internalFilter};
+    
     this.dataService.getReports(this.internalFilter).subscribe(
       (data) => {
         var temp : tableData[] = [];
@@ -214,21 +225,16 @@ export class ReportsListComponent implements OnInit {
             PaymentStatus: this.options.get('payment_status')!.values.find(f =>
               f.value == patient.PaymentStatus) === undefined ?
               '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus)!.text,
+            
+            SurgeryDay: 
+              this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay) === undefined ?
+              '' : this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay)!.text,
             PaymentCard: patient.LastFourDigitsCard,
             CashAmount: patient.CashAmount
           })
         });
         this.dataSource.data = temp;
-        this.prepareChartData();
     });
-  }
-
-  announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
   }
 
   doFilter(event: Event) {
@@ -236,7 +242,7 @@ export class ReportsListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  prepareExcelData(){
+  dowloadExcel(){
     let excelFileData: Map<string, any[]> = new Map<string, any[]>();
     this.patientData.forEach((patient) =>
     {
@@ -252,7 +258,14 @@ export class ReportsListComponent implements OnInit {
             '' : this.options.get(this.addUnderlinePipe.transform(key).toLowerCase())!.values.find(f => f.value == value.toString())!.text);
         }
         else if (key.includes("Date")){
-          excelFileData.get(key)!.push(this.dateAdapter.format(moment.unix(value), "YYYY-MM-DD"));
+          if(value != null) {
+            let date = this.dateAdapter.parse(value, "YYYY-MM-DD");
+            if(date != null) {
+              excelFileData.get(key)!.push(this.dateAdapter.format(date, "YYYY-MM-DD"));
+            } else {
+              console.error("Date is not in the correct format ", value);
+            }
+          }
         }
         else
           excelFileData.get(key)!.push(value);
@@ -261,11 +274,6 @@ export class ReportsListComponent implements OnInit {
     this.excelService.exportAsXLSX(excelFileData);
   }
 
-  prepareChartData(){
-    this.chartAdopters = [
-      new SimplePieAdopter(this.patientData, ["SurgeryResult"])
-    ]
-  }
   onChange(event: Event) {
     // @ts-ignore
     this.file = event.target.files[0];

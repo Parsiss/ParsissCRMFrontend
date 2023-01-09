@@ -11,21 +11,22 @@
           {{ 'time_range' | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-        <form [formGroup]="range" class="container">
-          <mat-form-field appearance="fill">
-            <mat-label>{{'surgery_date_from' | translate}}</mat-label>
-            <input matInput [matDatepicker]="startpicker" formControlName="start" [placeholder]="'start date' | translate">
-            <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
-            <mat-datepicker #startpicker></mat-datepicker>
-          </mat-form-field>
+      <form [formGroup]="range" class="container">
+        <mat-form-field appearance="fill">
+          <mat-label>{{'surgery_date_from' | translate}}</mat-label>
+          <input matInput [matDatepicker]="startpicker" formControlName="start"
+            [placeholder]="'start date' | translate">
+          <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+          <mat-datepicker #startpicker></mat-datepicker>
+        </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>{{'surgery_date_to' | translate}}</mat-label>
-            <input matInput [matDatepicker]="endpicker" formControlName="end" [placeholder]="'end date' | translate">
-            <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
-            <mat-datepicker #endpicker></mat-datepicker>
-          </mat-form-field>
-        </form>
+        <mat-form-field appearance="fill">
+          <mat-label>{{'surgery_date_to' | translate}}</mat-label>
+          <input matInput [matDatepicker]="endpicker" formControlName="end" [placeholder]="'end date' | translate">
+          <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+          <mat-datepicker #endpicker></mat-datepicker>
+        </mat-form-field>
+      </form>
     </mat-expansion-panel>
 
     <mat-expansion-panel hideToggle *ngFor="let filter of filters">
@@ -40,42 +41,48 @@
         </mat-checkbox>
       </div>
     </mat-expansion-panel>
-    <button (click)="prepareExcelData()" class="export-button" mat-stroked-button>Export</button>
+    <button (click)="dowloadExcel()" class="export-button" mat-stroked-button>Export</button>
     <div class="text-center">
-      <input class="form-control" type="file" accept=".db"
-             (change)="onChange($event)">
+      <input class="form-control" type="file" accept=".db" (change)="onChange($event)">
 
-      <button (click)="onUpload()"
-              class="btn btn-success" mat-stroked-button>
+      <button (click)="onUpload()" class="btn btn-success" mat-stroked-button>
         Upload
       </button>
     </div>
   </mat-card>
-  <mat-card style="overflow: auto; padding: 0px;">
-    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
-      <ng-container [matColumnDef]="name" *ngFor="let name of displayedFields" [sticky]="name == 'Name'">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ name | addUnderline | lowercase | translate }} </th>
-        <td mat-cell *matCellDef="let element"> {{ element[name] | translate}}</td>
-      </ng-container>
 
-      <ng-container matColumnDef="Actions" stickyEnd>
-        <th mat-header-cell *matHeaderCellDef> </th>
-        <td mat-cell *matCellDef="let element">
-          <div class="actions-container">
-            <button (click)="navigateTo(element.ID)" mat-stroked-button>{{ 'detail' | translate }}</button>
-            <button (click)="remove(element.ID)" mat-stroked-button> <mat-icon>delete</mat-icon></button>
-          </div>
-        </td>
-      </ng-container>
+  <mat-tab-group>
+    <mat-tab label="{{ 'table_tab' | translate }}">
+      <mat-card style="overflow: auto; padding: 0px;">
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator [pageSizeOptions]="[15, 10, 5, 20]" showFirstLastButtons
-      aria-label="Select page of periodic elements">
-    </mat-paginator>
-  </mat-card>
-</div>
-<div style="display: flex; justify-content: center;" class="container">
-  <app-chart *ngFor="let adopter of chartAdopters" [chartAdopter]="adopter"></app-chart>
+        <table mat-table [dataSource]="dataSource">
+          <ng-container [matColumnDef]="name" *ngFor="let name of displayedFields" [sticky]="name == 'Name'">
+            <th mat-header-cell *matHeaderCellDef> {{ name | addUnderline | lowercase | translate }}
+            </th>
+            <td mat-cell *matCellDef="let element"> {{ element[name] | translate}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="Actions" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element">
+              <div class="actions-container">
+                <button (click)="navigateTo(element.ID)" mat-stroked-button>{{ 'detail' | translate }}</button>
+                <button (click)="remove(element.ID)" mat-stroked-button> <mat-icon>delete</mat-icon></button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[15, 10, 5, 20]" showFirstLastButtons
+          aria-label="Select page of periodic elements">
+        </mat-paginator>
+      </mat-card>
+    </mat-tab>
+    <mat-tab label="{{ 'charts_tab' | translate }}">
+      <app-success-pie-chart [filters]="internalFilter"> </app-success-pie-chart>
+    </mat-tab>
+  </mat-tab-group>
 </div>

@@ -164,7 +164,6 @@ export class JalaliMomentDateAdapter extends DateAdapter<moment.Moment> {
   }
 
   createDate(year: number, month: number, date: number): moment.Moment {
-    //  console.log('year: ', year, 'month: ', month,'day: ', date); // shamsi
     // Moment.js will create an invalid date if any of the components are out of bounds, but we
     // explicitly check each case so we can throw more descriptive errors.
     if (month < 0 || month > 11) {

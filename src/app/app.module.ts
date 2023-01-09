@@ -31,6 +31,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { NgxCurrencyModule } from "ngx-currency";
 
 import { MatTabsModule } from '@angular/material/tabs';
@@ -58,9 +59,13 @@ import { OurCalendarComponent } from './our-calendar/our-calendar.component';
 import {AutofillService} from "./autofill.service";
 import {MAT_AUTOCOMPLETE_DEFAULT_OPTIONS, MatAutocompleteModule} from "@angular/material/autocomplete";
 import { NgApexchartsModule } from "ng-apexcharts";
-import { MyChartComponent } from './chart/chart.component';
 import { AddUnderlinePipe } from './add-underline.pipe';
 import { ReportOverviewDialogComponent } from './report-overview-dialog/report-overview-dialog.component';
+import { ColumnChartComponent } from './column-chart/column-chart.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { HospitalsPeriodicReportComponent } from './hospitals-periodic-report/hospitals-periodic-report.component';
+import { PeriodicReportsComponent } from './periodic-reports/periodic-reports.component';
+import { SuccessPieChartComponent } from './success-pie-chart/success-pie-chart.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -85,9 +90,14 @@ export function HttpLoaderFactory(http: HttpClient) {
     UpdatePatientComponent,
     DialogOverviewComponent,
     OurCalendarComponent,
-    MyChartComponent,
+    PieChartComponent,
+    ColumnChartComponent,
     AddUnderlinePipe,
     ReportOverviewDialogComponent,
+    ColumnChartComponent,
+    HospitalsPeriodicReportComponent,
+    PeriodicReportsComponent,
+    SuccessPieChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -123,6 +133,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatAutocompleteModule,
     FullCalendarModule,
     MatDialogModule,
+    MatSidenavModule,
     NgApexchartsModule,
     TranslateModule.forRoot({
       loader: {

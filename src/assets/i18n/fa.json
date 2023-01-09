@@ -70,6 +70,8 @@
     "percent_error": "مقدار وارد شده باید بین 0 تا 100 باشد",
     "insurance": "بیمه",
     "financial_verifier": "تایید کننده مالی",
+    "charts_tab": "نمودارها",
+    "table_tab": "جدول",
     "receipt received date": "تاریخ دریافت فاکتور",
     "receipt receiver": "گیرنده فاکتور",
     "add": "اضافه کردن",

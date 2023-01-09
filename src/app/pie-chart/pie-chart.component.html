@@ -1,0 +1,12 @@
+<div *ngIf="chartOptions.series.length">
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [labels]="chartOptions.labels"
+    [responsive]="chartOptions.responsive"
+    [legend]="chartOptions.legend"
+  ></apx-chart>
+</div>  
+<div *ngIf="!chartOptions.series.length">
+  <p class="text-center">No data to display</p>
+</div>

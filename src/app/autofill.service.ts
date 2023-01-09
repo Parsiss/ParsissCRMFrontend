@@ -31,18 +31,14 @@ export class AutofillService {
   constructor(
     public dataService : DataService
   ) {
-    this.dataService.getReports().subscribe(
-      (fulldata) => {
-        this.autofillFields.forEach((field) => {
-          this.autofillOptions.set(field, new Map());
-          for(let info of (fulldata as any)) {
-            const option = (info as any)[field].trim();
-            if(this.autofillOptions.get(field)!.get(option) == undefined) {
-              this.autofillOptions.get(field)!.set(option, 0);
-            }
-            this.autofillOptions.get(field)!.set(option, this.autofillOptions.get(field)!.get(option) as number + 1);
+    this.dataService.getAutofillData(this.autofillFields).subscribe(
+      (data) => {
+        for(let [key, value]of Object.entries(data)) {
+          this.autofillOptions.set(key, new Map(value));
+          for(let [item, count] of this.autofillOptions.get(key)!) {
+            this.autofillOptions.get(key)!.set(item, count);
           }
-        });
+        }
       }
     );
   }

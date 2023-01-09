@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import * as moment from 'moment';
 import { map, Observable, of } from 'rxjs';
-import { DatedReportData, Filter, PatientInformation} from '../types/report';
+import { DatedReportData, Filter, HospitalsPeriodicReportData, PatientInformation} from '../types/report';
 import { DateConversionService } from './date-conversion.service';
 
-import { KeyListOfValues } from './reports-list-component/interfaces';
+import { KeyListOfValues, KeyOfValues, AutolFillOptions } from './reports-list-component/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class DataService {
     public dateAdapter: DateAdapter<moment.Moment>
   ) { }
 
-  public getReports(filters: KeyListOfValues<string> | null = null): Observable<PatientInformation[]> {
+  public getReports(filters: KeyListOfValues<number> | null = null): Observable<PatientInformation[]> {
     if (filters === null || Object.keys(filters).length === 0) {
       return this.http.get<PatientInformation[]>(this.base_url + 'rest/');
     }
@@ -73,4 +73,24 @@ export class DataService {
     return this.http.get<DatedReportData>(this.base_url + `reports/dated/?start_date=${start}&end_date=${end}`);
   }
 
+  public getSuccessRateReport(filters: KeyListOfValues<number> | null = null): Observable<KeyListOfValues<number>> {
+    return this.http.post<KeyListOfValues<number>>(this.base_url + 'reports/success/', JSON.stringify(filters), this.httpOptions);
+  }
+
+  public getHospitalsPeriodicReport(p1start: number, p1end: number, p2start: number, p2end: number): Observable<HospitalsPeriodicReportData> {
+    return this.http.get<HospitalsPeriodicReportData>(this.base_url + `reports/hospitals/?p1start=${p1start}&p1end=${p1end}&p2start=${p2start}&p2end=${p2end}`);
+  }
+
+  public getAutofillData(fields: string[]): Observable<AutolFillOptions> {
+    return this.http.post<AutolFillOptions>(this.base_url + 'autofill/', JSON.stringify(fields), this.httpOptions);
+  }
+
+  public getFilteredReportExcel(filters: KeyListOfValues<number> | null = null): Observable<Blob> {
+    if (filters === null || Object.keys(filters).length === 0) {
+      return this.http.get(this.base_url + 'report/excel/', { responseType: 'blob' });
+    }
+
+    let bodyString = JSON.stringify(filters);
+    return this.http.post(this.base_url + 'report/excel/', bodyString, { responseType: 'blob' });
+  }
 }
