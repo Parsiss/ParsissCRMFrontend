@@ -1,5 +1,5 @@
 <div class="main-container">
-  <mat-card>
+  <mat-card style="display: flex; flex-direction: column; min-height: 100%;">
     {{ 'advanced search' | translate }}
     <mat-form-field style="margin: 10px 10px;">
       <input matInput type="text" (keyup)="doFilter($event)" placeholder="{{'simple search' | translate }}">
@@ -41,13 +41,10 @@
         </mat-checkbox>
       </div>
     </mat-expansion-panel>
-    <button (click)="dowloadExcel()" class="export-button" mat-stroked-button>Export</button>
-    <div class="text-center">
-      <input class="form-control" type="file" accept=".db" (change)="onChange($event)">
 
-      <button (click)="onUpload()" class="btn btn-success" mat-stroked-button>
-        Upload
-      </button>
+    <button (click)="dowloadExcel()" class="export-button" mat-stroked-button>Export</button>
+    <div class="text-center" style="margin-top: auto; margin-bottom: 3rem;">
+      <input class="form-control" type="file" accept=".db" (change)="onChange($event)">
     </div>
   </mat-card>
 

@@ -29,7 +29,7 @@ export class ReportsListComponent implements OnInit {
 
   dataSource = new MatTableDataSource<tableData>([]);
   displayedFields: string[] = [
-    'SurgeryDay', 'Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
+    'Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
     'SurgeryResult', 'PaymentCard', 'CashAmount', 'OperatorFirst'
   ];
 
@@ -38,7 +38,9 @@ export class ReportsListComponent implements OnInit {
   public internalFilter: KeyListOfValues<number> = {};
 
   filters: filterGroup[] = [];
+  filterFields: string[] = ['hospital_type', 'surgery_result', 'surgery_area', 'payment_status'];
 
+  
   options: Map<string, optionGroup> = new Map<string, optionGroup>();
 
   range = new FormGroup({
@@ -103,6 +105,22 @@ export class ReportsListComponent implements OnInit {
     this.dataService.getOptions().subscribe(
       (data) => {
         data.forEach((filter) => {
+          if (this.options.get(filter.Group) === undefined) {
+            this.options.set(filter.Group, {
+              name: filter.Group,
+              values: []
+            });
+          }
+          this.options.get(filter.Group)!.values.push({
+            value: filter.Value,
+            text: filter.Text,
+            selected: filter.Selected
+          });
+
+          if(!this.filterFields.includes(filter.Group)) {
+            return;
+          }
+
           if (this.filters.find(f => f.name === filter.Group) === undefined) {
             this.filters.push({
               name: filter.Group,
@@ -115,17 +133,7 @@ export class ReportsListComponent implements OnInit {
             selected: filter.Selected
           });
 
-          if (this.options.get(filter.Group) === undefined) {
-            this.options.set(filter.Group, {
-              name: filter.Group,
-              values: []
-            });
-          }
-          this.options.get(filter.Group)!.values.push({
-            value: filter.Value,
-            text: filter.Text,
-            selected: filter.Selected
-          });
+
         });
         this.getReportData();
       });
@@ -277,6 +285,7 @@ export class ReportsListComponent implements OnInit {
   onChange(event: Event) {
     // @ts-ignore
     this.file = event.target.files[0];
+    this.onUpload();
   }
 
   onUpload() {
