@@ -35,10 +35,13 @@
           {{ filter.name | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <div style="display: flex; flex-direction:column;">
+      <div style="display: flex; flex-direction:column;" *ngIf="filter.values && filter.values.length">
         <mat-checkbox *ngFor="let value of filter.values" [checked]="value.selected" (change)="checkboxChanged(filter.name, value.value)">
           {{ value.text | translate }}
         </mat-checkbox>
+      </div>
+      <div style="display: flex; flex-direction:column;" *ngIf="!filter.values || !filter.values.length">
+        {{ 'no_values' | translate }}
       </div>
     </mat-expansion-panel>
 

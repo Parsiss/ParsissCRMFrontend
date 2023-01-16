@@ -69,6 +69,7 @@
     "percent_error": "Enter a value between 0 and 100",
     "charts_tab": "Charts",
     "table_tab": "Table",
+    "no_values": "No values",
     "add": "Add",
     "save": "Save",
     "filters": "Filters",
