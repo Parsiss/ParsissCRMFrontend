@@ -2,7 +2,7 @@
 export interface filterOption {
     value: number;
     text: string;
-    selected: string;
+    selected: boolean;
 }
   
 export interface filterGroup {

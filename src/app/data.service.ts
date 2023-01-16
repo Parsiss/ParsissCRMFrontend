@@ -35,8 +35,9 @@ export class DataService {
     return this.http.post<PatientInformation[]>(this.base_url + 'report/filtered/', bodyString, this.httpOptions);
   }
 
-  public getOptions(): Observable<Filter[]> {
-    return this.http.get<Filter[]>(this.base_url + 'options/');
+  public getOptions(filters: KeyListOfValues<number> | null = null): Observable<Filter[]> {
+    let body = JSON.stringify(filters || {});
+    return this.http.post<Filter[]>(this.base_url + 'options/', body, this.httpOptions);
   }
 
   public getPatient(id: number): Observable<PatientInformation> {

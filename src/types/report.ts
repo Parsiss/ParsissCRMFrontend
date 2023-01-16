@@ -84,8 +84,6 @@ export interface Filter {
     Selected: string;
     Group: string;
 }
-
-
 export type Option = Filter;
 
 

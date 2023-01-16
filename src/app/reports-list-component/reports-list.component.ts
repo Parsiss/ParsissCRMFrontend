@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {PatientInformation, tableData} from 'src/types/report';
+import {Filter, PatientInformation, tableData} from 'src/types/report';
 import { DataService } from '../data.service';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -38,9 +38,9 @@ export class ReportsListComponent implements OnInit {
   public internalFilter: KeyListOfValues<number> = {};
 
   filters: filterGroup[] = [];
-  filterFields: string[] = ['hospital_type', 'surgery_result', 'surgery_area', 'payment_status'];
+  filterFields: string[] = ['surgeon_first', 'operator_first', 'hospital', 'hospital_type', 'surgery_result', 'surgery_area', 'payment_status'];
+  charFilterFields: string[] = ['surgeon_first', 'operator_first', 'hospital'];
 
-  
   options: Map<string, optionGroup> = new Map<string, optionGroup>();
 
   range = new FormGroup({
@@ -68,75 +68,14 @@ export class ReportsListComponent implements OnInit {
 
   getReportData() {
     this.dataSource.paginator = this.paginator;
-    this.dataService.getReports().subscribe(
-      (data) => {
-        this.patientData = data;
-        var temp : tableData[] = [];
-        data.forEach((patient) => {
-          temp.push({
-            ID: patient.ID,
-            Name: patient.Name,
-            NationalId: patient.NationalID,
-            PhoneNumber: patient.PhoneNumber,
-            SurgeonFirst: patient.SurgeonFirst,
-            Hospital: patient.Hospital,
-            OperatorFirst: patient.OperatorFirst,
-            SurgeryResult: 
-              this.options.get('surgery_result')!.values.find(f => f.value == (patient.SurgeryResult)) === undefined ? 
-              '' : this.options.get('surgery_result')!.values.find(f => f.value == patient.SurgeryResult)!.text,
-            
-            PaymentStatus: 
-              this.options.get('payment_status')!.values.find(f =>
-              f.value == patient.PaymentStatus) === undefined ?
-              '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus!)!.text,
-            
-            SurgeryDay: 
-              this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay) === undefined ?
-              '' : this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay)!.text,
-            PaymentCard: patient.LastFourDigitsCard,
-            CashAmount: patient.CashAmount
-          })
-        });
-        this.dataSource.data = temp;
-      });
+    this.dataService.getReports().subscribe(this.fillTableReportData.bind(this));
   }
 
   ngOnInit(): void {
-    this.dataService.getOptions().subscribe(
-      (data) => {
-        data.forEach((filter) => {
-          if (this.options.get(filter.Group) === undefined) {
-            this.options.set(filter.Group, {
-              name: filter.Group,
-              values: []
-            });
-          }
-          this.options.get(filter.Group)!.values.push({
-            value: filter.Value,
-            text: filter.Text,
-            selected: filter.Selected
-          });
-
-          if(!this.filterFields.includes(filter.Group)) {
-            return;
-          }
-
-          if (this.filters.find(f => f.name === filter.Group) === undefined) {
-            this.filters.push({
-              name: filter.Group,
-              values: []
-            });
-          }
-          this.filters.find((f) => f.name === filter.Group)!.values.push({
-            value: filter.Value,
-            text: filter.Text,
-            selected: filter.Selected
-          });
-
-
-        });
-        this.getReportData();
-      });
+    this.dataService.getOptions().subscribe({
+      next: this.extractOptions.bind(this),
+      complete: this.getReportData.bind(this),
+    });
 
     this.range.controls['start'].valueChanges.subscribe(() => {
       this.dateChanged();
@@ -145,10 +84,12 @@ export class ReportsListComponent implements OnInit {
     this.range.controls['end'].valueChanges.subscribe(() => {
       this.dateChanged();
     });
-
   }
 
   checkboxChanged(group: string, value: number) {
+    let options = this.filters.find(v => v.name === group)!.values;
+    options.find(v => v.value === value)!.selected = !options.find(v => v.value === value)!.selected;
+
     if (this.internalFilter[group] === undefined) {
       this.internalFilter[group] = [];
     }
@@ -212,37 +153,125 @@ export class ReportsListComponent implements OnInit {
 
   applyFilters() {
     this.internalFilter = {...this.internalFilter};
-    
-    this.dataService.getReports(this.internalFilter).subscribe(
-      (data) => {
-        var temp : tableData[] = [];
-        this.patientData = data;
-        data.forEach((patient) => {
-          temp.push({
-            ID: patient.ID,
-            Name: patient.Name,
-            NationalId: patient.NationalID,
-            PhoneNumber: patient.PhoneNumber,
-            SurgeonFirst: patient.SurgeonFirst,
-            Hospital: patient.Hospital,
-            OperatorFirst: patient.OperatorFirst,
-            SurgeryResult: this.options.get('surgery_result')!.values.find(f =>
-              f.value == patient.SurgeryResult) === undefined ?
-              '' : this.options.get('surgery_result')!.values.find(f => f.value == patient.SurgeryResult)!.text,
-            
-            PaymentStatus: this.options.get('payment_status')!.values.find(f =>
-              f.value == patient.PaymentStatus) === undefined ?
-              '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus)!.text,
-            
-            SurgeryDay: 
-              this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay) === undefined ?
-              '' : this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay)!.text,
-            PaymentCard: patient.LastFourDigitsCard,
-            CashAmount: patient.CashAmount
-          })
-        });
-        this.dataSource.data = temp;
+    let internalFilter = {...this.internalFilter};
+    for(let key of this.charFilterFields) {
+      if(internalFilter[key] !== undefined) {
+        delete internalFilter[key];
+      }
+    }
+    this.dataService.getOptions(internalFilter).subscribe({
+      next: this.updateOptions.bind(this),
+      complete: () => this.dataService.getReports(this.internalFilter).subscribe(this.fillTableReportData.bind(this)),
     });
+
+  }
+
+  updateOptions(data: Filter[]) {
+    for(let key of this.charFilterFields) {
+      this.filters.find(f => f.name === key)!.values = [];
+    }
+
+    data.forEach((filter) => {
+      if(!this.charFilterFields.includes(filter.Group)) {
+        return;
+      }
+
+      if (this.filters.find(f => f.name === filter.Group) === undefined) {
+        this.filters.push({
+          name: filter.Group,
+          values: []
+        });
+      }
+      this.filters.find(f => f.name === filter.Group)!.values.push({
+        value: filter.Value,
+        text: filter.Text,
+        selected: false
+      });
+    });
+    
+    this.charFilterFields.forEach((key) => {
+      if(this.internalFilter[key] == undefined) {
+        this.internalFilter[key] = [];
+      }
+
+      this.filters.find(f => f.name === key)!.values.forEach((value) => {
+        if(this.internalFilter[key].find(v => v === value.value) !== undefined) {
+          value.selected = true;
+        }
+      });
+
+      for(let i = 0; i < this.internalFilter[key].length; i++) {
+        if(this.filters.find(f => f.name === key)!.values.find(v => v.value === this.internalFilter[key][i]) === undefined) {
+          this.filters.find(f => f.name === key)!.values.unshift({
+            value: this.internalFilter[key][i],
+            text: this.internalFilter[key][i].toString() + " (0)",
+            selected: true
+          });
+        }
+      }
+    });
+  }
+
+  extractOptions(data: Filter[]) {
+    data.forEach((filter) => {
+      if (this.options.get(filter.Group) === undefined) {
+        this.options.set(filter.Group, {
+          name: filter.Group,
+          values: []
+        });
+      }
+      this.options.get(filter.Group)!.values.push({
+        value: filter.Value,
+        text: filter.Text,
+        selected: filter.Selected
+      });
+
+      if(!this.filterFields.includes(filter.Group)) {
+        return;
+      }
+
+      if (this.filters.find(f => f.name === filter.Group) === undefined) {
+        this.filters.push({
+          name: filter.Group,
+          values: []
+        });
+      }
+      this.filters.find((f) => f.name === filter.Group)!.values.push({
+        value: filter.Value,
+        text: filter.Text,
+        selected: false
+      });
+    });
+  }
+
+  fillTableReportData(data: PatientInformation[]) {
+    var temp : tableData[] = [];
+    this.patientData = data;
+    data.forEach((patient) => {
+      temp.push({
+        ID: patient.ID,
+        Name: patient.Name,
+        NationalId: patient.NationalID,
+        PhoneNumber: patient.PhoneNumber,
+        SurgeonFirst: patient.SurgeonFirst,
+        Hospital: patient.Hospital,
+        OperatorFirst: patient.OperatorFirst,
+        SurgeryResult: this.options.get('surgery_result')!.values.find(f =>
+          f.value == patient.SurgeryResult) === undefined ?
+          '' : this.options.get('surgery_result')!.values.find(f => f.value == patient.SurgeryResult)!.text,
+        
+        PaymentStatus: this.options.get('payment_status')!.values.find(f =>
+          f.value == patient.PaymentStatus) === undefined ?
+          '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus)!.text,
+        
+        SurgeryDay: 
+          this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay) === undefined ?
+          '' : this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay)!.text,
+        PaymentCard: patient.LastFourDigitsCard,
+        CashAmount: patient.CashAmount
+      })
+    });
+    this.dataSource.data = temp;
   }
 
   doFilter(event: Event) {
