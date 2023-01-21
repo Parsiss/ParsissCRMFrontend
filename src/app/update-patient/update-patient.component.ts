@@ -40,16 +40,6 @@ export class UpdatePatientComponent implements OnInit {
     });
   }
 
-  canDeactivate(): Observable<boolean> {
-    console.log('canDeactivate');
-    if (false) {
-      const result = window.confirm('There are unsaved changes! Are you sure?');
-      return of(result);
-    }
-    return of(true);
-  }
-
-
   SaveChanges() {
 
     if (this.id == 0) return;
@@ -82,4 +72,11 @@ export class UpdatePatientComponent implements OnInit {
     }
   }
 
+  canDeactivate(): Observable<boolean> {
+    if (this.detailPage.form.dirty) {
+      const result = window.confirm('There are unsaved changes! Are you sure?');
+      return of(result);
+    }
+    return of(true);
+  }
 }

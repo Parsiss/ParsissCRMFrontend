@@ -1,6 +1,6 @@
 import {Component, HostListener, Input, OnInit} from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { DataService } from '../data.service';
 import {PatientInformation} from 'src/types/report';
@@ -11,6 +11,7 @@ import * as moment from 'jalali-moment';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 import {AutofillService} from "../autofill.service";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-detail-page',
@@ -44,7 +45,8 @@ export class DetailPageComponent implements OnInit {
     route: ActivatedRoute,
     public dataService: DataService,
     public htmlService: HtmlService,
-    public autofill: AutofillService
+    public autofill: AutofillService,
+    private router: Router
   ) {
     this.form = new FormGroup({
       NationalID: new FormControl(''),
@@ -105,7 +107,10 @@ export class DetailPageComponent implements OnInit {
 
   @HostListener('window:beforeunload', ['$event'])
   beforeunloadHandler(event: Event) {
-    return false;
+    if(this.form.dirty) {
+      return false;
+    }
+    return true;
   }
 
   ngOnInit(): void {

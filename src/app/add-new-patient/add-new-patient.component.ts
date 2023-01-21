@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientInformation } from 'src/types/report';
 import { DataService } from '../data.service';
@@ -47,15 +45,6 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
     this.detailPage.form.controls['DateOfHospitalAdmission'].setValue(now);
   }
 
-  canDeactivate(): Observable<boolean> {
-    if (true) {
-      const result = window.confirm('There are unsaved changes! Are you sure?');
-      return of(result);
-    }
-    return of(true);
-  }
-
-
   AddNewPatient() {
     if (this.detailPage.form.valid) {
       let fulldata: PatientInformation = {};
@@ -78,5 +67,13 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
     } else {
       this.detailPage.form.markAllAsTouched();
     }
+  }
+
+  canDeactivate(): Observable<boolean> {
+    if (this.detailPage.form.dirty) {
+      const result = window.confirm('Changes you made may not be saved.');
+      return of(result);
+    }
+    return of(true);
   }
 }

@@ -250,6 +250,12 @@
         <mat-label>{{'cancellation_reason' | translate}}</mat-label>
         <input matInput placeholder="{{'cancellation_reason' | translate}}" formControlName="CancellationReason">
       </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: surgery-description;">
+        <mat-label>{{'surgery_description' | translate}}</mat-label>
+        <textarea matInput placeholder="{{'surgery_description' | translate}}" formControlName="SurgeryDescription"
+                  rows="1"></textarea>
+      </mat-form-field>
     </form>
   </mat-tab>
   <mat-tab label="{{'complementary_information' | translate }}">
@@ -310,10 +316,13 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" style="grid-area: surgery-description;">
-        <mat-label>{{'surgery_description' | translate}}</mat-label>
-        <textarea matInput placeholder="{{'surgery_description' | translate}}" formControlName="SurgeryDescription"
-          rows="3"></textarea>
+      <mat-form-field appearance="fill" style="grid-area: headband-fix;">
+        <mat-label>{{'head_fix_type' | translate}}</mat-label>
+        <mat-select formControlName="HeadFixType">
+          <mat-option *ngFor="let value of options.get('head_fix_type')!.values" [value]="value.value">
+            {{ value.text | translate }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: surgeon-second;">
@@ -399,21 +408,13 @@
           #patientEnterTimeDatepicker [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" style="grid-area: headband-fix;">
-        <mat-label>{{'head_fix_type' | translate}}</mat-label>
-        <mat-select formControlName="HeadFixType">
-          <mat-option *ngFor="let value of options.get('head_fix_type')!.values" [value]="value.value">
-            {{ value.text | translate }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" style="grid-area: FRE;">
-        <mat-label>{{'FRE' | translate}}</mat-label>
-        <input matInput type="number" min="0" max="150" formControlName="FRE" placeholder="{{'FRE' | translate}}">
-      </mat-form-field>
-
     </form>
 
+  </mat-tab>
+  <mat-tab label="{{'software_information' | translate }}">
+    <mat-form-field appearance="fill" style="grid-area: FRE;">
+      <mat-label>{{'FRE' | translate}}</mat-label>
+      <input matInput type="number" min="0" max="150" formControlName="FRE" placeholder="{{'FRE' | translate}}">
+    </mat-form-field>
   </mat-tab>
 </mat-tab-group>
