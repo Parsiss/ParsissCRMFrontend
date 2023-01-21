@@ -98,7 +98,7 @@ export class DetailPageComponent implements OnInit {
     });
 
     this.form.controls['SurgeryDate'].valueChanges.subscribe(value => {
-      const day = moment.unix(value).jDay() + 1;
+      const day = value.jDay() + 1;
       this.form.controls['SurgeryDay'].setValue(day);
     });
   }
