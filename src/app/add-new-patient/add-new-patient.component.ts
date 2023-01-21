@@ -7,6 +7,7 @@ import { DataService } from '../data.service';
 import { DetailPageComponent } from '../detail-page-component/detail-page.component';
 import { HtmlService } from '../html.service';
 import * as moment from "jalali-moment";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-add-new-patient',
@@ -45,6 +46,15 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
     this.detailPage.form.controls['DateOfFirstContact'].setValue(now);
     this.detailPage.form.controls['DateOfHospitalAdmission'].setValue(now);
   }
+
+  canDeactivate(): Observable<boolean> {
+    if (true) {
+      const result = window.confirm('There are unsaved changes! Are you sure?');
+      return of(result);
+    }
+    return of(true);
+  }
+
 
   AddNewPatient() {
     if (this.detailPage.form.valid) {

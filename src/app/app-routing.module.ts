@@ -5,11 +5,12 @@ import { HomePageComponent } from './home-page-component/home-page.component';
 import { PeriodicReportsComponent } from './periodic-reports/periodic-reports.component';
 import { ReportsListComponent } from './reports-list-component/reports-list.component';
 import { UpdatePatientComponent } from './update-patient/update-patient.component';
+import {CanDeactivateGuard} from "./guards/can-deactivate.guard";
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'detailPage/:id', component: UpdatePatientComponent },
-  { path: 'add_new_patient', component: AddNewPatientComponent },
+  { path: 'detailPage/:id', component: UpdatePatientComponent , canDeactivate: [CanDeactivateGuard] },
+  { path: 'add_new_patient', component: AddNewPatientComponent , canDeactivate: [CanDeactivateGuard] },
   { path: 'home', component: HomePageComponent },
   { path: 'reportsList', component: ReportsListComponent },
   { path: 'preports', component: PeriodicReportsComponent},

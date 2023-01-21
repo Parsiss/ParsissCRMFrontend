@@ -1,4 +1,4 @@
-import {Component, Inject, Injectable, OnInit} from '@angular/core';
+import {Component, Inject, Injectable} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT } from '@angular/common';

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, HostListener, Input, OnInit} from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
@@ -37,7 +37,7 @@ export class DetailPageComponent implements OnInit {
   };
 
   fulldata: PatientInformation = {};
-  options: Map<string, optionGroup> = new Map<string, optionGroup>();  
+  options: Map<string, optionGroup> = new Map<string, optionGroup>();
   form: FormGroup;
 
   constructor(
@@ -101,6 +101,11 @@ export class DetailPageComponent implements OnInit {
       const day = value.jDay() + 1;
       this.form.controls['SurgeryDay'].setValue(day);
     });
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event: Event) {
+    return false;
   }
 
   ngOnInit(): void {

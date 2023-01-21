@@ -66,6 +66,7 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
 import { HospitalsPeriodicReportComponent } from './hospitals-periodic-report/hospitals-periodic-report.component';
 import { PeriodicReportsComponent } from './periodic-reports/periodic-reports.component';
 import { SuccessPieChartComponent } from './success-pie-chart/success-pie-chart.component';
+import { CanDeactivateGuard } from "./guards/can-deactivate.guard";
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -153,7 +154,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     }},
     FormControlDirective,
     FormGroupDirective,
-    DatePipe
+    DatePipe,
+    CanDeactivateGuard,
   ],
   bootstrap: [AppComponent]
 })

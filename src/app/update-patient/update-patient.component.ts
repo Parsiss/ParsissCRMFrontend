@@ -6,6 +6,7 @@ import { DataService } from '../data.service';
 import { DetailPageComponent } from '../detail-page-component/detail-page.component';
 import { HtmlService } from '../html.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-update-patient',
@@ -38,6 +39,16 @@ export class UpdatePatientComponent implements OnInit {
       this.name = value;
     });
   }
+
+  canDeactivate(): Observable<boolean> {
+    console.log('canDeactivate');
+    if (false) {
+      const result = window.confirm('There are unsaved changes! Are you sure?');
+      return of(result);
+    }
+    return of(true);
+  }
+
 
   SaveChanges() {
 
