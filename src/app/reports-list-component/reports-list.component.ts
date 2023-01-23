@@ -27,9 +27,22 @@ import {UploadService} from "../upload.service";
 export class ReportsListComponent implements OnInit {
   patientData: PatientInformation[];
 
+  public weekdays_color: { [key: string]: string } = {
+    // two colors
+    'Saturday': 'black',
+    'Sunday': 'steelblue',
+    'Monday': 'black',
+    'Tuesday': 'steelblue',
+    'Wednesday': 'black',
+    'Thursday': 'steelblue',
+    'Friday': 'black',
+
+  };
+
+
   dataSource = new MatTableDataSource<tableData>([]);
   displayedFields: string[] = [
-    'Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
+    'SurgeryDay', 'Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
     'SurgeryResult', 'PaymentCard', 'CashAmount', 'OperatorFirst'
   ];
 
