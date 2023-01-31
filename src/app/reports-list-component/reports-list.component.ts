@@ -1,3 +1,4 @@
+// زن زندگی آزادی
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -36,13 +37,12 @@ export class ReportsListComponent implements OnInit {
     'Wednesday': 'black',
     'Thursday': 'steelblue',
     'Friday': 'black',
-
   };
 
 
   dataSource = new MatTableDataSource<tableData>([]);
   displayedFields: string[] = [
-    'SurgeryDay', 'Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
+    'SurgeryDate', 'Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
     'SurgeryResult', 'PaymentCard', 'CashAmount', 'OperatorFirst'
   ];
 
@@ -258,11 +258,19 @@ export class ReportsListComponent implements OnInit {
   }
 
   fillTableReportData(data: PatientInformation[]) {
+    console.log(data);
     var temp : tableData[] = [];
     this.patientData = data;
     data.forEach((patient) => {
+      let formatted: string = "";
+      let m = moment(patient.SurgeryDate!, 'YYYY-MM-DD');
+      let localMonth = this.dateAdapter.getMonthNames('long')[m.jMonth()];
+      let weekday = this.dateAdapter.getDayOfWeekNames('long')[((m.jDay() + 6) % 7)];
+      formatted = `${weekday} ${m.jDate()} ${localMonth}`;
+
       temp.push({
         ID: patient.ID,
+        SurgeryDate: formatted,
         Name: patient.Name,
         NationalId: patient.NationalID,
         PhoneNumber: patient.PhoneNumber,
@@ -273,13 +281,14 @@ export class ReportsListComponent implements OnInit {
           f.value == patient.SurgeryResult) === undefined ?
           '' : this.options.get('surgery_result')!.values.find(f => f.value == patient.SurgeryResult)!.text,
         
+        SurgeryDay: this.options.get('surgery_day')!.values.find(f =>
+          f.value == patient.SurgeryDay) === undefined ?
+          '' : this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay)!.text,
+        
         PaymentStatus: this.options.get('payment_status')!.values.find(f =>
           f.value == patient.PaymentStatus) === undefined ?
           '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus)!.text,
-        
-        SurgeryDay: 
-          this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay) === undefined ?
-          '' : this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay)!.text,
+      
         PaymentCard: patient.LastFourDigitsCard,
         CashAmount: patient.CashAmount
       })
@@ -292,20 +301,25 @@ export class ReportsListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  dowloadExcel(){
+  downloadExcel(){
     let excelFileData: Map<string, any[]> = new Map<string, any[]>();
     this.patientData.forEach((patient) =>
     {
       for (let [key, value] of Object.entries(patient)) {
+        try {
         if (excelFileData.get(key) === undefined) {
           excelFileData.set(key, []);
         }
         if (["SurgeryResult", "PaymentStatus", "SurgeryDay", "SurgeryArea", "HospitalType", "HeadFixType",
           "SurgeryTime", "CT", "MR", "FMRI", "DTI"].includes(key))
         {
-          excelFileData.get(key)!.push(this.options.get(this.addUnderlinePipe.transform(key).toLowerCase())!.values.find(f =>
-            f.value == value.toString()) === undefined ?
-            '' : this.options.get(this.addUnderlinePipe.transform(key).toLowerCase())!.values.find(f => f.value == value.toString())!.text);
+          if(value != null) {
+            excelFileData.get(key)!.push(this.options.get(this.addUnderlinePipe.transform(key).toLowerCase())!.values.find(f =>
+              f.value == value.toString()) === undefined ?
+              '' : this.options.get(this.addUnderlinePipe.transform(key).toLowerCase())!.values.find(f => f.value == value.toString())!.text);
+          } else {
+            excelFileData.get(key)!.push('');
+          }
         }
         else if (key.includes("Date")){
           if(value != null) {
@@ -319,7 +333,13 @@ export class ReportsListComponent implements OnInit {
         }
         else
           excelFileData.get(key)!.push(value);
+          
+      } catch (e) {
+        console.log(patient);
+        console.log(key, value);
+        console.error(e);
       }
+    }
     });
     this.excelService.exportAsXLSX(excelFileData);
   }

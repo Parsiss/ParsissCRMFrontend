@@ -73,7 +73,7 @@ export class ColumnChartComponent {
         }
       },
       dataLabels: {
-        enabled: false
+        enabled: true
       },
       stroke: {
         show: true,
@@ -102,5 +102,6 @@ export class ColumnChartComponent {
         floating: false,
       }
     };
+
   }
 }
