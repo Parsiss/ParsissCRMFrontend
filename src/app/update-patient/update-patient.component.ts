@@ -1,12 +1,13 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import { PatientInformation } from 'src/types/report';
 import { DataService } from '../data.service';
 import { DetailPageComponent } from '../detail-page-component/detail-page.component';
 import { HtmlService } from '../html.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {Observable, of} from "rxjs";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-update-patient',
@@ -22,12 +23,14 @@ export class UpdatePatientComponent implements OnInit {
 
   name: string | null;
 
+  save_clicked: boolean = false;
+
   constructor(
     route: ActivatedRoute,
     private htmlService: HtmlService,
     private dataService: DataService,
     private _snackBar: MatSnackBar,
-    private router: Router
+    private location: Location
   ) {
     route.params.subscribe(params => {
       this.id = parseInt(params['id'], 10);
@@ -46,6 +49,7 @@ export class UpdatePatientComponent implements OnInit {
 
     if (this.detailPage.form.valid)
     {
+      this.save_clicked = true;
       let fulldata: PatientInformation = {}
 
       fulldata["ID"] = this.id;
@@ -68,12 +72,12 @@ export class UpdatePatientComponent implements OnInit {
           });
         }
       );
-      this.router.navigate(['/reportsList']);
+      this.location.back();
     }
   }
 
   canDeactivate(): Observable<boolean> {
-    if (this.detailPage.form.dirty) {
+    if (this.detailPage.form.dirty && !this.save_clicked) {
       const result = window.confirm('There are unsaved changes! Are you sure?');
       return of(result);
     }

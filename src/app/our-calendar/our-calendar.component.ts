@@ -60,6 +60,7 @@ export class OurCalendarComponent implements OnInit {
   ngOnInit(): void {
     this.daysOfWeek = this.dateAdapter.getDayOfWeekNames('long');
     this.daysOfMonth = this.dateAdapter.getMonthNames('long');
+    this.currentDate = localStorage.getItem('currentDate') ? this.dateAdapter.parse(localStorage.getItem('currentDate'), 'jYYYY/jMM/jDD')! : this.currentDate;
     this.fillCalendarCells();
 
     this.dataService.getCalendarEvent().subscribe(
@@ -167,6 +168,7 @@ export class OurCalendarComponent implements OnInit {
     this.fillCalendarCells();
     this.fillWeeklyReports();
     this.fillMonthlyReports();
+    localStorage.setItem("currentDate", this.currentDate.format("jYYYY/jMM/jDD"));
   }
 
   previousMonth() {
@@ -174,6 +176,7 @@ export class OurCalendarComponent implements OnInit {
     this.fillCalendarCells();
     this.fillWeeklyReports();
     this.fillMonthlyReports();
+    localStorage.setItem("currentDate", this.currentDate.format("jYYYY/jMM/jDD"));
   }
 
   cliecked(date: any) {

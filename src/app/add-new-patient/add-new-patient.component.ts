@@ -6,6 +6,7 @@ import { DetailPageComponent } from '../detail-page-component/detail-page.compon
 import { HtmlService } from '../html.service';
 import * as moment from "jalali-moment";
 import {Observable, of} from "rxjs";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-add-new-patient',
@@ -21,7 +22,7 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
     private htmlService: HtmlService,
     private dataService: DataService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private location: Location
   ) {
 
   }
@@ -45,8 +46,10 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
     this.detailPage.form.controls['DateOfHospitalAdmission'].setValue(now);
   }
 
+  add_new_patient_clicked: boolean = false;
   AddNewPatient() {
     if (this.detailPage.form.valid) {
+      this.add_new_patient_clicked = true
       let fulldata: PatientInformation = {};
 
       for (let key in this.detailPage.form.controls) {
@@ -61,7 +64,7 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
       this.dataService.addPatient(fulldata).subscribe(
         (data: any) => {
           this.htmlService.isPageReady = true;
-          this.router.navigate(['/reportsList']);
+          this.location.back();
         }
       );
     } else {
@@ -70,7 +73,8 @@ export class AddNewPatientComponent implements OnInit, AfterViewInit {
   }
 
   canDeactivate(): Observable<boolean> {
-    if (this.detailPage.form.dirty) {
+    if (this.detailPage.form.dirty && !this.add_new_patient_clicked) {
+      this.add_new_patient_clicked = true
       const result = window.confirm('Changes you made may not be saved.');
       return of(result);
     }
