@@ -58,6 +58,7 @@ export interface PatientInformation {
 
 export interface tableData {
     ID?: number;
+    SurgeryDate?: any;
     SurgeryDay?: string;
     PaymentStatus?: string;
     Name?: string;
