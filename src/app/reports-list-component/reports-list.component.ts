@@ -97,6 +97,8 @@ export class ReportsListComponent implements OnInit {
     this.range.controls['end'].valueChanges.subscribe(() => {
       this.dateChanged();
     });
+    localStorage.getItem('internalFilter') && (this.internalFilter = JSON.parse(localStorage.getItem('internalFilter')!));
+    this.applyFilters();
   }
 
   checkboxChanged(group: string, value: number) {
@@ -160,7 +162,7 @@ export class ReportsListComponent implements OnInit {
         this.range.controls['end'].value.unix()
       ];
     }
-    
+
     this.applyFilters();
   }
 
@@ -172,11 +174,12 @@ export class ReportsListComponent implements OnInit {
         delete internalFilter[key];
       }
     }
+    console.log(this.internalFilter);
     this.dataService.getOptions(internalFilter).subscribe({
       next: this.updateOptions.bind(this),
       complete: () => this.dataService.getReports(this.internalFilter).subscribe(this.fillTableReportData.bind(this)),
     });
-
+    localStorage.setItem('internalFilter', JSON.stringify(this.internalFilter));
   }
 
   updateOptions(data: Filter[]) {
@@ -201,7 +204,7 @@ export class ReportsListComponent implements OnInit {
         selected: false
       });
     });
-    
+
     this.charFilterFields.forEach((key) => {
       if(this.internalFilter[key] == undefined) {
         this.internalFilter[key] = [];
@@ -258,7 +261,6 @@ export class ReportsListComponent implements OnInit {
   }
 
   fillTableReportData(data: PatientInformation[]) {
-    console.log(data);
     var temp : tableData[] = [];
     this.patientData = data;
     data.forEach((patient) => {
@@ -280,15 +282,15 @@ export class ReportsListComponent implements OnInit {
         SurgeryResult: this.options.get('surgery_result')!.values.find(f =>
           f.value == patient.SurgeryResult) === undefined ?
           '' : this.options.get('surgery_result')!.values.find(f => f.value == patient.SurgeryResult)!.text,
-        
+
         SurgeryDay: this.options.get('surgery_day')!.values.find(f =>
           f.value == patient.SurgeryDay) === undefined ?
           '' : this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay)!.text,
-        
+
         PaymentStatus: this.options.get('payment_status')!.values.find(f =>
           f.value == patient.PaymentStatus) === undefined ?
           '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus)!.text,
-      
+
         PaymentCard: patient.LastFourDigitsCard,
         CashAmount: patient.CashAmount
       })
@@ -333,10 +335,8 @@ export class ReportsListComponent implements OnInit {
         }
         else
           excelFileData.get(key)!.push(value);
-          
+
       } catch (e) {
-        console.log(patient);
-        console.log(key, value);
         console.error(e);
       }
     }
