@@ -12,6 +12,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { NgxMaterialTimepickerTheme } from 'ngx-material-timepicker';
 import {AutofillService} from "../autofill.service";
 import {Observable, of} from "rxjs";
+import { ComboOptions } from 'src/types/filters';
 
 @Component({
   selector: 'app-detail-page',
@@ -38,7 +39,7 @@ export class DetailPageComponent implements OnInit {
   };
 
   fulldata: PatientInformation = {};
-  options: Map<string, optionGroup> = new Map<string, optionGroup>();
+  options: ComboOptions<number>
   form: FormGroup;
 
   constructor(
@@ -122,19 +123,7 @@ export class DetailPageComponent implements OnInit {
 
     this.dataService.getOptions().subscribe(
       (data) => {
-        data.forEach((filter) => {
-          if (this.options.get(filter.Group) === undefined) {
-            this.options.set(filter.Group, {
-              name: filter.Group,
-              values: []
-            });
-          }
-          this.options.get(filter.Group)!.values.push({
-            value: filter.Value,
-            text: filter.Text,
-            selected: filter.Selected
-          });
-        });
+        this.options = data;
         this.htmlService.isPageReady = true;
       });
 

@@ -73,21 +73,6 @@ export interface tableData {
 }
 
 
-export interface groupedTableData {
-    weekday: string;
-    data: tableData[];
-}
-
-
-export interface Filter {
-    Value: number;
-    Text: string;
-    Selected: string;
-    Group: string;
-}
-export type Option = Filter;
-
-
 export interface DatedReportData {
     types: string[];
     result: { [key: string]: number[] };
