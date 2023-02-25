@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import * as moment from 'moment';
 import { map, Observable, of } from 'rxjs';
-import { DatedReportData, Filter, HospitalsPeriodicReportData, PatientInformation} from '../types/report';
+import { DatedReportData, HospitalsPeriodicReportData, PatientInformation} from '../types/report';
+import { ActiveFilters, ComboOptions } from 'src/types/filters';
 import { DateConversionService } from './date-conversion.service';
 
 import { KeyListOfValues, KeyOfValues, AutolFillOptions } from './reports-list-component/interfaces';
@@ -26,7 +27,7 @@ export class DataService {
     public dateAdapter: DateAdapter<moment.Moment>
   ) { }
 
-  public getReports(filters: KeyListOfValues<number> | null = null): Observable<PatientInformation[]> {
+  public getReports(filters: ActiveFilters | null = null): Observable<PatientInformation[]> {
     if (filters === null || Object.keys(filters).length === 0) {
       return this.http.get<PatientInformation[]>(this.base_url + 'rest/');
     }
@@ -35,9 +36,17 @@ export class DataService {
     return this.http.post<PatientInformation[]>(this.base_url + 'report/filtered/', bodyString, this.httpOptions);
   }
 
-  public getOptions(filters: KeyListOfValues<number> | null = null): Observable<Filter[]> {
-    let body = JSON.stringify(filters || {});
-    return this.http.post<Filter[]>(this.base_url + 'options/', body, this.httpOptions);
+  public getOptions(): Observable<ComboOptions<number>> {
+    return this.http.get<ComboOptions<number>>(this.base_url + 'options/', this.httpOptions);
+  }
+
+  public getFilters(): Observable<ComboOptions<number>> {
+    return this.http.get<ComboOptions<number>>(this.base_url + 'filters/', this.httpOptions);
+  }
+
+  public getAdaptiveFilterOptions(activeFilters: ActiveFilters) : Observable<ComboOptions<string>> {
+    let body = JSON.stringify(activeFilters);
+    return this.http.post<ComboOptions<string>>(this.base_url + 'adaptive_filters/', body, this.httpOptions);
   }
 
   public getPatient(id: number): Observable<PatientInformation> {

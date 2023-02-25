@@ -1,14 +1,10 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { Router } from '@angular/router';
 import * as moment from 'jalali-moment';
 import { DataService } from '../data.service';
 import { DatedReportDialogData, PatientInformation } from "../../types/report";
-import { DialogOverviewComponent } from "../dialog-overview/dialog-overview.component";
 import { MatDialog } from "@angular/material/dialog";
-import { saveAs } from 'file-saver';
-import { NgxCaptureService } from 'ngx-capture';
-import renderReport from "./dialog_content";
 import { ReportOverviewDialogComponent } from '../report-overview-dialog/report-overview-dialog.component';
 
 

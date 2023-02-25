@@ -69,8 +69,8 @@
       <mat-form-field appearance="fill" style="grid-area: hospital-type;">
         <mat-label>{{'hospital_type' | translate}}</mat-label>
         <mat-select formControlName="HospitalType">
-          <mat-option *ngFor="let value of options.get('hospital_type')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['hospital_type']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -78,8 +78,8 @@
       <mat-form-field appearance="fill" style="grid-area: surgery-day;">
         <mat-label>{{'surgery_day' | translate}}</mat-label>
         <mat-select formControlName="SurgeryDay">
-          <mat-option *ngFor="let value of options.get('surgery_day')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['surgery_day']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -87,8 +87,8 @@
       <mat-form-field appearance="fill" style="grid-area: surgery-time;">
         <mat-label>{{'surgery_time' | translate}}</mat-label>
         <mat-select formControlName="SurgeryTime">
-          <mat-option *ngFor="let value of options.get('surgery_time')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['surgery_time']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -96,8 +96,8 @@
       <mat-form-field appearance="fill" style="grid-area: MR;">
         <mat-label>{{'MR' | translate}}</mat-label>
         <mat-select formControlName="MR">
-          <mat-option *ngFor="let value of options.get('mr')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['mr']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -105,8 +105,8 @@
       <mat-form-field appearance="fill" style="grid-area: CT;">
         <mat-label>{{'CT' | translate}}</mat-label>
         <mat-select formControlName="CT">
-          <mat-option *ngFor="let value of options.get('ct')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['ct']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -155,8 +155,8 @@
       <mat-form-field appearance="fill" style="grid-area: payment-status;">
         <mat-label>{{'payment_status' | translate}}</mat-label>
         <mat-select formControlName="PaymentStatus">
-          <mat-option *ngFor="let value of options.get('payment_status')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['payment_status']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -239,8 +239,8 @@
       <mat-form-field appearance="fill" style="grid-area: surgery-result;">
         <mat-label>{{'surgery_result' | translate}}</mat-label>
         <mat-select formControlName="SurgeryResult">
-          <mat-option *ngFor="let value of options.get('surgery_result')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['surgery_result']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -310,8 +310,8 @@
       <mat-form-field appearance="fill" style="grid-area: surgery-area;">
         <mat-label>{{'surgery_area' | translate}}</mat-label>
         <mat-select formControlName="SurgeryArea">
-          <mat-option *ngFor="let value of options.get('surgery_area')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['surgery_area']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -319,8 +319,8 @@
       <mat-form-field appearance="fill" style="grid-area: headband-fix;">
         <mat-label>{{'head_fix_type' | translate}}</mat-label>
         <mat-select formControlName="HeadFixType">
-          <mat-option *ngFor="let value of options.get('head_fix_type')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['head_fix_type']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -353,8 +353,8 @@
       <mat-form-field appearance="fill" style="grid-area: FMRI;">
         <mat-label>{{'FMRI' | translate}}</mat-label>
         <mat-select formControlName="FMRI">
-          <mat-option *ngFor="let value of options.get('fmri')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['fmri']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -362,8 +362,8 @@
       <mat-form-field appearance="fill" style="grid-area: DTI;">
         <mat-label>{{'DTI' | translate}}</mat-label>
         <mat-select formControlName="DTI">
-          <mat-option *ngFor="let value of options.get('dti')!.values" [value]="value.value">
-            {{ value.text | translate }}
+          <mat-option *ngFor="let value of options['dti']" [value]="value.Value">
+            {{ value.Text | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>

@@ -1,35 +1,35 @@
 // زن زندگی آزادی
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {Filter, PatientInformation, tableData} from 'src/types/report';
+import { PatientInformation, tableData } from 'src/types/report';
 import { DataService } from '../data.service';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { filterGroup, KeyListOfValues } from './interfaces';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import {MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogOverviewComponent } from '../dialog-overview/dialog-overview.component';
-import {optionGroup} from "../detail-page-component/interfaces";
-import {ExcelService} from "../excel.service";
+import { ExcelService } from "../excel.service";
 import * as moment from "jalali-moment";
-import {DateAdapter} from "@angular/material/core";
+import { DateAdapter } from "@angular/material/core";
 
-import {AddUnderlinePipe} from "../add-underline.pipe";
-import {UploadService} from "../upload.service";
+import { UploadService } from "../upload.service";
+import { ActiveFilters, ComboOptions } from 'src/types/filters';
+
+import { combineLatest } from 'rxjs';
+import { AddUnderlinePipe } from '../add-underline.pipe';
 
 @Component({
   selector: 'app-reports-list',
   templateUrl: './reports-list.component.html',
   styleUrls: ['./reports-list.component.scss']
 })
-export class ReportsListComponent implements OnInit {
+export class ReportsListComponent implements OnInit, AfterViewInit {
   patientData: PatientInformation[];
 
   public weekdays_color: { [key: string]: string } = {
-    // two colors
     'Saturday': 'black',
     'Sunday': 'steelblue',
     'Monday': 'black',
@@ -48,26 +48,24 @@ export class ReportsListComponent implements OnInit {
 
   displayedColumns: string[] = [...this.displayedFields, 'Actions'];
 
-  public internalFilter: KeyListOfValues<number> = {};
+  comboOptions: ComboOptions<number>;
+  public basicfilterOptions: ComboOptions<number>;
+  public adaptiveFilterOptions: ComboOptions<string> = {};
 
-  filters: filterGroup[] = [];
-  filterFields: string[] = ['surgeon_first', 'operator_first', 'hospital', 'hospital_type', 'surgery_result', 'surgery_area', 'payment_status'];
-  charFilterFields: string[] = ['surgeon_first', 'operator_first', 'hospital'];
+  public activeFilters: ActiveFilters;
 
-  options: Map<string, optionGroup> = new Map<string, optionGroup>();
-
-  range = new FormGroup({
+  date_filter_range = new FormGroup({
     start: new FormControl(null),
     end: new FormControl(null),
   });
 
-  addUnderlinePipe = new AddUnderlinePipe();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  shortLink: string = "";
   loading: boolean = false;
   file: File;
+
+  addUnderlinePipe = new AddUnderlinePipe();
 
   constructor(
     private dataService: DataService,
@@ -79,40 +77,82 @@ export class ReportsListComponent implements OnInit {
     private uploadService: UploadService,
   ) { }
 
-  getReportData() {
-    this.dataSource.paginator = this.paginator;
-    this.dataService.getReports().subscribe(this.fillTableReportData.bind(this));
-  }
 
   ngOnInit(): void {
+    this.activeFilters = localStorage.getItem('ReportsList_internalFilter') ? JSON.parse(localStorage.getItem('ReportsList_internalFilter')!) : {};
+
+    this.date_filter_range.controls['start'].valueChanges.subscribe(this.dateFilterChanged.bind(this));
+    this.date_filter_range.controls['end'].valueChanges.subscribe(this.dateFilterChanged.bind(this));
+
     this.dataService.getOptions().subscribe({
-      next: this.extractOptions.bind(this),
-      complete: this.getReportData.bind(this),
+      next: (data) => this.comboOptions = data,
+      complete: () => this.dataService.getReports(this.activeFilters).subscribe(this.fillTableReportData.bind(this))
     });
 
-    this.range.controls['start'].valueChanges.subscribe(() => {
-      this.dateChanged();
+    let basicFilter$ = this.dataService.getFilters();
+    let adaptiverFilter$ = this.dataService.getAdaptiveFilterOptions(this.activeFilters);
+    combineLatest([basicFilter$, adaptiverFilter$]).subscribe(([basicFilter, adaptiveFilter]) => {
+      this.basicfilterOptions = basicFilter;
+      this.adaptiveFilterOptions = adaptiveFilter;
+      this.initialize_activeFilters();
     });
-
-    this.range.controls['end'].valueChanges.subscribe(() => {
-      this.dateChanged();
-    });
-    localStorage.getItem('internalFilter') && (this.internalFilter = JSON.parse(localStorage.getItem('internalFilter')!));
-    this.applyFilters();
   }
 
-  checkboxChanged(group: string, value: number) {
-    let options = this.filters.find(v => v.name === group)!.values;
-    options.find(v => v.value === value)!.selected = !options.find(v => v.value === value)!.selected;
-
-    if (this.internalFilter[group] === undefined) {
-      this.internalFilter[group] = [];
+  initialize_activeFilters() {
+    if(this.activeFilters["surgery_date"]) {
+      this.date_filter_range.controls['start'].setValue(moment.unix(this.activeFilters["surgery_date"][0]));
+      this.date_filter_range.controls['end'].setValue(moment.unix(this.activeFilters["surgery_date"][1]));
     }
 
-    if (this.internalFilter[group].find(v => v === value) === undefined) {
-      this.internalFilter[group].push(value);
+    for(const [key, values] of Object.entries(this.activeFilters)) {
+      if(key === 'surgery_date') {
+        continue;
+      }
+
+      if(this.basicfilterOptions[key]) {
+        this.basicfilterOptions[key].forEach((item) => {
+          if(values.indexOf(item.Value) !== -1) {
+            item.Selected = true;
+          }
+        });
+      } else {
+        values.forEach(value => {
+          let option = this.adaptiveFilterOptions[key].find((item) => item.Value === value);
+          if(option) {
+            option.Selected = true;
+          } else {
+            this.adaptiveFilterOptions[key].unshift({Value: value, Text: `${value} (0)`, Selected: true});
+          }
+        });
+      }
+    }
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  checkboxChanged(group: string, value: any) {
+    let will_afterward_be_selected = false;
+    if(Object.keys(this.adaptiveFilterOptions).indexOf(group) === -1) {
+      let comboOption = this.basicfilterOptions[group].find((item) => item.Value === value)!;
+      will_afterward_be_selected = comboOption.Selected = !comboOption.Selected;
     } else {
-      this.internalFilter[group] = this.internalFilter[group].filter(v => v !== value);
+      let comboOption = this.adaptiveFilterOptions[group].find((item) => item.Value === value)!;
+      will_afterward_be_selected = comboOption.Selected = !comboOption.Selected;
+    }
+
+
+    if(will_afterward_be_selected){
+      if(!this.activeFilters[group]) {
+        this.activeFilters[group] = []
+      }
+      this.activeFilters[group].push(value);
+    } else {
+      this.activeFilters[group] = this.activeFilters[group].filter((item) => item !== value);
+      if(!this.activeFilters[group].length) {
+        delete this.activeFilters[group];
+      }
     }
 
     this.applyFilters();
@@ -125,41 +165,41 @@ export class ReportsListComponent implements OnInit {
   remove(id: number) {
     const dialogRef = this.dialog.open(DialogOverviewComponent, {
       width: '350px',
-      data: {title: "Remove Report", content: "Are you sure you want to remove this report?"},
+      data: { title: "Remove Report", content: "Are you sure you want to remove this report?" },
     });
 
     dialogRef.afterClosed().subscribe(result => {
-        if(result == 'Canceled') {
-          return;
-        }
-        this.dataService.deletePatient(id).subscribe(
-          (_) => {
-            this._snackBar.open("Report removed successfully", "Close", {
-              duration: 2000,
-            });
-            this.getReportData();
-          });
+      if(result == 'Canceled') {
+        return;
       }
+      this.dataService.deletePatient(id).subscribe(
+        (_) => {
+          this._snackBar.open("Report removed successfully", "Close", {
+            duration: 2000,
+          });
+          this.dataService.getReports(this.activeFilters).subscribe(this.fillTableReportData.bind(this));
+        });
+    }
     );
   }
 
-  dateChanged() {
-    if(this.range.controls['start'].value === null && this.range.controls['end'].value === null) {
-      delete this.internalFilter["surgery_date"];
-    } else if(this.range.controls['start'].value === null) {
-      this.internalFilter["surgery_date"] = [
+  dateFilterChanged() {
+    if(this.date_filter_range.controls['start'].value === null && this.date_filter_range.controls['end'].value === null) {
+      delete this.activeFilters["surgery_date"];
+    } else if(this.date_filter_range.controls['start'].value === null) {
+      this.activeFilters["surgery_date"] = [
         null,
-        this.range.controls['end'].value.unix()
+        this.date_filter_range.controls['end'].value.unix()
       ];
-    } else if(this.range.controls['end'].value === null) {
-      this.internalFilter["surgery_date"] = [
-        this.range.controls['start'].value.unix(),
+    } else if(this.date_filter_range.controls['end'].value === null) {
+      this.activeFilters["surgery_date"] = [
+        this.date_filter_range.controls['start'].value.unix(),
         null
       ];
     } else {
-      this.internalFilter["surgery_date"] = [
-        this.range.controls['start'].value.unix(),
-        this.range.controls['end'].value.unix()
+      this.activeFilters["surgery_date"] = [
+        this.date_filter_range.controls['start'].value.unix(),
+        this.date_filter_range.controls['end'].value.unix()
       ];
     }
 
@@ -167,101 +207,34 @@ export class ReportsListComponent implements OnInit {
   }
 
   applyFilters() {
-    this.internalFilter = {...this.internalFilter};
-    let internalFilter = {...this.internalFilter};
-    for(let key of this.charFilterFields) {
-      if(internalFilter[key] !== undefined) {
-        delete internalFilter[key];
-      }
-    }
-    console.log(this.internalFilter);
-    this.dataService.getOptions(internalFilter).subscribe({
-      next: this.updateOptions.bind(this),
-      complete: () => this.dataService.getReports(this.internalFilter).subscribe(this.fillTableReportData.bind(this)),
-    });
-    localStorage.setItem('internalFilter', JSON.stringify(this.internalFilter));
-  }
+    this.activeFilters = {...this.activeFilters};
 
-  updateOptions(data: Filter[]) {
-    for(let key of this.charFilterFields) {
-      this.filters.find(f => f.name === key)!.values = [];
-    }
+    this.dataService.getReports(this.activeFilters).subscribe(this.fillTableReportData.bind(this));
+    this.dataService.getAdaptiveFilterOptions(this.activeFilters).subscribe((filters) => {
+      for(let field of ['hospital', 'surgeon_first', 'operator_first']) {
+        let selected = this.adaptiveFilterOptions[field].filter((item) => item.Selected).map((item) => item.Value);
+        this.adaptiveFilterOptions[field].splice(0, this.adaptiveFilterOptions[field].length)
 
-    data.forEach((filter) => {
-      if(!this.charFilterFields.includes(filter.Group)) {
-        return;
-      }
-
-      if (this.filters.find(f => f.name === filter.Group) === undefined) {
-        this.filters.push({
-          name: filter.Group,
-          values: []
-        });
-      }
-      this.filters.find(f => f.name === filter.Group)!.values.push({
-        value: filter.Value,
-        text: filter.Text,
-        selected: false
-      });
-    });
-
-    this.charFilterFields.forEach((key) => {
-      if(this.internalFilter[key] == undefined) {
-        this.internalFilter[key] = [];
-      }
-
-      this.filters.find(f => f.name === key)!.values.forEach((value) => {
-        if(this.internalFilter[key].find(v => v === value.value) !== undefined) {
-          value.selected = true;
+        for(let value of selected) {
+          if(filters[field].findIndex((item) => item.Value === value) === -1) {
+            this.adaptiveFilterOptions[field].push({Value: value, Text: `${value} (0)`, Selected: true});
+          }
         }
-      });
 
-      for(let i = 0; i < this.internalFilter[key].length; i++) {
-        if(this.filters.find(f => f.name === key)!.values.find(v => v.value === this.internalFilter[key][i]) === undefined) {
-          this.filters.find(f => f.name === key)!.values.unshift({
-            value: this.internalFilter[key][i],
-            text: this.internalFilter[key][i].toString() + " (0)",
-            selected: true
-          });
+        for(let item of filters[field]) {
+          if(selected.indexOf(item.Value) !== -1) {
+            item.Selected = true;
+          }
+          this.adaptiveFilterOptions[field].push(item);
         }
       }
     });
-  }
 
-  extractOptions(data: Filter[]) {
-    data.forEach((filter) => {
-      if (this.options.get(filter.Group) === undefined) {
-        this.options.set(filter.Group, {
-          name: filter.Group,
-          values: []
-        });
-      }
-      this.options.get(filter.Group)!.values.push({
-        value: filter.Value,
-        text: filter.Text,
-        selected: filter.Selected
-      });
-
-      if(!this.filterFields.includes(filter.Group)) {
-        return;
-      }
-
-      if (this.filters.find(f => f.name === filter.Group) === undefined) {
-        this.filters.push({
-          name: filter.Group,
-          values: []
-        });
-      }
-      this.filters.find((f) => f.name === filter.Group)!.values.push({
-        value: filter.Value,
-        text: filter.Text,
-        selected: false
-      });
-    });
+    localStorage.setItem('ReportsList_internalFilter', JSON.stringify(this.activeFilters));
   }
 
   fillTableReportData(data: PatientInformation[]) {
-    var temp : tableData[] = [];
+    var temp: tableData[] = [];
     this.patientData = data;
     data.forEach((patient) => {
       let formatted: string = "";
@@ -279,18 +252,9 @@ export class ReportsListComponent implements OnInit {
         SurgeonFirst: patient.SurgeonFirst,
         Hospital: patient.Hospital,
         OperatorFirst: patient.OperatorFirst,
-        SurgeryResult: this.options.get('surgery_result')!.values.find(f =>
-          f.value == patient.SurgeryResult) === undefined ?
-          '' : this.options.get('surgery_result')!.values.find(f => f.value == patient.SurgeryResult)!.text,
-
-        SurgeryDay: this.options.get('surgery_day')!.values.find(f =>
-          f.value == patient.SurgeryDay) === undefined ?
-          '' : this.options.get('surgery_day')!.values.find(f => f.value == patient.SurgeryDay)!.text,
-
-        PaymentStatus: this.options.get('payment_status')!.values.find(f =>
-          f.value == patient.PaymentStatus) === undefined ?
-          '' : this.options.get('payment_status')!.values.find(f => f.value == patient.PaymentStatus)!.text,
-
+        SurgeryResult: this.getBasicComboOptionText('surgery_result', patient.SurgeryResult),
+        SurgeryDay: this.getBasicComboOptionText('surgery_day', patient.SurgeryDay),
+        PaymentStatus: this.getBasicComboOptionText('payment_status', patient.PaymentStatus),
         PaymentCard: patient.LastFourDigitsCard,
         CashAmount: patient.CashAmount
       })
@@ -303,45 +267,70 @@ export class ReportsListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  downloadExcel(){
+  downloadExcel() {
+    // pop up
+    this._snackBar.open('This feature is not working right now', 'Close', {
+      duration: 2000,
+    });
     let excelFileData: Map<string, any[]> = new Map<string, any[]>();
-    this.patientData.forEach((patient) =>
-    {
-      for (let [key, value] of Object.entries(patient)) {
+    this.patientData.forEach((patient) => {
+      for(let [key, value] of Object.entries(patient)) {
         try {
-        if (excelFileData.get(key) === undefined) {
-          excelFileData.set(key, []);
-        }
-        if (["SurgeryResult", "PaymentStatus", "SurgeryDay", "SurgeryArea", "HospitalType", "HeadFixType",
-          "SurgeryTime", "CT", "MR", "FMRI", "DTI"].includes(key))
-        {
-          if(value != null) {
-            excelFileData.get(key)!.push(this.options.get(this.addUnderlinePipe.transform(key).toLowerCase())!.values.find(f =>
-              f.value == value.toString()) === undefined ?
-              '' : this.options.get(this.addUnderlinePipe.transform(key).toLowerCase())!.values.find(f => f.value == value.toString())!.text);
-          } else {
-            excelFileData.get(key)!.push('');
+          if(excelFileData.get(key) === undefined) {
+            excelFileData.set(key, []);
           }
-        }
-        else if (key.includes("Date")){
-          if(value != null) {
-            let date = this.dateAdapter.parse(value, "YYYY-MM-DD");
-            if(date != null) {
-              excelFileData.get(key)!.push(this.dateAdapter.format(date, "YYYY-MM-DD"));
+          if(["SurgeryResult", "PaymentStatus", "SurgeryDay", "SurgeryArea", "HospitalType", "HeadFixType",
+            "SurgeryTime", "CT", "MR", "FMRI", "DTI"].includes(key)) {
+            if(value != null) {
+              excelFileData.get(key)!.push(this.comboOptions[this.addUnderlinePipe.transform(key).toLowerCase()].find(f =>
+                f.Value == value.toString()) === undefined ?
+                '' : this.comboOptions[this.addUnderlinePipe.transform(key).toLowerCase()].find(f => f.Value == value.toString())!.Text);
+
+
             } else {
-              console.error("Date is not in the correct format ", value);
+              excelFileData.get(key)!.push('');
             }
           }
-        }
-        else
-          excelFileData.get(key)!.push(value);
+          else if(key.includes("Date")) {
+            if(value != null) {
+              let date = this.dateAdapter.parse(value, "YYYY-MM-DD");
+              if(date != null) {
+                excelFileData.get(key)!.push(this.dateAdapter.format(date, "YYYY-MM-DD"));
+              } else {
+                console.error("Date is not in the correct format ", value);
+              }
+            }
+          }
+          else
+            excelFileData.get(key)!.push(value);
 
-      } catch (e) {
-        console.error(e);
+        } catch (e) {
+          console.log(patient);
+          console.log(key, value);
+          console.error(e);
+        }
       }
-    }
     });
     this.excelService.exportAsXLSX(excelFileData);
+  }
+
+
+  getBasicComboOptionText(group: string, value: any): string {
+    if(value === undefined) {
+      return ""
+    }
+
+    let optionsList = this.comboOptions[group];
+    if(optionsList === undefined) {
+      throw Error('Invalid Group of Combo Box: ' + group)
+    }
+
+    let option = optionsList.find(item => item.Value == value);
+    if(option === undefined) {
+      // throw Error(`Invalid Value of Combo Box: ${value} in group ${group}`)
+      return "";
+    }
+    return option.Text;
   }
 
   onChange(event: Event) {

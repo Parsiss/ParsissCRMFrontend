@@ -11,7 +11,7 @@
           {{ 'time_range' | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <form [formGroup]="range" class="container">
+      <form [formGroup]="date_filter_range" class="container">
         <mat-form-field appearance="fill">
           <mat-label>{{'surgery_date_from' | translate}}</mat-label>
           <input matInput [matDatepicker]="startpicker" formControlName="start"
@@ -29,18 +29,32 @@
       </form>
     </mat-expansion-panel>
 
-    <mat-expansion-panel hideToggle *ngFor="let filter of filters">
+    <mat-expansion-panel hideToggle *ngFor="let filter of basicfilterOptions | keyvalue">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{ filter.name | translate }}
+          {{ filter.key | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <div style="display: flex; flex-direction:column;" *ngIf="filter.values && filter.values.length">
-        <mat-checkbox *ngFor="let value of filter.values" [checked]="value.selected" (change)="checkboxChanged(filter.name, value.value)">
-          {{ value.text | translate }}
+      <div style="display: flex; flex-direction:column;">
+        <mat-checkbox *ngFor="let value of filter.value" [checked]="value.Selected" (change)="checkboxChanged(filter.key, value.Value)">
+          {{ value.Text | translate }}
         </mat-checkbox>
       </div>
-      <div style="display: flex; flex-direction:column;" *ngIf="!filter.values || !filter.values.length">
+      <!-- </div  *ngIf="filter.values && filter.values.length"> -->
+
+    </mat-expansion-panel>
+    <mat-expansion-panel hideToggle *ngFor="let filter of adaptiveFilterOptions | keyvalue">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ filter.key | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div style="display: flex; flex-direction:column;">
+        <mat-checkbox *ngFor="let value of filter.value" [checked]="value.Selected" (change)="checkboxChanged(filter.key, value.Value)">
+          {{ value.Text | translate }}
+        </mat-checkbox>
+      </div>
+      <div style="display: flex; flex-direction:column;" *ngIf="!filter.value.values || !filter.value.length">
         {{ 'no_values' | translate }}
       </div>
     </mat-expansion-panel>
@@ -84,7 +98,7 @@
       </mat-card>
     </mat-tab>
     <mat-tab label="{{ 'charts_tab' | translate }}">
-      <app-success-pie-chart [filters]="internalFilter"> </app-success-pie-chart>
+      <app-success-pie-chart [filters]="activeFilters"> </app-success-pie-chart>
     </mat-tab>
   </mat-tab-group>
 </div>
