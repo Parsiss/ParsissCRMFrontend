@@ -20,6 +20,7 @@ import { ActiveFilters, ComboOptions } from 'src/types/filters';
 
 import { combineLatest } from 'rxjs';
 import { AddUnderlinePipe } from '../add-underline.pipe';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-reports-list',
@@ -63,6 +64,7 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   loading: boolean = false;
+  periodicTab: boolean = false;
   file: File;
 
   addUnderlinePipe = new AddUnderlinePipe();
@@ -342,5 +344,9 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   onUpload() {
     this.loading = !this.loading;
     this.uploadService.upload(this.file)
+  }
+
+  tabChanged(event: MatTabChangeEvent): void {
+    this.periodicTab = (event.index === 2);
   }
 }

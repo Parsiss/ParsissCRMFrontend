@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import * as moment from 'moment';
 import { HospitalsPeriodicReportData } from 'src/types/report';
 import { DataService } from '../data.service';
+import { KeyListOfValues } from '../reports-list-component/interfaces';
 
 
 @Component({
@@ -11,7 +12,9 @@ import { DataService } from '../data.service';
   templateUrl: './hospitals-periodic-report.component.html',
   styleUrls: ['./hospitals-periodic-report.component.scss']
 })
-export class HospitalsPeriodicReportComponent implements OnInit, AfterViewInit {
+export class HospitalsPeriodicReportComponent implements OnChanges {
+  @Input() filters: KeyListOfValues<number> | null = null;
+  
   range_first_period: FormGroup = new FormGroup({
     start: new FormControl(),
     end: new FormControl()
@@ -29,23 +32,12 @@ export class HospitalsPeriodicReportComponent implements OnInit, AfterViewInit {
     private dataService: DataService,
     private dateAdapter: DateAdapter<moment.Moment>,
   ) {
-  }
-
-
-  initializeForms() {
     this.range_first_period.get('start')!.setValue(this.dateAdapter.today().startOf('year'));
     this.range_first_period.get('end')!.setValue(this.dateAdapter.today().endOf('month'));
 
     this.range_second_period.get('start')!.setValue(this.dateAdapter.today().subtract(1, 'year').startOf('year'));
     this.range_second_period.get('end')!.setValue(this.dateAdapter.today().subtract(1, 'year').endOf('month'));
-  }
 
-  ngOnInit(): void {
-    this.initializeForms();
-    this.updateForm();
-  }
-
-  ngAfterViewInit() {
     this.range_first_period.valueChanges.subscribe((value) => {
       this.updateForm();
     });
@@ -56,6 +48,7 @@ export class HospitalsPeriodicReportComponent implements OnInit, AfterViewInit {
   }
 
   updateForm() {
+    console.log(this.filters)
     this.getReport(
       this.range_first_period.get('start')!.value,
       this.range_first_period.get('end')!.value,
@@ -71,6 +64,7 @@ export class HospitalsPeriodicReportComponent implements OnInit, AfterViewInit {
     p2end: moment.Moment
   ) {
     this.dataService.getHospitalsPeriodicReport(
+      this.filters,
       p1start.unix(),
       p1end.unix(),
       p2start.unix(),
@@ -80,11 +74,15 @@ export class HospitalsPeriodicReportComponent implements OnInit, AfterViewInit {
         let map = new Map<string, number[]>();
         map.set(`${p1start.format('YYYY/MM')} - ${p1end.format('YYYY/MM')}`, data.first_period);
         map.set(`${p2start.format('YYYY/MM')} - ${p2end.format('YYYY/MM')}`, data.second_period);
-
         this.series = map;
         this.labels = data.hospitals;
       }
     );
   }
-  
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['filters']) {
+      this.updateForm();
+    }
+  }
 }

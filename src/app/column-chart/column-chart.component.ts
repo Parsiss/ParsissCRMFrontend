@@ -31,37 +31,18 @@ export type ColumnChartOptions = {
   templateUrl: "./column-chart.component.html",
   styleUrls: ["./column-chart.component.scss"]
 })
+
 export class ColumnChartComponent {
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: ColumnChartOptions;
 
+  @Input() title: string;
   @Input() series: Map<string, number[]>;
   @Input() labels: string[];
-  @Input() title: string;
 
   constructor() {
-  }
-
-
-  ngOnChanges(changes: SimpleChanges) {
-    if(changes['series'] || changes['labels']) {
-      this.series = changes['series'].currentValue;
-      this.labels = changes['labels'].currentValue;
-      this.updateChart();
-    }
-  }
-
-  updateChart() {
-    let series: any[] = [];
-    this.series.forEach((value, key) => {
-      series.push({
-        name: key,
-        data: value
-      })
-    });
-    
     this.chartOptions = {
-      series: series,
+      series: [],
       chart: {
         type: "bar",
         height: 350
@@ -80,9 +61,7 @@ export class ColumnChartComponent {
         width: 2,
         colors: ["transparent"]
       },
-      xaxis: {
-        categories: this.labels
-      },
+      xaxis: {},
       yaxis: {
         title: {
           text: ""
@@ -102,6 +81,28 @@ export class ColumnChartComponent {
         floating: false,
       }
     };
+  }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['series'] || changes['labels']) {
+      let series_data = changes['series'].currentValue;
+      let labels_data = changes['labels'].currentValue;
+      this.updateChart(series_data, labels_data)
+    }
+  }
+
+  updateChart(series_data:  Map<string, number[]>, labels_data: string[]) {
+    let series: any[] = [];
+    series_data.forEach((value, key) => {
+      series.push({
+        name: key,
+        data: value
+      })
+    });
+
+    this.chartOptions.series = series;
+    this.chartOptions.xaxis = {
+      categories: labels_data
+    }
   }
 }
