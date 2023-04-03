@@ -5,12 +5,13 @@
       <input matInput type="text" (keyup)="doFilter($event)" placeholder="{{'simple search' | translate }}">
     </mat-form-field>
 
-    <mat-expansion-panel hideToggle>
+    <mat-expansion-panel hideToggle *ngIf="!periodicTab">
       <mat-expansion-panel-header>
         <mat-panel-title>
           {{ 'time_range' | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
+      
       <form [formGroup]="date_filter_range" class="container">
         <mat-form-field appearance="fill">
           <mat-label>{{'surgery_date_from' | translate}}</mat-label>
@@ -65,7 +66,7 @@
     </div>
   </mat-card>
 
-  <mat-tab-group>
+  <mat-tab-group (selectedTabChange)="tabChanged($event)">
     <mat-tab label="{{ 'table_tab' | translate }}">
       <mat-card style="overflow: auto; padding: 0px;">
 
@@ -99,6 +100,10 @@
     </mat-tab>
     <mat-tab label="{{ 'charts_tab' | translate }}">
       <app-success-pie-chart [filters]="activeFilters"> </app-success-pie-chart>
+    </mat-tab>
+
+    <mat-tab label="{{ 'periodic_tab' | translate }}">
+      <app-periodic-reports [filters]="activeFilters"> </app-periodic-reports>
     </mat-tab>
   </mat-tab-group>
 </div>

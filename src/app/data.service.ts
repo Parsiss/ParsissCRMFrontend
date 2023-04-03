@@ -87,8 +87,12 @@ export class DataService {
     return this.http.post<KeyListOfValues<number>>(this.base_url + 'reports/success/', JSON.stringify(filters), this.httpOptions);
   }
 
-  public getHospitalsPeriodicReport(p1start: number, p1end: number, p2start: number, p2end: number): Observable<HospitalsPeriodicReportData> {
-    return this.http.get<HospitalsPeriodicReportData>(this.base_url + `reports/hospitals/?p1start=${p1start}&p1end=${p1end}&p2start=${p2start}&p2end=${p2end}`);
+  public getHospitalsPeriodicReport(filters: KeyListOfValues<number> | null, p1start: number, p1end: number, p2start: number, p2end: number): Observable<HospitalsPeriodicReportData> {    
+    return this.http.post<HospitalsPeriodicReportData>(
+      this.base_url + `reports/hospitals/?p1start=${p1start}&p1end=${p1end}&p2start=${p2start}&p2end=${p2end}`,
+      JSON.stringify(filters), 
+      this.httpOptions
+    );
   }
 
   public getAutofillData(fields: string[]): Observable<AutolFillOptions> {
