@@ -18,7 +18,7 @@ export class PeriodicReportsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes['filters']) {
-      this.filters_without_time = changes['filters'].currentValue;
+      this.filters_without_time = {...changes['filters'].currentValue};
       if(this.filters_without_time) {
         delete this.filters_without_time['surgery_date'];
         this.filters_without_time = {...this.filters_without_time};
