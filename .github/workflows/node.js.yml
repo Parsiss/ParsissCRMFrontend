@@ -25,3 +25,12 @@ jobs:
         cache: 'npm'
     - run: npm ci --no-optional
     - run: npm run build --if-present
+    - name: Copy files to release directory
+      run: cp -r dist release
+    - name: Create ZIP archive
+      run: zip -r release.zip release
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: release
+        path: release.zip
