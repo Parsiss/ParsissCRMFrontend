@@ -5,6 +5,7 @@ name: Node.js CI
 
 on:
   push:
+    tags: ["v*"]
     branches: [ "master" ]
 jobs:
   build:
@@ -53,6 +54,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/CRMAngular.windows-amd64.zip
-        asset_name: azblogfilter.windows-amd64.zip
+        asset_path: release.zip
+        asset_name: CRMFrotend.windows-amd64.zip
         asset_content_type: application/zip
