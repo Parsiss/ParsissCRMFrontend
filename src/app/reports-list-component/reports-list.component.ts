@@ -127,7 +127,7 @@ export class ReportsListComponent implements OnInit {
           if(option) {
             option.Selected = true;
           } else {
-            this.adaptiveFilterOptions[key].unshift({Value: value, Text: `${value} (0)`, Selected: true}); 
+            this.adaptiveFilterOptions[key].unshift({Value: value, Text: `${value} (0)`, Selected: true});
           }
         });
       }
@@ -216,7 +216,6 @@ export class ReportsListComponent implements OnInit {
     this.activeFilters = {...this.activeFilters};
     
     this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this));
-    
     this.dataService.getAdaptiveFilterOptions(this.activeFilters).subscribe((filters) => {
       for(let field of ['hospital', 'surgeon_first', 'operator_first']) {
         let selected = this.adaptiveFilterOptions[field].filter((item) => item.Selected).map((item) => item.Value);
@@ -236,7 +235,7 @@ export class ReportsListComponent implements OnInit {
         }
       }
     });
-    
+
     localStorage.setItem('ReportsList_internalFilter', JSON.stringify(this.activeFilters));
   }
 
