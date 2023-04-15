@@ -129,7 +129,6 @@ export class DetailPageComponent implements OnInit {
 
     if (this.id != -1) {
       this.dataService.getPatient(this.id).subscribe(fulldata => {
-        console.log(fulldata);
         this.fulldata = fulldata;
         for (let key in this.form.controls) {
           this.form.controls[key].setValue((fulldata as any)[key]);

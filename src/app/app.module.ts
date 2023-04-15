@@ -67,6 +67,7 @@ import { HospitalsPeriodicReportComponent } from './hospitals-periodic-report/ho
 import { PeriodicReportsComponent } from './periodic-reports/periodic-reports.component';
 import { SuccessPieChartComponent } from './success-pie-chart/success-pie-chart.component';
 import { CanDeactivateGuard } from "./guards/can-deactivate.guard";
+import { PatientPreiodicReportComponent } from './patient-preiodic-report/patient-preiodic-report.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -99,6 +100,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HospitalsPeriodicReportComponent,
     PeriodicReportsComponent,
     SuccessPieChartComponent,
+    PatientPreiodicReportComponent,
   ],
   imports: [
     BrowserModule,

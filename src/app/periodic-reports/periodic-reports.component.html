@@ -1,1 +1,37 @@
-<app-hospitals-periodic-report [filters]="filters_without_time"> </app-hospitals-periodic-report>
+<app-hospitals-periodic-report [surgery_date_period]="surgery_date_period" [filters]="filters_without_time"> </app-hospitals-periodic-report>
+<app-patient-preiodic-report [surgery_date_period]="surgery_date_period" [filters]="filters_without_time"> </app-patient-preiodic-report>
+
+<form [formGroup]="range_first_period" class="container">
+<mat-form-field appearance="fill">
+    <mat-label>{{'surgery_date_from' | translate}}</mat-label>
+    <input matInput [matDatepicker]="p1startpicker" formControlName="start"
+    [placeholder]="'start date' | translate">
+    <mat-datepicker-toggle matSuffix [for]="p1startpicker"></mat-datepicker-toggle>
+    <mat-datepicker #p1startpicker startView="year"
+    ></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field appearance="fill">
+    <mat-label>{{'surgery_date_to' | translate}}</mat-label>
+    <input #p1endinput matInput [matDatepicker]="p1endpicker" formControlName="end" [placeholder]="'end date' | translate">
+    <mat-datepicker-toggle matSuffix [for]="p1endpicker"></mat-datepicker-toggle>
+    <mat-datepicker #p1endpicker startView="year"></mat-datepicker>
+</mat-form-field>
+</form>
+
+<form [formGroup]="range_second_period" class="container">
+<mat-form-field appearance="fill">
+    <mat-label>{{'surgery_date_from' | translate}}</mat-label>
+    <input #p2startinput matInput [matDatepicker]="p2startpicker" formControlName="start" [placeholder]="'start date' | translate">
+    <mat-datepicker-toggle matSuffix [for]="p2startpicker"></mat-datepicker-toggle>
+    <mat-datepicker #p2startpicker startView="year"
+    ></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field appearance="fill">
+    <mat-label>{{'surgery_date_to' | translate}}</mat-label>
+    <input #p2endinput matInput [matDatepicker]="p2endpicker" formControlName="end" [placeholder]="'end date' | translate">
+    <mat-datepicker-toggle matSuffix [for]="p2endpicker"></mat-datepicker-toggle>
+    <mat-datepicker #p2endpicker startView="year"></mat-datepicker>
+</mat-form-field>
+</form>

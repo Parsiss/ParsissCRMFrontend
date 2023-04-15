@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import * as moment from 'moment';
-import { map, Observable, of } from 'rxjs';
-import { DatedReportData, HospitalsPeriodicReportData, PatientInformation} from '../types/report';
+import { filter, map, Observable, of } from 'rxjs';
+import { DatedReportData, HospitalsPeriodicReportData, PatientInformation, PatientListData} from '../types/report';
 import { ActiveFilters, ComboOptions } from 'src/types/filters';
 import { DateConversionService } from './date-conversion.service';
 
@@ -27,13 +27,19 @@ export class DataService {
     public dateAdapter: DateAdapter<moment.Moment>
   ) { }
 
-  public getReports(filters: ActiveFilters | null = null): Observable<PatientInformation[]> {
-    if (filters === null || Object.keys(filters).length === 0) {
-      return this.http.get<PatientInformation[]>(this.base_url + 'rest/');
+  public getReports(filters: ActiveFilters | null = null, page_index: number, page_size: number): Observable<PatientListData> {
+    if (filters === null) { // || Object.keys(filters).length === 0) {
+      // return this.http.get<PatientInformation[]>(this.base_url + 'rest/');
+      filters = {};
     }
 
-    let bodyString = JSON.stringify(filters);
-    return this.http.post<PatientInformation[]>(this.base_url + 'report/filtered/', bodyString, this.httpOptions);
+    let bodyString = {
+      'filters': JSON.stringify(filters),
+      'page_index': page_index,
+      'page_size': page_size
+    };
+    
+    return this.http.post<PatientListData>(this.base_url + 'report/filtered/', bodyString, this.httpOptions);
   }
 
   public getOptions(): Observable<ComboOptions<number>> {
@@ -72,7 +78,7 @@ export class DataService {
   }
 
   public getCalendarEvent(): Observable<PatientInformation[]> {
-    return DateConversionService.ConvertDatesToTimestamp(this.http.get<PatientInformation[]>(this.base_url + 'rest/'));
+    return DateConversionService.ConvertDatesToTimestamp(this.http.get<PatientInformation[]>(this.base_url + 'calendar/'));
   }
 
   public uploadFile(file: File): Observable<object> {
@@ -90,6 +96,14 @@ export class DataService {
   public getHospitalsPeriodicReport(filters: KeyListOfValues<number> | null, p1start: number, p1end: number, p2start: number, p2end: number): Observable<HospitalsPeriodicReportData> {    
     return this.http.post<HospitalsPeriodicReportData>(
       this.base_url + `reports/hospitals/?p1start=${p1start}&p1end=${p1end}&p2start=${p2start}&p2end=${p2end}`,
+      JSON.stringify(filters), 
+      this.httpOptions
+    );
+  }
+
+  public getPatientPeriodicReport(filters: KeyListOfValues<number> | null, p1start: number, p1end: number, p2start: number, p2end: number): Observable<HospitalsPeriodicReportData> {    
+    return this.http.post<HospitalsPeriodicReportData>(
+      this.base_url + `reports/patients/?p1start=${p1start}&p1end=${p1end}&p2start=${p2start}&p2end=${p2end}`,
       JSON.stringify(filters), 
       this.httpOptions
     );

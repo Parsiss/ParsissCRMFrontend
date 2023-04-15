@@ -1,17 +1,15 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import * as moment from 'moment';
-import { HospitalsPeriodicReportData } from 'src/types/report';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { DataService } from '../data.service';
 import { KeyListOfValues } from '../reports-list-component/interfaces';
+import { HospitalsPeriodicReportData } from 'src/types/report';
 import { Moment } from 'jalali-moment';
 
-
 @Component({
-  selector: 'app-hospitals-periodic-report',
-  templateUrl: './hospitals-periodic-report.component.html',
-  styleUrls: ['./hospitals-periodic-report.component.scss']
+  selector: 'app-patient-preiodic-report',
+  templateUrl: './patient-preiodic-report.component.html',
+  styleUrls: ['./patient-preiodic-report.component.scss']
 })
-export class HospitalsPeriodicReportComponent implements OnChanges {
+export class PatientPreiodicReportComponent implements OnInit {
   @Input() filters: KeyListOfValues<number> | null = null;
   @Input() surgery_date_period: Moment[];
 
@@ -23,11 +21,14 @@ export class HospitalsPeriodicReportComponent implements OnChanges {
   ) {
 
   }
+
+  ngOnInit(): void {
+      
+  }
   
-  public getReport(
-  ) {
+  getReport(): void {
     let [p1start, p1end, p2start, p2end] = this.surgery_date_period;
-    this.dataService.getHospitalsPeriodicReport(
+    this.dataService.getPatientPeriodicReport(
       this.filters,
       p1start.unix(),
       p1end.unix(),
@@ -44,7 +45,7 @@ export class HospitalsPeriodicReportComponent implements OnChanges {
     );
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if(changes['filters'] || changes['surgery_date_period']) {
       this.getReport();
     }

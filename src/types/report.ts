@@ -1,5 +1,11 @@
 import { Time } from "@angular/common";
 
+
+export interface PatientListData {
+    data: PatientInformation[];
+    total: number;
+}
+
 export interface PatientInformation {
     ID?: number;
     Name?: string;
@@ -54,6 +60,7 @@ export interface PatientInformation {
     TypeOfInsurance?: string;
     FinancialVerifier?: string;
     ReceiptNumber?: number;
+    PreviousSurgeries?: [string, string][];
 }
 
 export interface tableData {
@@ -70,6 +77,8 @@ export interface tableData {
     PaymentCard?: string;
     CashAmount?: string;
     OperatorFirst?: string;
+    PreviousSurgeries?: string;
+
 }
 
 

@@ -1,8 +1,8 @@
 // زن زندگی آزادی
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { PatientInformation, tableData } from 'src/types/report';
+import { PatientInformation, PatientListData, tableData } from 'src/types/report';
 import { DataService } from '../data.service';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -21,15 +21,18 @@ import { ActiveFilters, ComboOptions } from 'src/types/filters';
 import { combineLatest } from 'rxjs';
 import { AddUnderlinePipe } from '../add-underline.pipe';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-reports-list',
   templateUrl: './reports-list.component.html',
   styleUrls: ['./reports-list.component.scss']
 })
-export class ReportsListComponent implements OnInit, AfterViewInit {
+export class ReportsListComponent implements OnInit {
   patientData: PatientInformation[];
+  public dataCount: number;
 
+  
   public weekdays_color: { [key: string]: string } = {
     'Saturday': 'black',
     'Sunday': 'steelblue',
@@ -47,7 +50,7 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     'SurgeryResult', 'PaymentCard', 'CashAmount', 'OperatorFirst'
   ];
 
-  displayedColumns: string[] = [...this.displayedFields, 'Actions'];
+  displayedColumns: string[] = [...this.displayedFields, 'Actions', 'Previous'];
 
   comboOptions: ComboOptions<number>;
   public basicfilterOptions: ComboOptions<number>;
@@ -77,6 +80,7 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     public excelService: ExcelService,
     public dateAdapter: DateAdapter<moment.Moment>,
     private uploadService: UploadService,
+    private translate: TranslateService
   ) { }
 
 
@@ -88,7 +92,7 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
 
     this.dataService.getOptions().subscribe({
       next: (data) => this.comboOptions = data,
-      complete: () => this.dataService.getReports(this.activeFilters).subscribe(this.fillTableReportData.bind(this))
+      complete: () => this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this))
     });
 
     let basicFilter$ = this.dataService.getFilters();
@@ -130,10 +134,10 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+  pageChanged(event: PageEvent) {
+    this.dataService.getReports(this.activeFilters, event.pageIndex, event.pageSize).subscribe(this.fillTableReportData.bind(this));
   }
-
+  
   checkboxChanged(group: string, value: any) {
     let will_afterward_be_selected = false;
     if(Object.keys(this.adaptiveFilterOptions).indexOf(group) === -1) {
@@ -179,7 +183,7 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
           this._snackBar.open("Report removed successfully", "Close", {
             duration: 2000,
           });
-          this.dataService.getReports(this.activeFilters).subscribe(this.fillTableReportData.bind(this));
+          this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this));
         });
     }
     );
@@ -211,7 +215,8 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
   applyFilters() {
     this.activeFilters = {...this.activeFilters};
     
-    this.dataService.getReports(this.activeFilters).subscribe(this.fillTableReportData.bind(this));
+    this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this));
+    
     this.dataService.getAdaptiveFilterOptions(this.activeFilters).subscribe((filters) => {
       for(let field of ['hospital', 'surgeon_first', 'operator_first']) {
         let selected = this.adaptiveFilterOptions[field].filter((item) => item.Selected).map((item) => item.Value);
@@ -235,19 +240,30 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
     localStorage.setItem('ReportsList_internalFilter', JSON.stringify(this.activeFilters));
   }
 
-  fillTableReportData(data: PatientInformation[]) {
+
+  formatJdate(date: string) {
+    let m = moment(date, 'YYYY-MM-DD');
+    let localMonth = this.dateAdapter.getMonthNames('long')[m.jMonth()];
+    let weekday = this.dateAdapter.getDayOfWeekNames('long')[((m.jDay() + 6) % 7)];
+    return `${weekday} ${m.jDate()} ${localMonth}`;
+  }
+
+  fillTableReportData(data: PatientListData) {
     var temp: tableData[] = [];
-    this.patientData = data;
-    data.forEach((patient) => {
-      let formatted: string = "";
-      let m = moment(patient.SurgeryDate!, 'YYYY-MM-DD');
-      let localMonth = this.dateAdapter.getMonthNames('long')[m.jMonth()];
-      let weekday = this.dateAdapter.getDayOfWeekNames('long')[((m.jDay() + 6) % 7)];
-      formatted = `${weekday} ${m.jDate()} ${localMonth}`;
+    this.patientData = data.data;
+
+    this.patientData.forEach((patient) => {
+      let previous_surgeries = '';
+      for(let [date, result] of patient.PreviousSurgeries!) {
+        let jdate = this.formatJdate(date);
+        let result_text = this.translate.instant(this.getBasicComboOptionText('surgery_result', result))
+        previous_surgeries += `${jdate}(${result_text}), `;
+      }
+      previous_surgeries = previous_surgeries.slice(0, -2);
 
       temp.push({
         ID: patient.ID,
-        SurgeryDate: formatted,
+        SurgeryDate: this.formatJdate(patient.SurgeryDate!.toString()),
         Name: patient.Name,
         NationalId: patient.NationalID,
         PhoneNumber: patient.PhoneNumber,
@@ -258,10 +274,12 @@ export class ReportsListComponent implements OnInit, AfterViewInit {
         SurgeryDay: this.getBasicComboOptionText('surgery_day', patient.SurgeryDay),
         PaymentStatus: this.getBasicComboOptionText('payment_status', patient.PaymentStatus),
         PaymentCard: patient.LastFourDigitsCard,
-        CashAmount: patient.CashAmount
+        CashAmount: patient.CashAmount,
+        PreviousSurgeries: previous_surgeries
       })
     });
     this.dataSource.data = temp;
+    this.dataCount = data.total;
   }
 
   doFilter(event: Event) {
