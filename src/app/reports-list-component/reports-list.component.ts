@@ -32,7 +32,7 @@ export class ReportsListComponent implements OnInit {
   patientData: PatientInformation[];
   public dataCount: number;
 
-  
+
   public weekdays_color: { [key: string]: string } = {
     'Saturday': 'black',
     'Sunday': 'steelblue',
@@ -137,7 +137,7 @@ export class ReportsListComponent implements OnInit {
   pageChanged(event: PageEvent) {
     this.dataService.getReports(this.activeFilters, event.pageIndex, event.pageSize).subscribe(this.fillTableReportData.bind(this));
   }
-  
+
   checkboxChanged(group: string, value: any) {
     let will_afterward_be_selected = false;
     if(Object.keys(this.adaptiveFilterOptions).indexOf(group) === -1) {
@@ -214,7 +214,7 @@ export class ReportsListComponent implements OnInit {
 
   applyFilters() {
     this.activeFilters = {...this.activeFilters};
-    
+
     this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this));
     this.dataService.getAdaptiveFilterOptions(this.activeFilters).subscribe((filters) => {
       for(let field of ['hospital', 'surgeon_first', 'operator_first']) {
@@ -288,49 +288,52 @@ export class ReportsListComponent implements OnInit {
 
   downloadExcel() {
     // pop up
-    this._snackBar.open('This feature is not working right now', 'Close', {
-      duration: 2000,
-    });
-    let excelFileData: Map<string, any[]> = new Map<string, any[]>();
-    this.patientData.forEach((patient) => {
-      for(let [key, value] of Object.entries(patient)) {
-        try {
-          if(excelFileData.get(key) === undefined) {
-            excelFileData.set(key, []);
-          }
-          if(["SurgeryResult", "PaymentStatus", "SurgeryDay", "SurgeryArea", "HospitalType", "HeadFixType",
-            "SurgeryTime", "CT", "MR", "FMRI", "DTI"].includes(key)) {
-            if(value != null) {
-              excelFileData.get(key)!.push(this.comboOptions[this.addUnderlinePipe.transform(key).toLowerCase()].find(f =>
-                f.Value == value.toString()) === undefined ?
-                '' : this.comboOptions[this.addUnderlinePipe.transform(key).toLowerCase()].find(f => f.Value == value.toString())!.Text);
-
-
-            } else {
-              excelFileData.get(key)!.push('');
+    // this._snackBar.open('This feature is not working right now', 'Close', {
+    //   duration: 2000,
+    // });
+    this.dataService.getFilteredReportExcel(this.activeFilters).subscribe(data => {
+      let excelFileData: Map<string, any[]> = new Map<string, any[]>();
+      data.data.forEach((patient) => {
+        for(let [key, value] of Object.entries(patient)) {
+          try {
+            if(excelFileData.get(key) === undefined) {
+              excelFileData.set(key, []);
             }
-          }
-          else if(key.includes("Date")) {
-            if(value != null) {
-              let date = this.dateAdapter.parse(value, "YYYY-MM-DD");
-              if(date != null) {
-                excelFileData.get(key)!.push(this.dateAdapter.format(date, "YYYY-MM-DD"));
+            if(["SurgeryResult", "PaymentStatus", "SurgeryDay", "SurgeryArea", "HospitalType", "HeadFixType",
+              "SurgeryTime", "CT", "MR", "FMRI", "DTI"].includes(key)) {
+              if(value != null) {
+                excelFileData.get(key)!.push(this.comboOptions[this.addUnderlinePipe.transform(key).toLowerCase()].find(f =>
+                  f.Value == value.toString()) === undefined ?
+                  '' : this.comboOptions[this.addUnderlinePipe.transform(key).toLowerCase()].find(f => f.Value == value.toString())!.Text);
+
+
               } else {
-                console.error("Date is not in the correct format ", value);
+                excelFileData.get(key)!.push('');
               }
             }
-          }
-          else
-            excelFileData.get(key)!.push(value);
+            else if(key.includes("Date")) {
+              if(value != null) {
+                let date = this.dateAdapter.parse(value, "YYYY-MM-DD");
+                if(date != null) {
+                  excelFileData.get(key)!.push(this.dateAdapter.format(date, "YYYY-MM-DD"));
+                } else {
+                  console.error("Date is not in the correct format ", value);
+                }
+              }
+            }
+            else
+              excelFileData.get(key)!.push(value);
 
-        } catch (e) {
-          console.log(patient);
-          console.log(key, value);
-          console.error(e);
+          } catch (e) {
+            console.log(patient);
+            console.log(key, value);
+            console.error(e);
+          }
         }
-      }
+      });
+      this.excelService.exportAsXLSX(excelFileData);
     });
-    this.excelService.exportAsXLSX(excelFileData);
+
   }
 
 

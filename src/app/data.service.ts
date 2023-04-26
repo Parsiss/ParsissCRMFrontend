@@ -13,8 +13,10 @@ import { KeyListOfValues, KeyOfValues, AutolFillOptions } from './reports-list-c
   providedIn: 'root'
 })
 export class DataService {
+  // public base_url = '';
   public base_url = 'http://192.168.1.201:8000/api/';
-  //public base_url = 'http://localhost:8000/api/';
+  // public base_url = 'http://192.168.1.201:9000/api/';
+  // public base_url = 'http://localhost:8000/api/';
 
   public httpOptions = {
     headers: new HttpHeaders({
@@ -25,7 +27,14 @@ export class DataService {
   constructor(
     public http: HttpClient,
     public dateAdapter: DateAdapter<moment.Moment>
-  ) { }
+  ) {
+    this.http.get('assets/config.json').subscribe(data => {
+      // @ts-ignore
+      // this.base_url = data['url'];
+      // console.log(this.base_url)
+    });
+  }
+
 
   public getReports(filters: ActiveFilters | null = null, page_index: number, page_size: number): Observable<PatientListData> {
     if (filters === null) { // || Object.keys(filters).length === 0) {
@@ -38,7 +47,7 @@ export class DataService {
       'page_index': page_index,
       'page_size': page_size
     };
-    
+
     return this.http.post<PatientListData>(this.base_url + 'report/filtered/', bodyString, this.httpOptions);
   }
 
@@ -101,10 +110,10 @@ export class DataService {
     );
   }
 
-  public getPatientPeriodicReport(filters: KeyListOfValues<number> | null, p1start: number, p1end: number, p2start: number, p2end: number): Observable<HospitalsPeriodicReportData> {    
+  public getPatientPeriodicReport(filters: KeyListOfValues<number> | null, p1start: number, p1end: number, p2start: number, p2end: number): Observable<HospitalsPeriodicReportData> {
     return this.http.post<HospitalsPeriodicReportData>(
       this.base_url + `reports/patients/?p1start=${p1start}&p1end=${p1end}&p2start=${p2start}&p2end=${p2end}`,
-      JSON.stringify(filters), 
+      JSON.stringify(filters),
       this.httpOptions
     );
   }
@@ -113,12 +122,16 @@ export class DataService {
     return this.http.post<AutolFillOptions>(this.base_url + 'autofill/', JSON.stringify(fields), this.httpOptions);
   }
 
-  public getFilteredReportExcel(filters: KeyListOfValues<number> | null = null): Observable<Blob> {
-    if (filters === null || Object.keys(filters).length === 0) {
-      return this.http.get(this.base_url + 'report/excel/', { responseType: 'blob' });
+  public getFilteredReportExcel(filters: KeyListOfValues<number> | null = null): Observable<PatientListData> {
+    if (filters === null) { // || Object.keys(filters).length === 0) {
+      // return this.http.get<PatientInformation[]>(this.base_url + 'rest/');
+      filters = {};
     }
 
-    let bodyString = JSON.stringify(filters);
-    return this.http.post(this.base_url + 'report/excel/', bodyString, { responseType: 'blob' });
+    let bodyString = {
+      'filters': JSON.stringify(filters),
+    };
+
+    return this.http.post<PatientListData>(this.base_url + 'report/excel/', bodyString, this.httpOptions);
   }
 }

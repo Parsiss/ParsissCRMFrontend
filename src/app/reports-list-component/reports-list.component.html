@@ -11,7 +11,7 @@
           {{ 'time_range' | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      
+
       <form [formGroup]="date_filter_range" class="container">
         <mat-form-field appearance="fill">
           <mat-label>{{'surgery_date_from' | translate}}</mat-label>
@@ -74,7 +74,7 @@
           <ng-container [matColumnDef]="name" *ngFor="let name of displayedFields" [sticky]="name == 'Name'">
             <th mat-header-cell *matHeaderCellDef> {{ name | addUnderline | lowercase | translate }}
             </th>
-            <td mat-cell *matCellDef="let element" 
+            <td mat-cell *matCellDef="let element"
               [style.color]="weekdays_color[element['SurgeryDay']]"
             > {{ element[name] | translate}}</td>
           </ng-container>
@@ -83,12 +83,12 @@
             <th mat-header-cell *matHeaderCellDef> </th>
             <td mat-cell *matCellDef="let element">
               <div *ngIf="element.PreviousSurgeries">
-                <mat-icon 
+                <mat-icon
                   [matTooltip]="element.PreviousSurgeries"
                   style="white-space: pre-line !important;"
                   matTooltipPosition="above"
                   matTooltipHideDelay="1000"
-                >info</mat-icon>                
+                >info</mat-icon>
               </div>
             </td>
           </ng-container>
@@ -109,7 +109,7 @@
 
         <mat-paginator class="justify-content-center"
           [length]="dataCount"
-          [pageSizeOptions]="[15, 10, 5, 20]"
+          [pageSizeOptions]="[15, 10, 5, 20, 50, 100]"
           (page)="pageChanged($event)"
         >
         </mat-paginator>
