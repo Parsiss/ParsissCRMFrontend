@@ -17,13 +17,19 @@ if [ "$branch" = "master" ]; then
   fi
   echo "Tag is valid."
 
-  echo -n "Are you sure to push to $branch with tag $tag? (y/n) "
-  read -n 1 -r < /dev/tty
-  echo
-  
-  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "Aborting push"
-    exit 1
+  # Check if /dev/tty is available
+  if [ -e /dev/tty ]; then
+      # Read input from /dev/tty
+    echo -n "Are you sure to push to $branch with tag $tag? (y/n) "
+    read -n 1 -r < /dev/tty
+    echo
+  else
+      # Use a default response when /dev/tty is not available
+      response="n"
+      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Aborting push"
+        exit 1
+      fi
   fi
 
   echo "Pushing tags"
