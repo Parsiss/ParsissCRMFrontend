@@ -45,6 +45,7 @@ export class ReportsListComponent implements OnInit {
 
 
   dataSource = new MatTableDataSource<tableData>([]);
+  dataSearch = new MatTableDataSource<tableData>([]);
   displayedFields: string[] = [
     'SurgeryDate', 'Name', 'PaymentStatus', 'SurgeonFirst', 'Hospital', 'NationalId', 'PhoneNumber',
     'SurgeryResult', 'PaymentCard', 'CashAmount', 'OperatorFirst'
@@ -86,7 +87,6 @@ export class ReportsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeFilters = localStorage.getItem('ReportsList_internalFilter') ? JSON.parse(localStorage.getItem('ReportsList_internalFilter')!) : {};
-
     this.date_filter_range.controls['start'].valueChanges.subscribe(this.dateFilterChanged.bind(this));
     this.date_filter_range.controls['end'].valueChanges.subscribe(this.dateFilterChanged.bind(this));
 
@@ -94,7 +94,6 @@ export class ReportsListComponent implements OnInit {
       next: (data) => this.comboOptions = data,
       complete: () => this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this))
     });
-
     let basicFilter$ = this.dataService.getFilters();
     let adaptiverFilter$ = this.dataService.getAdaptiveFilterOptions(this.activeFilters);
     combineLatest([basicFilter$, adaptiverFilter$]).subscribe(([basicFilter, adaptiveFilter]) => {
@@ -102,12 +101,35 @@ export class ReportsListComponent implements OnInit {
       this.adaptiveFilterOptions = adaptiveFilter;
       this.initialize_activeFilters();
     });
+    this.dataService.getReportsForSearch(this.activeFilters).subscribe(data => {
+      var temp: tableData[] = [];
+      data.data.forEach((patient) => {
+        temp.push({
+          ID: patient.ID,
+          SurgeryDate: this.formatJdate(patient.SurgeryDate!.toString()),
+          Name: patient.Name,
+          NationalId: patient.NationalID,
+          PhoneNumber: patient.PhoneNumber,
+          SurgeonFirst: patient.SurgeonFirst,
+          Hospital: patient.Hospital,
+          OperatorFirst: patient.OperatorFirst,
+          SurgeryResult: this.getBasicComboOptionText('surgery_result', patient.SurgeryResult),
+          SurgeryDay: this.getBasicComboOptionText('surgery_day', patient.SurgeryDay),
+          PaymentStatus: this.getBasicComboOptionText('payment_status', patient.PaymentStatus),
+          PaymentCard: patient.LastFourDigitsCard,
+          CashAmount: patient.CashAmount,
+        })
+      });
+      this.dataSearch.data = temp;
+    });
   }
 
   initialize_activeFilters() {
     if(this.activeFilters["surgery_date"]) {
-      this.date_filter_range.controls['start'].setValue(moment.unix(this.activeFilters["surgery_date"][0]));
-      this.date_filter_range.controls['end'].setValue(moment.unix(this.activeFilters["surgery_date"][1]));
+      let start = this.activeFilters["surgery_date"][0];
+      let end = this.activeFilters["surgery_date"][1];
+      this.date_filter_range.controls['start'].setValue(moment.unix(start));
+      this.date_filter_range.controls['end'].setValue(moment.unix(end));
     }
 
     for(const [key, values] of Object.entries(this.activeFilters)) {
@@ -208,7 +230,6 @@ export class ReportsListComponent implements OnInit {
         this.date_filter_range.controls['end'].value.unix()
       ];
     }
-
     this.applyFilters();
   }
 
@@ -244,7 +265,7 @@ export class ReportsListComponent implements OnInit {
     let m = moment(date, 'YYYY-MM-DD');
     let localMonth = this.dateAdapter.getMonthNames('long')[m.jMonth()];
     let weekday = this.dateAdapter.getDayOfWeekNames('long')[((m.jDay() + 6) % 7)];
-    return `${weekday} ${m.jDate()} ${localMonth}`;
+    return `${weekday} ${m.jDate()} ${localMonth} ${m.jYear()}`
   }
 
   fillTableReportData(data: PatientListData) {
@@ -282,8 +303,17 @@ export class ReportsListComponent implements OnInit {
   }
 
   doFilter(event: Event) {
+    console.log(this.dataSearch)
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (filterValue.length === 0) {
+      this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this));
+    }
+    else {
+      this.dataSearch.filter = filterValue.trim().toLowerCase();
+      this.dataCount = this.dataSearch.filteredData.length;
+      this.dataSource = new MatTableDataSource<tableData>(this.dataSearch.filteredData);
+      this.dataSource.paginator = this.paginator
+    }
   }
 
   downloadExcel() {

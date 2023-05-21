@@ -107,7 +107,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
-        <mat-paginator class="justify-content-center"
+        <mat-paginator #paginator class="justify-content-center"
           [length]="dataCount"
           [pageSizeOptions]="[15, 10, 5, 20, 50, 100]"
           (page)="pageChanged($event)"

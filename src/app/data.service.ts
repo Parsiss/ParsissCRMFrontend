@@ -51,6 +51,17 @@ export class DataService {
     return this.http.post<PatientListData>(this.base_url + 'report/filtered/', bodyString, this.httpOptions);
   }
 
+  public getReportsForSearch(filters: ActiveFilters | null = null): Observable<PatientListData> {
+    if (filters === null) {
+      filters = {};
+    }
+    let bodyString = {
+      'filters': JSON.stringify(filters),
+    };
+
+    return this.http.post<PatientListData>(this.base_url + 'report/search/', bodyString, this.httpOptions);
+  }
+
   public getOptions(): Observable<ComboOptions<number>> {
     return this.http.get<ComboOptions<number>>(this.base_url + 'options/', this.httpOptions);
   }
