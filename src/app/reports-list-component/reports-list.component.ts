@@ -18,7 +18,7 @@ import { DateAdapter } from "@angular/material/core";
 import { UploadService } from "../upload.service";
 import { ActiveFilters, ComboOptions } from 'src/types/filters';
 
-import { combineLatest } from 'rxjs';
+import {combineLatest, filter} from 'rxjs';
 import { AddUnderlinePipe } from '../add-underline.pipe';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { TranslateService } from '@ngx-translate/core';
@@ -315,7 +315,7 @@ export class ReportsListComponent implements OnInit {
     this.dataSource.paginator = this.paginator
   }
 
-  public filterValue: string
+  public filterValue = ""
   doFilter(event: Event) {
     this.filterValue = (event.target as HTMLInputElement).value;
     if (this.filterValue.length === 0) {
