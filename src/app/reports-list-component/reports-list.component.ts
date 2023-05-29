@@ -101,27 +101,7 @@ export class ReportsListComponent implements OnInit {
       this.adaptiveFilterOptions = adaptiveFilter;
       this.initialize_activeFilters();
     });
-    this.dataService.getReportsForSearch(this.activeFilters).subscribe(data => {
-      var temp: tableData[] = [];
-      data.data.forEach((patient) => {
-        temp.push({
-          ID: patient.ID,
-          SurgeryDate: this.formatJdate(patient.SurgeryDate!.toString()),
-          Name: patient.Name,
-          NationalId: patient.NationalID,
-          PhoneNumber: patient.PhoneNumber,
-          SurgeonFirst: patient.SurgeonFirst,
-          Hospital: patient.Hospital,
-          OperatorFirst: patient.OperatorFirst,
-          SurgeryResult: this.getBasicComboOptionText('surgery_result', patient.SurgeryResult),
-          SurgeryDay: this.getBasicComboOptionText('surgery_day', patient.SurgeryDay),
-          PaymentStatus: this.getBasicComboOptionText('payment_status', patient.PaymentStatus),
-          PaymentCard: patient.LastFourDigitsCard,
-          CashAmount: patient.CashAmount,
-        })
-      });
-      this.dataSearch.data = temp;
-    });
+    this.dataService.getReportsForSearch(this.activeFilters).subscribe(this.fillSearchReportData.bind(this))
   }
 
   initialize_activeFilters() {
@@ -229,6 +209,7 @@ export class ReportsListComponent implements OnInit {
         this.date_filter_range.controls['start'].value.unix(),
         this.date_filter_range.controls['end'].value.unix()
       ];
+      console.log(this.date_filter_range.controls)
     }
     this.applyFilters();
   }
@@ -236,7 +217,13 @@ export class ReportsListComponent implements OnInit {
   applyFilters() {
     this.activeFilters = {...this.activeFilters};
 
-    this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this));
+    if (this.filterValue.length === 0) {
+      this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this));
+    }
+    else {
+      this.dataService.getReportsForSearch(this.activeFilters).subscribe(this.fillSearchReportData.bind(this))
+    }
+
     this.dataService.getAdaptiveFilterOptions(this.activeFilters).subscribe((filters) => {
       for(let field of ['hospital', 'surgeon_first', 'operator_first']) {
         let selected = this.adaptiveFilterOptions[field].filter((item) => item.Selected).map((item) => item.Value);
@@ -302,14 +289,40 @@ export class ReportsListComponent implements OnInit {
     this.dataCount = data.total;
   }
 
+  fillSearchReportData(data: PatientListData) {
+    var temp: tableData[] = [];
+    data.data.forEach((patient) => {
+      temp.push({
+        ID: patient.ID,
+        SurgeryDate: this.formatJdate(patient.SurgeryDate!.toString()),
+        Name: patient.Name,
+        NationalId: patient.NationalID,
+        PhoneNumber: patient.PhoneNumber,
+        SurgeonFirst: patient.SurgeonFirst,
+        Hospital: patient.Hospital,
+        OperatorFirst: patient.OperatorFirst,
+        SurgeryResult: this.getBasicComboOptionText('surgery_result', patient.SurgeryResult),
+        SurgeryDay: this.getBasicComboOptionText('surgery_day', patient.SurgeryDay),
+        PaymentStatus: this.getBasicComboOptionText('payment_status', patient.PaymentStatus),
+        PaymentCard: patient.LastFourDigitsCard,
+        CashAmount: patient.CashAmount,
+      })
+    });
+    this.dataSearch.data = temp;
+    this.dataSearch.filter = this.filterValue.trim().toLowerCase();
+    this.dataCount = this.dataSearch.filteredData.length;
+    this.dataSource = new MatTableDataSource<tableData>(this.dataSearch.filteredData);
+    this.dataSource.paginator = this.paginator
+  }
+
+  public filterValue: string
   doFilter(event: Event) {
-    console.log(this.dataSearch)
-    const filterValue = (event.target as HTMLInputElement).value;
-    if (filterValue.length === 0) {
+    this.filterValue = (event.target as HTMLInputElement).value;
+    if (this.filterValue.length === 0) {
       this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this));
     }
     else {
-      this.dataSearch.filter = filterValue.trim().toLowerCase();
+      this.dataSearch.filter = this.filterValue.trim().toLowerCase();
       this.dataCount = this.dataSearch.filteredData.length;
       this.dataSource = new MatTableDataSource<tableData>(this.dataSearch.filteredData);
       this.dataSource.paginator = this.paginator
