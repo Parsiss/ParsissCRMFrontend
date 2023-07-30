@@ -68,6 +68,11 @@ import { PeriodicReportsComponent } from './periodic-reports/periodic-reports.co
 import { SuccessPieChartComponent } from './success-pie-chart/success-pie-chart.component';
 import { CanDeactivateGuard } from "./guards/can-deactivate.guard";
 import { PatientPreiodicReportComponent } from './patient-preiodic-report/patient-preiodic-report.component';
+import { CentersInfoPageComponent } from './centers-info-page/centers-info-page.component';
+import { AddCenterDialogComponent } from './centers-info-page/components/add-center-dialog/add-center-dialog.component';
+import { DetailCenterDialogComponent } from './centers-info-page/components/detail-center-dialog/detail-center-dialog.component';
+import { MatListModule } from '@angular/material/list';
+import { MatTreeModule } from '@angular/material/tree'
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -101,6 +106,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     PeriodicReportsComponent,
     SuccessPieChartComponent,
     PatientPreiodicReportComponent,
+    CentersInfoPageComponent,
+    AddCenterDialogComponent,
+    DetailCenterDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -138,6 +146,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatDialogModule,
     MatSidenavModule,
     NgApexchartsModule,
+    MatListModule,
+    MatTreeModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
