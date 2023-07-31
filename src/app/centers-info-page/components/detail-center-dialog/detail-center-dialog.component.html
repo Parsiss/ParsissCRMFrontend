@@ -1,38 +1,22 @@
 <mat-card>
 <mat-card-header>
+    <mat-card-title>Center</mat-card-title>
     <mat-card-subtitle>{{ editable ? "Edit" : "View" }}</mat-card-subtitle>
+    <mat-icon *ngIf="!editable" (click)="enableEdit()">edit</mat-icon>
 </mat-card-header>
 
 <mat-card-content>
-    <form>
+    <form [formGroup]="form">
         <mat-form-field>
             <mat-label>Name</mat-label>
-            <input [(ngModel)]="data.name" name="name" matInput ngDisabled="!editable">
+            <input formControlName="name" matInput>
         </mat-form-field>
-
-        <div class="list">
-            <div class="list-item" *ngFor="let device of data.devices;">
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>{{ device }}</mat-panel-title>
-                    </mat-expansion-panel-header>
-        
-                    <mat-action-row>
-                        <button mat-button color="primary">Edit</button>
-                        <button mat-button color="primary">Apply</button>
-                    </mat-action-row>
-                </mat-expansion-panel>
-            </div>
-            <div>
-                <button mat-button (click)="addDevice(data.id)" color="primary"><mat-icon>add</mat-icon></button></div>
-        </div>
     </form>
-
 </mat-card-content>
 
 <mat-card-actions *ngIf="editable">
     <button mat-button (click)="dialogRef.close()">Cancel</button>
-    <button mat-button [mat-dialog-close]="data">Update</button>
+    <button mat-button [mat-dialog-close]="processResult()">Accept</button>
 </mat-card-actions>
 
 <mat-card-actions *ngIf="!editable">

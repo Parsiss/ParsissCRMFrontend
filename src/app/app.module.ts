@@ -69,10 +69,13 @@ import { SuccessPieChartComponent } from './success-pie-chart/success-pie-chart.
 import { CanDeactivateGuard } from "./guards/can-deactivate.guard";
 import { PatientPreiodicReportComponent } from './patient-preiodic-report/patient-preiodic-report.component';
 import { CentersInfoPageComponent } from './centers-info-page/centers-info-page.component';
-import { AddCenterDialogComponent } from './centers-info-page/components/add-center-dialog/add-center-dialog.component';
 import { DetailCenterDialogComponent } from './centers-info-page/components/detail-center-dialog/detail-center-dialog.component';
 import { MatListModule } from '@angular/material/list';
-import { MatTreeModule } from '@angular/material/tree'
+import { MatTreeModule } from '@angular/material/tree';
+import { DeviceInfoPageComponent } from './device-info-page/device-info-page.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { EventEditDialogComponent } from './device-info-page/components/event-edit-dialog/event-edit-dialog.component';
+
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -107,8 +110,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     SuccessPieChartComponent,
     PatientPreiodicReportComponent,
     CentersInfoPageComponent,
-    AddCenterDialogComponent,
     DetailCenterDialogComponent,
+    DeviceInfoPageComponent,
+    PageNotFoundComponent,
+    EventEditDialogComponent,
   ],
   imports: [
     BrowserModule,

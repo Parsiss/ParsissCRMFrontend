@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { AddCenterDialogComponent } from './components/add-center-dialog/add-center-dialog.component';
-import { CenterViewInfo } from './interfaces/centerInfo';
+import { CenterViewInfo } from './interfaces';
 import { DataService } from './data.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -16,7 +15,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 })
 export class CentersInfoPageComponent implements OnInit, AfterViewInit {
   public dataSource = new MatTableDataSource<CenterViewInfo> ();  
-  public displayedColumns = ['name'];
+  public displayedColumns = ['edit', 'name'];
 
   constructor(
     public dialog: MatDialog,
@@ -33,26 +32,32 @@ export class CentersInfoPageComponent implements OnInit, AfterViewInit {
     this.updateTableInfo();
   }
 
-  openDialog() {
-    let dialog = this.dialog.open(AddCenterDialogComponent, {data: {name: ''}});
+  openDialog(): void {
+    let dialog = this.dialog.open(DetailCenterDialogComponent);
+    dialog.componentInstance.enableEdit();
     dialog.afterClosed().subscribe((data: CenterViewInfo) => {
       let result = (data ? this.dataService.addCenter(data) : null);
       result?.subscribe(this.updateTableInfo.bind(this));
     });
   }
 
-
-  tableRowCliecked(row: CenterViewInfo) {
+  tableRowCliecked(row: CenterViewInfo): void {
     let dialog = this.dialog.open(DetailCenterDialogComponent, {data: row});
     dialog.afterClosed().subscribe((data: CenterViewInfo) => {
-      let result = (data ? this.dataService.addCenter(data) : null);
+      let result = (data ? this.dataService.updateCenter(data) : null);
       result?.subscribe(this.updateTableInfo.bind(this));
     });
   }
 
+  deleteElement(row: CenterViewInfo): void {
+    this.dataService.deleteCenter(row.id).subscribe(this.updateTableInfo.bind(this));
+  }
 
-  updateTableInfo()  {
+  updateTableInfo(): void  {
     this.dataService.getCenters().subscribe((data) => this.dataSource.data = data);
   }
 
+  addDevice(centerId: number): void {
+    this.dataService.addDevice(centerId).subscribe(this.updateTableInfo.bind(this));
+  }
 }

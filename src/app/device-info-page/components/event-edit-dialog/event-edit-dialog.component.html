@@ -1,0 +1,48 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Event</mat-card-title>
+        <mat-card-subtitle>{{ editable ? "Edit" : "View" }}</mat-card-subtitle>
+        <mat-icon *ngIf="!editable" (click)="enableEdit()">edit</mat-icon>
+    </mat-card-header>
+
+    <mat-card-content>
+        <form [formGroup]="form">
+            <mat-form-field>
+                <mat-label>description</mat-label>
+                <input formControlName="description" matInput>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Select a type</mat-label>
+                <mat-select formControlName="type">
+                    <mat-option value="NA">None</mat-option>
+                    <mat-option value="SV">Service</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="grid-area: surgery-date;">
+                <mat-label>{{'date' | translate}}</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date" placeholder="{{'date' | translate}}">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="grid-area: start-time;">
+                <mat-label>{{'time' | translate}}</mat-label>
+                <input matInput formControlName="time" [ngxTimepicker]="startTimeDatepicker" [format]="24" placeholder="{{'time' | translate}}" >
+                <ngx-material-timepicker #startTimeDatepicker class="overlay-timepicker" [format]="24"></ngx-material-timepicker>
+            </mat-form-field>
+        
+        </form>
+    </mat-card-content>
+
+    <mat-card-actions *ngIf="editable">
+        <button mat-button (click)="dialogRef.close()">Cancel</button>
+        <button mat-button (click)="processResult()">Accept</button>
+    </mat-card-actions>
+
+    <mat-card-actions *ngIf="!editable">
+        <button mat-button (click)="dialogRef.close()">Close</button>
+    </mat-card-actions>
+
+</mat-card>

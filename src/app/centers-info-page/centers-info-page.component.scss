@@ -1,0 +1,17 @@
+.actions-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.device-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.device-item {
+    width: 100%;
+
+}

@@ -1,23 +1,38 @@
 <div style="display: flex; flex-direction: row;">
     <button mat-raised-button (click)="openDialog()">Add</button>
+
     <div style="display: flex; flex-direction: column;">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-            <ng-container [matColumnDef]="field" *ngFor="let field of displayedColumns">
-                <th mat-header-cell *matHeaderCellDef>{{ field | translate}}</th>
-                <td mat-cell *matCellDef="let element"> {{element[field]}} </td>
+            <ng-container matColumnDef="edit" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef>{{ 'actions' | translate}}</th>
+
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element">
+                  <div class="actions-container">
+                    <mat-icon (click)="tableRowCliecked(element)">remove_red_eye</mat-icon>
+                    <mat-icon (click)="deleteElement(element)">delete</mat-icon>
+                  </div>
+                </td>
+              </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>{{ 'name' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> 
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <span>{{ element.name }}</span>
+                        </mat-expansion-panel-header>
+                        <div class="device-list">
+                            <button *ngFor="let device of element.devices; let i = index" class="device-item" mat-stroked-button routerLink="/devices/{{element.devices_id[i]}}">{{device}}</button>
+                            <button mat-icon-button (click)="addDevice(element.id)"><mat-icon>add</mat-icon></button >
+                        </div>
+                    </mat-expansion-panel>
+                </td>
             </ng-container>
-        
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+        <mat-paginator [pageSizeOptions]="[10, 20, 5]" showFirstLastButtons aria-label="Select page of periodic elements">
         </mat-paginator>
     </div>
 </div>
-
-
-
-
-
-

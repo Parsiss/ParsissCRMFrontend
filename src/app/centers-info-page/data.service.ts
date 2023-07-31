@@ -7,7 +7,7 @@ import { filter, map, Observable, of } from 'rxjs';
 
 import { DataService as BaseDataService } from '../data.service';
 
-import { DeviceInfo, CenterInfo, CenterViewInfo } from './interfaces/centerInfo';
+import { CenterInfo, CenterViewInfo } from './interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +23,23 @@ export class DataService {
   ) {
   }
 
+  deleteCenter(id: number): Observable<object> {
+    return this.http.delete<object>(`${this.base_url}centers/${id}/`);
+  }
+
+
+  updateCenter(data: CenterInfo): Observable<object> {
+    let body = JSON.stringify(data);
+    return this.http.post<object>(`${this.base_url}centers/${data.id.toString()}/`, body, this.httpOptions);
+  }
+
   addCenter(data: CenterInfo): Observable<object> {
     let body = JSON.stringify(data);
-    return this.http.post<object>(this.base_url + 'centers_detail/', body, this.httpOptions);
+    return this.http.post<object>(this.base_url + 'centers/', body, this.httpOptions);
   }
 
   getCenters(): Observable<CenterViewInfo[]> {
-    return this.http.get<CenterViewInfo[]>(this.base_url + 'centers_detail/');
+    return this.http.get<CenterViewInfo[]>(this.base_url + 'centers/');
   }
 
 
@@ -37,10 +47,11 @@ export class DataService {
     return this.http.post<object>(
       this.base_url + 'devices/',
       { 
-        version: '',
+        version: 'New Device',
         center_id: centerId
       },
       this.httpOptions
     );
   }
 }
+ 

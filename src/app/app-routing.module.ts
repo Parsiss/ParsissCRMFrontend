@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AddNewPatientComponent } from './add-new-patient/add-new-patient.component';
 import { HomePageComponent } from './home-page-component/home-page.component';
@@ -7,6 +7,8 @@ import { ReportsListComponent } from './reports-list-component/reports-list.comp
 import { UpdatePatientComponent } from './update-patient/update-patient.component';
 import {CanDeactivateGuard} from "./guards/can-deactivate.guard";
 import { CentersInfoPageComponent } from './centers-info-page/centers-info-page.component';
+import { DeviceInfoPageComponent } from './device-info-page/device-info-page.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -16,7 +18,9 @@ const routes: Routes = [
   { path: 'reportsList', component: ReportsListComponent },
   { path: 'preports', component: PeriodicReportsComponent},
   { path: 'centers', component: CentersInfoPageComponent },
-  { path: '**', redirectTo: 'preports' }
+  { path: 'devices/:device_id', component: DeviceInfoPageComponent },
+  { path: '404', component: PageNotFoundComponent },
+  { path: '**', redirectTo: '/404' }
 ];
 
 @NgModule({

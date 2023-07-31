@@ -1,0 +1,14 @@
+.page-container {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.events-section {
+    flex-grow: 4;
+}
+
+.device-section {
+    flex-grow: 1;
+    flex-basis: 20%;
+}
