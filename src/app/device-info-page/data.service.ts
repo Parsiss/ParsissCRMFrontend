@@ -27,11 +27,15 @@ export class DataService {
     return this.http.get<DeviceInfo>(`${this.base_url}devices/${id}`);
   }
 
-
-  updateEvent(data: EventInfo): Observable<object> {
-    let body = JSON.stringify(data);
-    return this.http.post<object>(`${this.base_url}events/${data.id.toString()}/`, body, this.httpOptions);
+  updateDevice(id: number, device: DeviceInfo): Observable<object> {
+    return this.http.post<object>(`${this.base_url}devices/${id}/`, JSON.stringify(device), this.httpOptions);
   }
+
+  deleteDevice(id: number): Observable<object> {
+    return this.http.delete<object>(`${this.base_url}devices/${id}`);
+  }
+
+
 
   addEvent(data: EventInfo): Observable<object> {
     let body = JSON.stringify(data);
@@ -40,6 +44,15 @@ export class DataService {
 
   getEvents(deivce_id: number): Observable<EventInfo[]> {
     return this.http.get<EventInfo[]>(`${this.base_url}events/search/${deivce_id}/`);
+  }
+  
+  updateEvent(data: EventInfo): Observable<object> {
+    let body = JSON.stringify(data);
+    return this.http.post<object>(`${this.base_url}events/${data.id.toString()}/`, body, this.httpOptions);
+  }
+
+  deleteEvent(id: number): Observable<object> {
+    return this.http.delete<object>(`${this.base_url}events/${id.toString()}/`);
   }
 }
  

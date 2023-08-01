@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EventInfo } from '../../interfaces';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -11,8 +11,9 @@ import * as moment from "jalali-moment";
   styleUrls: ['./event-edit-dialog.component.scss']
 })
 export class EventEditDialogComponent implements OnInit {
-  public editable: boolean = false;
+  public deleted = new EventEmitter<boolean>();
 
+  public editable: boolean = false;
   public form: FormGroup;
 
   constructor(
@@ -45,6 +46,13 @@ export class EventEditDialogComponent implements OnInit {
     result.type = this.form.get('type')?.value
     result.description = this.form.get('description')?.value;
     this.dialogRef.close(result);
+  }
+
+  delete() {
+    this.dataService.deleteEvent(this.data.id).subscribe(() => {
+      this.deleted.emit();
+      this.dialogRef.close();
+    })
   }
 
   enableEdit() {

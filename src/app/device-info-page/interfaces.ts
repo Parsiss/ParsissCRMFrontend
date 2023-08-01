@@ -17,6 +17,6 @@ export interface DeviceInfo
 
 
 export let type_map = new Map<string, string>([
-    ["SERVICE", "SV"],
-    ["NONE", "NA"]
+    ["SV", "SERVICE"],
+    ["NA", "NONE"]
 ]);

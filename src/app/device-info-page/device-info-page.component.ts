@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
 
-import { ActivatedRoute } from '@angular/router';
-import { DeviceInfo, EventInfo } from './interfaces';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DeviceInfo, EventInfo, type_map } from './interfaces';
 import { DataService } from './data.service';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import * as moment from "jalali-moment";
+
+
 
 @Component({
   selector: 'app-device-info-page',
@@ -13,14 +16,16 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./device-info-page.component.scss']
 })
 export class DeviceInfoPageComponent implements OnInit {
+  public type_map = type_map;
+
   public device_id: number;
 
   public device: DeviceInfo | null;
   public events?: EventInfo[] | null;
 
-
   constructor(
     route: ActivatedRoute,
+    private router: Router,
     private dataService: DataService,
     public dialog: MatDialog
   ) {
@@ -43,7 +48,6 @@ export class DeviceInfoPageComponent implements OnInit {
     this.events = null;
     this.dataService.getEvents(this.device_id).subscribe((data) => {
       this.events = data;
-      console.log(data)
     });
   }
 
@@ -57,13 +61,30 @@ export class DeviceInfoPageComponent implements OnInit {
     });
   }
 
-  tableRowCliecked(row: EventInfo): void {
+  tableRowCliecked(i: number, row: EventInfo): void {
     let dialog = this.dialog.open(EventEditDialogComponent, {data: row});
     dialog.afterClosed().subscribe((data: EventInfo) => {
       let result = (data ? this.dataService.updateEvent(data) : null);
       result?.subscribe(this.getEvents.bind(this));
     });
+    dialog.componentInstance.deleted.subscribe(() => this.events?.splice(i, 1));
   }
 
+  update(): void {
+    if(this.device != null) {
+      this.dataService.updateDevice(this.device_id, this.device).subscribe(() => {
+        this.getDevice();
+      })
+    }
+  }
 
+  delete(): void {
+    this.dataService.deleteDevice(this.device_id).subscribe(() => this.router.navigate(['/centers']));
+  }
+
+  formatDate(datetime: Date): string {
+    let date = moment(datetime).format("jYYYY/jMM/jDD")
+
+    return date;
+  }
 }

@@ -6,11 +6,7 @@
     </mat-card-header>
 
     <mat-card-content>
-        <form [formGroup]="form">
-            <mat-form-field>
-                <mat-label>description</mat-label>
-                <input formControlName="description" matInput>
-            </mat-form-field>
+        <form [formGroup]="form" class="form-section">
 
             <mat-form-field>
                 <mat-label>Select a type</mat-label>
@@ -32,6 +28,12 @@
                 <input matInput formControlName="time" [ngxTimepicker]="startTimeDatepicker" [format]="24" placeholder="{{'time' | translate}}" >
                 <ngx-material-timepicker #startTimeDatepicker class="overlay-timepicker" [format]="24"></ngx-material-timepicker>
             </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Description</mat-label>
+                <textarea formControlName="description" matInput> </textarea>
+            </mat-form-field>
+
         
         </form>
     </mat-card-content>
@@ -43,6 +45,7 @@
 
     <mat-card-actions *ngIf="!editable">
         <button mat-button (click)="dialogRef.close()">Close</button>
+        <button mat-button (click)="delete()">Delete</button>
     </mat-card-actions>
 
 </mat-card>
