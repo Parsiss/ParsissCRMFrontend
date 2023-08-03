@@ -7,7 +7,7 @@ import { filter, map, Observable, of } from 'rxjs';
 
 import { DataService as BaseDataService } from '../data.service';
 
-import { EventInfo, DeviceInfo } from './interfaces';
+import { EventInfo, DeviceInfo, FileInfo } from './interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +35,6 @@ export class DataService {
     return this.http.delete<object>(`${this.base_url}devices/${id}`);
   }
 
-
-
   addEvent(data: EventInfo): Observable<object> {
     let body = JSON.stringify(data);
     return this.http.post<object>(this.base_url + 'events/', body, this.httpOptions);
@@ -53,6 +51,18 @@ export class DataService {
 
   deleteEvent(id: number): Observable<object> {
     return this.http.delete<object>(`${this.base_url}events/${id.toString()}/`);
+  }
+
+  deleteFile(id: number): Observable<object> {
+    return this.http.delete<object>(`${this.base_url}file/delete/${id.toString()}/`);
+  }
+
+  addFile(data: FormData): Observable<object> {
+    return this.http.post<object>(`${this.base_url}file/upload/`, data);
+  }
+
+  getFiles(device_id: number): Observable<FileInfo[]> {
+    return this.http.get<FileInfo[]>(`${this.base_url}devices/files/${device_id}/`);
   }
 }
  

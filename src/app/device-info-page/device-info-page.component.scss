@@ -6,6 +6,7 @@
     padding-right: 5%;
     padding-left: 10%;
     margin-top: 2rem;
+    min-height: 80vh;
 }
 
 .space {
@@ -13,13 +14,11 @@
 }
 
 .events-section {
-    flex-grow: 2;
+    flex-grow: 3;
 }
 
 .device-section {
-    height: 100%;
-    flex-grow: 3;
-    flex-basis: 20%
+    flex-grow: 4;
 }
 
 .form-section {
@@ -29,12 +28,43 @@
 
 .events-list {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: space-between;
     margin-top: 20px;
 }
 
+
 .events-item {
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+::ng-deep .mat-chip-list-wrapper {
+    display: flex;
+    flex-direction: column !important;
+    align-items: normal !important;
+    align-content: normal !important;
+}
+
+
+.file-item {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 0fr 1fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+}
+
+.file-delete {
+    margin-right: 0px !important;
+}
+
+.file-select {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
 }

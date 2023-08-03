@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EventInfo } from '../../interfaces';
+import { EventInfo, file_type_map } from '../../interfaces';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '../../data.service';
 import * as moment from "jalali-moment";
@@ -11,10 +11,17 @@ import * as moment from "jalali-moment";
   styleUrls: ['./event-edit-dialog.component.scss']
 })
 export class EventEditDialogComponent implements OnInit {
+  public file_type_map = file_type_map;
+  
   public deleted = new EventEmitter<boolean>();
 
   public editable: boolean = false;
   public form: FormGroup;
+
+  // file manager
+  public selected_file_name: string | null;
+  public dataFile: File | null;
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: EventInfo,
@@ -55,6 +62,11 @@ export class EventEditDialogComponent implements OnInit {
     })
   }
 
+
+  onFileSelected(event: Event) {
+    this.selected_file_name = "";
+  }
+
   enableEdit() {
     this.editable = true;
     this.form.enable({emitEvent: false});
@@ -62,4 +74,9 @@ export class EventEditDialogComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  deleteFile(id: number): void {
+    this.dataService.deleteFile(id).subscribe();
+  }
+
 }

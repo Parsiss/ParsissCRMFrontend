@@ -42,7 +42,6 @@ export class DataService {
     return this.http.get<CenterViewInfo[]>(this.base_url + 'centers/');
   }
 
-
   addDevice(centerId: number): Observable<object> {
     return this.http.post<object>(
       this.base_url + 'devices/',

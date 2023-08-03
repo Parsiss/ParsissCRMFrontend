@@ -10,21 +10,71 @@
             <mat-card-content>
                 <div class="form-section">
                     <mat-form-field>
-                        <mat-label>Version</mat-label>
+                        <mat-label>{{'version' | translate}}</mat-label>
                         <input [(ngModel)]="device.version" matInput>
                     </mat-form-field>
 
                     <mat-form-field>
-                        <mat-label>Type</mat-label>
-                        <input [(ngModel)]="device.center" matInput>
+                        <mat-label>{{'bundle_version' | translate}}</mat-label>
+                        <input [(ngModel)]="device.bundle_version" matInput>
                     </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>{{'windows' | translate}}</mat-label>
+                        <input [(ngModel)]="device.windows_version" matInput>
+                    </mat-form-field>
+
+                    <div>
+                        <mat-form-field>
+                            <mat-label>{{'passowrd' | translate}}</mat-label>
+                            <input [(ngModel)]="device.system_password" matInput [type]="password_show ? 'text' : 'password'">
+                        </mat-form-field>
+                        <button mat-icon-button (click)="password_show = !password_show"><mat-icon>{{password_show ? 'close' : 'remove_red_eye'}}</mat-icon></button>
+                    </div>
                 </div>
             </mat-card-content>
-            <mat-card-footer><mat-card-actions>
-                    <button mat-icon-button (click)="update()"><mat-icon>update</mat-icon></button>
-                    <button mat-icon-button (click)="delete()"><mat-icon>delete</mat-icon></button>
-                </mat-card-actions></mat-card-footer>
 
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    {{"files" | translate}}
+                </mat-expansion-panel-header>
+                <mat-chip-list>
+                    <mat-chip *ngFor="let file of device.files">
+                        <div class="file-item">
+                            <button matChipRemove class="file-delete"
+                                (click)="deleteFile(file.id)"><mat-icon>delete</mat-icon></button>
+                            <a href="{{file.file}}">{{file.filename}}</a>
+                            <div>{{file_type_map.get(file.type) || ""  | translate}}</div>
+                            <div>{{file.created_at}}</div>
+                        </div>
+                    </mat-chip>
+                    <div class="file-select">
+                        <div *ngIf="dataForm">
+                            <button mat-icon-button (click)="sendFile()"><mat-icon>send</mat-icon></button>
+
+                            <mat-form-field>
+                                <mat-label>{{'type' | translate}}</mat-label>
+                                <mat-select [(ngModel)]="selected_file_type">
+                                    <mat-option value="NA">{{'none' | translate}}</mat-option>
+                                    <mat-option value="SV">{{'survey_form' | translate}}</mat-option>
+                                    <mat-option value="TC">{{'tool_char' | translate}}</mat-option>
+                                    <mat-option value="SR">{{'given_services' | translate}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>  
+                        </div>
+                        <div>
+                            <input type="file" style="display: none;" #fileInput (change)="onFileSelected($event)" />
+                            <button mat-icon-button (click)="fileInput.click()"><mat-icon>attach_file</mat-icon></button>
+                            <label for="fileInput">{{selected_file_name || "Select A file"}}</label>
+                        </div>
+                    </div>
+                </mat-chip-list>
+            </mat-expansion-panel>
+
+            <mat-card-actions>
+                <button mat-icon-button (click)="update()"><mat-icon>update</mat-icon></button>
+                <button mat-icon-button (click)="delete()"><mat-icon>delete</mat-icon></button>
+            </mat-card-actions>
         </mat-card>
         <mat-spinner *ngIf="!device"></mat-spinner>
     </div>
@@ -32,12 +82,14 @@
     <div class="space"></div>
 
     <div class="events-section">
-        <mat-card *ngIf="events" style="height: 100%;">
-            <mat-card-header>Events</mat-card-header>
+        <mat-card *ngIf="events">
+            <mat-card-header>{{'events' | translate}}</mat-card-header>
             <mat-card-content class="events-list">
-                <button mat-stroked-button *ngFor="let event of events; let i = index;" (click)="tableRowCliecked(i, event)">
+                <button mat-stroked-button *ngFor="let event of events; let i = index;"
+                    (click)="tableRowCliecked(i, event)">
                     <div class="events-item">
-                        <div>{{formatDate(event.date)}}</div> <div>{{type_map.get(event.type)}}</div>
+                        <div>{{formatDate(event.date)}}</div>
+                        <div>{{event_type_map.get(event.type) || "" | translate}}</div>
                     </div>
                 </button>
             </mat-card-content>

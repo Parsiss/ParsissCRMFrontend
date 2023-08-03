@@ -75,6 +75,8 @@ import { MatTreeModule } from '@angular/material/tree';
 import { DeviceInfoPageComponent } from './device-info-page/device-info-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { EventEditDialogComponent } from './device-info-page/components/event-edit-dialog/event-edit-dialog.component';
+import { MatChipsModule } from '@angular/material/chips';
+
 
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
@@ -153,6 +155,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NgApexchartsModule,
     MatListModule,
     MatTreeModule,
+    MatChipsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

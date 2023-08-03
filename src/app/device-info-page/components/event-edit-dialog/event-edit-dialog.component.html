@@ -1,7 +1,7 @@
 <mat-card>
     <mat-card-header>
-        <mat-card-title>Event</mat-card-title>
-        <mat-card-subtitle>{{ editable ? "Edit" : "View" }}</mat-card-subtitle>
+        <mat-card-title>{{'event' | translate}}</mat-card-title>
+        <mat-card-subtitle>{{ (editable ? "edit" : "view") | translate }}</mat-card-subtitle>
         <mat-icon *ngIf="!editable" (click)="enableEdit()">edit</mat-icon>
     </mat-card-header>
 
@@ -9,10 +9,10 @@
         <form [formGroup]="form" class="form-section">
 
             <mat-form-field>
-                <mat-label>Select a type</mat-label>
+                <mat-label>{{"type" | translate}}</mat-label>
                 <mat-select formControlName="type">
-                    <mat-option value="NA">None</mat-option>
-                    <mat-option value="SV">Service</mat-option>
+                    <mat-option value="NA">{{'none' | translate}}</mat-option>
+                    <mat-option value="SV">{{'service' | translate}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -30,22 +30,22 @@
             </mat-form-field>
 
             <mat-form-field>
-                <mat-label>Description</mat-label>
+                <mat-label>{{'description' | translate}}</mat-label>
                 <textarea formControlName="description" matInput> </textarea>
             </mat-form-field>
 
-        
+
         </form>
     </mat-card-content>
 
     <mat-card-actions *ngIf="editable">
-        <button mat-button (click)="dialogRef.close()">Cancel</button>
-        <button mat-button (click)="processResult()">Accept</button>
+        <button mat-button (click)="processResult()">{{'accept' | translate}}</button>  
+        <button mat-button (click)="dialogRef.close()">{{'cancel' | translate}}</button>
     </mat-card-actions>
 
     <mat-card-actions *ngIf="!editable">
-        <button mat-button (click)="dialogRef.close()">Close</button>
-        <button mat-button (click)="delete()">Delete</button>
+        <button mat-button (click)="dialogRef.close()">{{'close' | translate}}</button>
+        <button mat-button (click)="delete()">{{'delete' | translate}}</button>
     </mat-card-actions>
 
 </mat-card>
