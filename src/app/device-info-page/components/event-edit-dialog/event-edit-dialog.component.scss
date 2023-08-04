@@ -7,3 +7,16 @@
     flex-direction: column;
 }
 
+.file-item {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 0fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+}
+
+
+.file-item * {
+    margin-right: 2px;
+    margin-left: 2px;
+}

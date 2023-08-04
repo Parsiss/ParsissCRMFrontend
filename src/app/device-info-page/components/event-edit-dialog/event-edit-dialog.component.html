@@ -33,19 +33,38 @@
                 <mat-label>{{'description' | translate}}</mat-label>
                 <textarea formControlName="description" matInput> </textarea>
             </mat-form-field>
+            
+            <div *ngIf="form.get('type')?.value == 'SV'">
+                <span>{{file_type_map.get("MC") || ""  | translate}}</span><br>
+                <span *ngIf="!editable && !data?.files?.length">{{'dont_have' | translate}}</span>
 
-
+                <mat-chip *ngFor="let file of data?.files">
+                    <div class="file-item">
+                        <button matChipRemove [disabled]="!editable" class="file-delete" (click)="deleteFile(file.id)"><mat-icon>delete</mat-icon></button>
+                        <a href="{{file.file}}">{{file.filename}}</a>
+                        <div>{{file.created_at}}</div>
+                    </div>
+                </mat-chip>
+                
+                <div class="file-select" *ngIf="!data?.files?.length && editable">
+                    <div>
+                        <input type="file" style="display: none;" #fileInput (change)="onFileSelected($event)" />
+                        <button mat-icon-button (click)="fileInput.click()"><mat-icon>attach_file</mat-icon></button>
+                        <label for="fileInput">{{selected_file_name || "Select A file"}}</label>
+                    </div>
+                </div>
+            </div>
         </form>
     </mat-card-content>
 
     <mat-card-actions *ngIf="editable">
-        <button mat-button (click)="processResult()">{{'accept' | translate}}</button>  
         <button mat-button (click)="dialogRef.close()">{{'cancel' | translate}}</button>
+        <button mat-button (click)="processResult()">{{'accept' | translate}}</button>  
     </mat-card-actions>
 
     <mat-card-actions *ngIf="!editable">
+        <button mat-button (click)="delete()">{{'delete' | translate}}</button> 
         <button mat-button (click)="dialogRef.close()">{{'close' | translate}}</button>
-        <button mat-button (click)="delete()">{{'delete' | translate}}</button>
     </mat-card-actions>
 
 </mat-card>

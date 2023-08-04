@@ -15,7 +15,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 })
 export class CentersInfoPageComponent implements OnInit, AfterViewInit {
   public dataSource = new MatTableDataSource<CenterViewInfo> ();  
-  public displayedColumns = ['edit', 'name'];
+  public displayedColumns = ['edit', 'name', 'devices'];
 
   constructor(
     public dialog: MatDialog,

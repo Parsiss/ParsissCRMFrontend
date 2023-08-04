@@ -7,13 +7,13 @@
       </button>
       <a mat-button href="https://parsiss.com/{{selectedLanguage == 'fa' ? 'fa' : ''}}"> {{ 'parsiss' | translate }}</a>
       <a mat-button routerLink="home" routerLinkActive="active">{{ 'home' | translate }}</a>
+      <a routerLink="centers" mat-menu-item>{{'centers' | translate}}</a>
       <div>
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
           {{'report' | translate}}
         </button>
         <mat-menu #menu="matMenu">
           <a routerLink="reportsList" routerLinkActive="active" mat-menu-item>{{'reports' | translate}}</a>
-
           <a routerLink="add_new_patient" mat-menu-item target="_blank">{{'add_new_report' | translate}}</a>
         </mat-menu>
       </div>

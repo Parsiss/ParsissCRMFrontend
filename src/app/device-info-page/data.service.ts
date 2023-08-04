@@ -35,18 +35,18 @@ export class DataService {
     return this.http.delete<object>(`${this.base_url}devices/${id}`);
   }
 
-  addEvent(data: EventInfo): Observable<object> {
+  addEvent(data: EventInfo): Observable<EventInfo> {
     let body = JSON.stringify(data);
-    return this.http.post<object>(this.base_url + 'events/', body, this.httpOptions);
+    return this.http.post<EventInfo>(this.base_url + 'events/', body, this.httpOptions);
   }
 
   getEvents(deivce_id: number): Observable<EventInfo[]> {
     return this.http.get<EventInfo[]>(`${this.base_url}events/search/${deivce_id}/`);
   }
   
-  updateEvent(data: EventInfo): Observable<object> {
+  updateEvent(data: EventInfo): Observable<EventInfo> {
     let body = JSON.stringify(data);
-    return this.http.post<object>(`${this.base_url}events/${data.id.toString()}/`, body, this.httpOptions);
+    return this.http.post<EventInfo>(`${this.base_url}events/${data.id.toString()}/`, body, this.httpOptions);
   }
 
   deleteEvent(id: number): Observable<object> {

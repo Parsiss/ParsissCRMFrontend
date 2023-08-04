@@ -20,7 +20,7 @@ export class EventEditDialogComponent implements OnInit {
 
   // file manager
   public selected_file_name: string | null;
-  public dataFile: File | null;
+  public dataForm: FormData | null;
 
 
   constructor(
@@ -36,7 +36,7 @@ export class EventEditDialogComponent implements OnInit {
       description: {value: data?.description, disabled: true},
       date: {value: date, disabled: true},
       time: {value: time, disabled: true},
-      type: {value: data?.type, disabled: true},
+      type: {value: data.type ? data.type : "NA", disabled: true},
     });
   }
 
@@ -52,6 +52,9 @@ export class EventEditDialogComponent implements OnInit {
     result.date = date;  
     result.type = this.form.get('type')?.value
     result.description = this.form.get('description')?.value;
+    if(this.dataForm) {
+      (result as any)['file'] = this.dataForm;
+    }
     this.dialogRef.close(result);
   }
 
@@ -62,9 +65,15 @@ export class EventEditDialogComponent implements OnInit {
     })
   }
 
-
   onFileSelected(event: Event) {
-    this.selected_file_name = "";
+      const element = event.currentTarget as HTMLInputElement;
+      let fileList: FileList | null = element.files;
+    if(fileList && fileList.length == 1) {
+      let file = fileList[0];
+      this.selected_file_name = file.name;
+      this.dataForm = new FormData();
+      this.dataForm.append("file", file, this.selected_file_name);
+    }
   }
 
   enableEdit() {
@@ -76,7 +85,9 @@ export class EventEditDialogComponent implements OnInit {
   }
 
   deleteFile(id: number): void {
-    this.dataService.deleteFile(id).subscribe();
+    this.dataService.deleteFile(id).subscribe(() => {
+      this.data.files = this.data.files.filter((value) => value.id !== id);
+    });
   }
 
 }

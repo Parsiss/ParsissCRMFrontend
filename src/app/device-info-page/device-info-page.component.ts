@@ -7,6 +7,7 @@ import { DataService } from './data.service';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from "jalali-moment";
+import { Observable, of } from 'rxjs';
 
 
 
@@ -64,26 +65,51 @@ export class DeviceInfoPageComponent implements OnInit {
     this.events = null;
     this.dataService.getEvents(this.device_id).subscribe((data) => {
       this.events = data;
+      for(let event of this.events) {
+        event.files = event.files || [];
+        for(let i = 0; i < event.files.length; ++i) {
+          event.files[i].created_at = moment(event.files[i].created_at).format("jYYYY/MM/DD - HH:mm")
+        }
+      }
     });
   }
 
 
   openDialog(): void {
-    let dialog = this.dialog.open(EventEditDialogComponent, {data: {device_id: this.device_id}});
+    let dialog = this.dialog.open(EventEditDialogComponent, {direction: 'rtl', data: {device_id: this.device_id}});
     dialog.componentInstance.enableEdit();
     dialog.afterClosed().subscribe((data: EventInfo) => {
+      let file = data && (data as any)['file'];
       let result = (data ? this.dataService.addEvent(data) : null);
-      result?.subscribe(this.getEvents.bind(this));
+      result?.subscribe((data: EventInfo) => {
+        this.addFile(file, data).subscribe(this.getEvents.bind(this));
+      });
     });
   }
 
   tableRowCliecked(i: number, row: EventInfo): void {
-    let dialog = this.dialog.open(EventEditDialogComponent, {data: row});
+    let dialog = this.dialog.open(EventEditDialogComponent, {direction: 'rtl', data: row});
     dialog.afterClosed().subscribe((data: EventInfo) => {
+      let file = data && (data as any)['file'];
       let result = (data ? this.dataService.updateEvent(data) : null);
-      result?.subscribe(this.getEvents.bind(this));
+      result?.subscribe((data: EventInfo) => {
+        this.addFile(file, data).subscribe(this.getEvents.bind(this));
+      });
     });
+    
     dialog.componentInstance.deleted.subscribe(() => this.events?.splice(i, 1));
+  }
+
+  addFile(file: FormData, data: EventInfo): Observable<object> {        
+    if(file) {
+      file = (file as FormData);
+      file.append("device_id", this.device_id.toString());
+      file.append("event_id", data.id.toString());
+      file.append("type", "MC")
+      console.log(data)
+      return this.dataService.addFile(file);
+    }
+    return of();
   }
 
   update(): void {
@@ -107,7 +133,6 @@ export class DeviceInfoPageComponent implements OnInit {
       this.dataForm = new FormData();
       this.dataForm.append("file", file, this.selected_file_name);
       this.dataForm.append("device_id", this.device_id.toString());
-
     }
   }
 
