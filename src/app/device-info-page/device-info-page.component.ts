@@ -10,7 +10,6 @@ import * as moment from "jalali-moment";
 import { Observable, of } from 'rxjs';
 
 
-
 @Component({
   selector: 'app-device-info-page',
   templateUrl: './device-info-page.component.html',
@@ -100,7 +99,7 @@ export class DeviceInfoPageComponent implements OnInit {
     dialog.componentInstance.deleted.subscribe(() => this.events?.splice(i, 1));
   }
 
-  addFile(file: FormData, data: EventInfo): Observable<object> {        
+  addFile(file: FormData, data: EventInfo): Observable<any> {        
     if(file) {
       file = (file as FormData);
       file.append("device_id", this.device_id.toString());
@@ -109,7 +108,7 @@ export class DeviceInfoPageComponent implements OnInit {
       console.log(data)
       return this.dataService.addFile(file);
     }
-    return of();
+    return of('ok!');
   }
 
   update(): void {
