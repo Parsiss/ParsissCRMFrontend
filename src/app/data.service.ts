@@ -14,7 +14,7 @@ import { KeyListOfValues, KeyOfValues, AutolFillOptions } from './reports-list-c
 })
 export class DataService {
   // public base_url = '';
-  public base_url = 'http://192.168.1.201:8000/api/';
+  public static base_url = 'http://192.168.1.201:8000/api/';
   // public base_url = 'http://192.168.1.201:9000/api/';
   // public static base_url = 'http://localhost:8000/api/';
 
