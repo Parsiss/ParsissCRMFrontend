@@ -14,7 +14,7 @@ export class AppComponent {
   title = 'ParsissCRMFrontend';
   private _selectedLanguage = 'fa';
 
-  textDir: 'rtl' | 'ltr' = 'rtl';
+  public textDir: 'rtl' | 'ltr' = 'rtl';
 
   date = new Date();
 

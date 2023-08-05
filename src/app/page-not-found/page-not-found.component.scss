@@ -1,0 +1,13 @@
+.page-container {
+    display: flex;
+    justify-content: center;
+    min-height: 300px;
+}
+
+mat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 100%;
+}

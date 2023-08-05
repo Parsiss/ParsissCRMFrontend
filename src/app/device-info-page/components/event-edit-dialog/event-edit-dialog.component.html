@@ -1,0 +1,70 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{'event' | translate}}</mat-card-title>
+        <mat-card-subtitle>{{ (editable ? "edit" : "view") | translate }}</mat-card-subtitle>
+        <mat-icon *ngIf="!editable" (click)="enableEdit()">edit</mat-icon>
+    </mat-card-header>
+
+    <mat-card-content>
+        <form [formGroup]="form" class="form-section">
+
+            <mat-form-field>
+                <mat-label>{{"type" | translate}}</mat-label>
+                <mat-select formControlName="type">
+                    <mat-option value="NA">{{'none' | translate}}</mat-option>
+                    <mat-option value="SV">{{'service' | translate}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="grid-area: surgery-date;">
+                <mat-label>{{'date' | translate}}</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date" placeholder="{{'date' | translate}}">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="grid-area: start-time;">
+                <mat-label>{{'time' | translate}}</mat-label>
+                <input matInput formControlName="time" [ngxTimepicker]="startTimeDatepicker" [format]="24" placeholder="{{'time' | translate}}" >
+                <ngx-material-timepicker #startTimeDatepicker class="overlay-timepicker" [format]="24"></ngx-material-timepicker>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{'description' | translate}}</mat-label>
+                <textarea formControlName="description" matInput> </textarea>
+            </mat-form-field>
+            
+            <div *ngIf="form.get('type')?.value == 'SV'">
+                <span>{{file_type_map.get("MC") || ""  | translate}}</span><br>
+                <span *ngIf="!editable && !data?.files?.length">{{'dont_have' | translate}}</span>
+
+                <mat-chip *ngFor="let file of data?.files">
+                    <div class="file-item">
+                        <button matChipRemove [disabled]="!editable" class="file-delete" (click)="deleteFile(file.id)"><mat-icon>delete</mat-icon></button>
+                        <a href="{{file.file}}">{{file.filename}}</a>
+                        <div>{{file.created_at}}</div>
+                    </div>
+                </mat-chip>
+                
+                <div class="file-select" *ngIf="!data?.files?.length && editable">
+                    <div>
+                        <input type="file" style="display: none;" #fileInput (change)="onFileSelected($event)" />
+                        <button mat-icon-button (click)="fileInput.click()"><mat-icon>attach_file</mat-icon></button>
+                        <label for="fileInput">{{selected_file_name || "Select A file"}}</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </mat-card-content>
+
+    <mat-card-actions *ngIf="editable">
+        <button mat-button (click)="dialogRef.close()">{{'cancel' | translate}}</button>
+        <button mat-button (click)="processResult()">{{'accept' | translate}}</button>  
+    </mat-card-actions>
+
+    <mat-card-actions *ngIf="!editable">
+        <button mat-button (click)="delete()">{{'delete' | translate}}</button> 
+        <button mat-button (click)="dialogRef.close()">{{'close' | translate}}</button>
+    </mat-card-actions>
+
+</mat-card>
