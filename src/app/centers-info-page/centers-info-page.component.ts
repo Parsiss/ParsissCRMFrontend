@@ -83,7 +83,7 @@ export class CentersInfoPageComponent implements OnInit, AfterViewInit {
     this.selected_device_id = null;
     let deletedIndex = this.selectedElement.devices_id.findIndex((val) => val == device_id);
     this.selectedElement.devices_id.splice(deletedIndex, 1);
-    this.selectedElement.devices.splice(deletedIndex);
+    this.selectedElement.devices.splice(deletedIndex, 1);
     this.dataSource.data = this.dataSource.data;
   }
 }
