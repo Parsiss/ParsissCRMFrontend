@@ -18,7 +18,6 @@ const routes: Routes = [
   { path: 'reportsList', component: ReportsListComponent },
   { path: 'preports', component: PeriodicReportsComponent},
   { path: 'centers', component: CentersInfoPageComponent },
-  { path: 'devices/:device_id', component: DeviceInfoPageComponent },
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];

@@ -46,7 +46,7 @@ export class DataService {
     return this.http.post<object>(
       this.base_url + 'devices/',
       { 
-        version: 'New Device',
+        name: 'New Device',
         center_id: centerId
       },
       this.httpOptions

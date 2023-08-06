@@ -1,42 +1,45 @@
-<mat-card class="page-card">
-    <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="edit" stickyEnd>
-            <th style="width: 20%;" mat-header-cell *matHeaderCellDef>{{ 'edit' | translate}}</th>
-            <td mat-cell *matCellDef="let element">
-                <div class="actions-container">
-                    <button mat-button (click)="addDevice(element.id)"><mat-icon>add</mat-icon></button>
-                    <button mat-icon-button (click)="tableRowCliecked(element)"><mat-icon>remove_red_eye</mat-icon></button>
-                    <button mat-icon-button (click)="deleteElement(element)"><mat-icon>delete</mat-icon></button>
-                </div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="name">
-            <th style="width: 20%;" mat-header-cell *matHeaderCellDef>{{ 'name' | translate}}</th>
-            <td mat-cell *matCellDef="let element">
-                {{ element.name }}
-            </td>
-        </ng-container>
+<div class="page-container">
+    <mat-card class="page-card">
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="edit" stickyEnd>
+                <th style="width: 20%;" mat-header-cell *matHeaderCellDef>{{ 'edit' | translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="actions-container">
+                        <button mat-icon-button (click)="addDevice(element.id)"><mat-icon>add</mat-icon></button>
+                        <button mat-icon-button (click)="tableRowCliecked(element)"><mat-icon>remove_red_eye</mat-icon></button>
+                        <button mat-icon-button (click)="deleteElement(element)"><mat-icon>delete</mat-icon></button>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th style="width: 20%;" mat-header-cell *matHeaderCellDef>{{ 'name' | translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.name }}
+                </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="devices">
+                <th mat-header-cell *matHeaderCellDef>{{ 'devices' | translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="device-list">
+                        <button 
+                         [color]="element.devices_id[i] == selected_device_id ? 'primary' : 'basic'"
+                         [class.selected_button]="element.devices_id[i] == selected_device_id"
+                         *ngFor="let device of element.devices; let i = index" class="device-item"
+                         mat-stroked-button (click)="selectDevice(element, element.devices_id[i])">{{device}}</button>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    
+        <mat-card-actions>
+            <button mat-raised-button (click)="openDialog()">Add</button>
+        </mat-card-actions>    
+    </mat-card>
 
-        <ng-container matColumnDef="devices">
-            <th mat-header-cell *matHeaderCellDef>{{ 'devices' | translate}}</th>
-            <td mat-cell *matCellDef="let element">
-                <div class="device-list">
-                    <button *ngFor="let device of element.devices; let i = index" class="device-item"
-                        mat-stroked-button routerLink="/devices/{{element.devices_id[i]}}">{{device}}</button>
-                </div>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+    <app-device-info-page style="width: 100%;" *ngIf="selected_device_id" (updated)="deviceUpdated($event)" (deviceDeleted)="deviceDeleted($event)" [device_id]="selected_device_id"></app-device-info-page>
+</div>
 
-    <mat-card-actions>
-        <button mat-raised-button (click)="openDialog()">Add</button>
-    </mat-card-actions>
 
-    <mat-card-footer>
-        <mat-paginator [pageSizeOptions]="[10, 20, 5]" showFirstLastButtons
-            aria-label="Select page of periodic elements">
-        </mat-paginator>
-    </mat-card-footer>
-</mat-card>

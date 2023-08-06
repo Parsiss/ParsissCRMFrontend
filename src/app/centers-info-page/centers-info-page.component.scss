@@ -1,3 +1,8 @@
+.selected_button {
+    border-color: blue;
+}
+
+
 .actions-container {
     display: flex;
     flex-direction: row;
@@ -15,6 +20,8 @@
 
 .device-item {
     width: 100%;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 .table {
@@ -24,5 +31,19 @@
 .page-card {
     display: flex; 
     flex-direction: column;
-    min-height: 80%;
+    min-width: 20%;
+    flex-shrink: 0;
 }
+
+.outlet-container {
+    flex-grow: 6;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 80vh;
+}
+
+

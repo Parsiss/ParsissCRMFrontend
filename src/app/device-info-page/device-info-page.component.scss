@@ -3,10 +3,13 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: stretch;
-    padding-right: 5%;
-    padding-left: 10%;
+    padding-right: 2rem;
+    padding-left: 2rem;
     margin-top: 2rem;
-    min-height: 80vh;
+}
+
+.file-section {
+    margin-top: 1rem;
 }
 
 .space {
@@ -15,6 +18,7 @@
 
 .events-section {
     flex-grow: 3;
+    margin-right: 1rem;
 }
 
 .device-section {

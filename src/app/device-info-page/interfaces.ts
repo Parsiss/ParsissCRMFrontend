@@ -24,6 +24,7 @@ export interface EventInfo {
 export interface DeviceInfo
 {
     id: number;
+    name: string;
     center_id: number;
     center: string;
     version: string;

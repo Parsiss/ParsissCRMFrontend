@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 
 
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,13 +13,16 @@ import { Observable, of } from 'rxjs';
 @Component({
   selector: 'app-device-info-page',
   templateUrl: './device-info-page.component.html',
-  styleUrls: ['./device-info-page.component.scss']
+  styleUrls: ['./device-info-page.component.scss'],
 })
-export class DeviceInfoPageComponent implements OnInit {
+export class DeviceInfoPageComponent implements OnInit, OnChanges {
+  @Input() public device_id: number;
+  @Output() public deviceDeleted = new EventEmitter<number>();
+  @Output() public updated = new EventEmitter<number>(); 
+
+
   public event_type_map = event_type_map;
   public file_type_map = file_type_map;
-
-  public device_id: number;
 
   public device: DeviceInfo | null;
   public events?: EventInfo[] | null;
@@ -40,9 +43,6 @@ export class DeviceInfoPageComponent implements OnInit {
     private dataService: DataService,
     public dialog: MatDialog
   ) {
-    route.params.subscribe(params => {
-      this.device_id = parseInt(params['device_id'], 10);
-    });
   }
 
   ngOnInit(): void {
@@ -59,6 +59,14 @@ export class DeviceInfoPageComponent implements OnInit {
       this.device = data;
     });
   }
+
+  ngOnChanges(simpleChanges: SimpleChanges): void {
+    if(simpleChanges['device_id']) {
+      this.getDevice();
+      this.getEvents();
+    }
+  }
+
 
   getEvents(): void {
     this.events = null;
@@ -115,12 +123,13 @@ export class DeviceInfoPageComponent implements OnInit {
     if(this.device != null) {
       this.dataService.updateDevice(this.device_id, this.device).subscribe(() => {
         this.getDevice();
+        this.updated.emit(this.device_id);
       })
     }
   }
 
   delete(): void {
-    this.dataService.deleteDevice(this.device_id).subscribe(() => this.router.navigate(['/centers']));
+    this.dataService.deleteDevice(this.device_id).subscribe(() => this.deviceDeleted.emit(this.device_id));
   }
 
   onFileSelected(event: Event): void {

@@ -17,6 +17,10 @@ export class CentersInfoPageComponent implements OnInit, AfterViewInit {
   public dataSource = new MatTableDataSource<CenterViewInfo> ();  
   public displayedColumns = ['edit', 'name', 'devices'];
 
+  public selected_device_id: number | null = null;
+  public selectedElement: CenterViewInfo;
+
+
   constructor(
     public dialog: MatDialog,
     public dataService: DataService
@@ -59,5 +63,27 @@ export class CentersInfoPageComponent implements OnInit, AfterViewInit {
 
   addDevice(centerId: number): void {
     this.dataService.addDevice(centerId).subscribe(this.updateTableInfo.bind(this));
+  }
+
+  selectDevice(element: CenterViewInfo, device_id: number) {
+    this.selectedElement = element;
+
+    if(this.selected_device_id == device_id) {
+      this.selected_device_id = null;
+    } else {
+      this.selected_device_id = device_id;
+    }
+  }
+
+  deviceUpdated(device_id: number) {
+    this.updateTableInfo();
+  }
+
+  deviceDeleted(device_id: number) {
+    this.selected_device_id = null;
+    let deletedIndex = this.selectedElement.devices_id.findIndex((val) => val == device_id);
+    this.selectedElement.devices_id.splice(deletedIndex, 1);
+    this.selectedElement.devices.splice(deletedIndex);
+    this.dataSource.data = this.dataSource.data;
   }
 }
