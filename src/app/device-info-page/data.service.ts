@@ -8,16 +8,18 @@ import { filter, map, Observable, of } from 'rxjs';
 import { DataService as BaseDataService } from '../data.service';
 
 import { EventInfo, DeviceInfo, FileInfo } from './interfaces';
+import { ApiBaseService } from '../api-base.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  public base_url = BaseDataService.base_url + 'centers/';
+  public base_url = this.apiBase.url_base + 'centers/';
   public httpOptions = BaseDataService.httpOptions;
 
   constructor(
+    private apiBase: ApiBaseService,
     public http: HttpClient,
     public dateAdapter: DateAdapter<moment.Moment>
   ) {
