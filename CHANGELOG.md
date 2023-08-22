@@ -1,3 +1,7 @@
+## 1.0.18 (August 22, 2023)
+  - Fix item 3 of ToDo#2
+  - Fix item 1 and 2 of ToDo#2
+
 ## 1.0.17 (August 22, 2023)
   - adding bump-version script to repo
 
