@@ -1,3 +1,6 @@
+## 1.0.17 (August 22, 2023)
+  - adding bump-version script to repo
+
 ## 1.0.16 (August 22, 2023)
   - Bump version to 1.0.15.
   - Add VERSION and CHANGELOG.md files, Bump version to v0.1.0.
