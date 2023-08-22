@@ -9,49 +9,68 @@
             </mat-card-subtitle>
             <mat-card-content>
                 <div class="form-section">
-                    <mat-form-field>
+                    <mat-form-field class="string-field">
                         <mat-label>{{'name' | translate}}</mat-label>
                         <input [(ngModel)]="device.name" matInput>
                     </mat-form-field>
 
-                    <mat-form-field>
-                        <mat-label>{{'version' | translate}}</mat-label>
-                        <input [(ngModel)]="device.version" matInput>
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label>{{'bundle_version' | translate}}</mat-label>
-                        <input [(ngModel)]="device.bundle_version" matInput>
-                    </mat-form-field>
-
-                    <mat-form-field>
+                    <mat-form-field class="string-field">
                         <mat-label>{{'windows' | translate}}</mat-label>
-                        <mat-select  [(ngModel)]="device.windows_version">
+                        <mat-select [(ngModel)]="device.windows_version">
                             <mat-option *ngFor="let item of windows_versions" [value]="item">
-                              {{ item | translate }}
+                                {{ item | translate }}
                             </mat-option>
-                          </mat-select>
+                        </mat-select>
                     </mat-form-field>
 
-                    <div>
+                    <div >
+                        <button mat-icon-button (click)="password_show = !password_show"><mat-icon>{{password_show ?
+                            'close' : 'remove_red_eye'}}</mat-icon></button>
                         <mat-form-field>
                             <mat-label>{{'passowrd' | translate}}</mat-label>
                             <input [(ngModel)]="device.system_password" matInput
                                 [type]="password_show ? 'text' : 'password'">
                         </mat-form-field>
-                        <button mat-icon-button (click)="password_show = !password_show"><mat-icon>{{password_show ?
-                                'close' : 'remove_red_eye'}}</mat-icon></button>
+
                     </div>
+
+                    <mat-form-field class="chip-list">
+                        <mat-label>{{'version' | translate}}</mat-label>
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let version of device_versions"
+                                (removed)="removeVersion(device_versions, version)">
+                                {{version}}
+                                <button matChipRemove><mat-icon>cancel</mat-icon></button>
+                            </mat-chip>
+                            <input placeholder="{{'new_version' | translate}}" [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" matChipInputAddOnBlur="true"
+                                (matChipInputTokenEnd)="addVersion(device_versions, $event)">
+                        </mat-chip-list>
+                    </mat-form-field>
+
+                    <mat-form-field class="chip-list">
+                        <mat-label>{{'bundle_version' | translate}}</mat-label>
+                        <mat-chip-list #bundleChipList>
+                            <mat-chip *ngFor="let version of bundle_versions"
+                                (removed)="removeVersion(bundle_versions, version)">
+                                {{version}}
+                                <button matChipRemove><mat-icon>cancel</mat-icon></button>
+                            </mat-chip>
+                            <input placeholder="{{'new_version' | translate}}" [matChipInputFor]="bundleChipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" matChipInputAddOnBlur="true"
+                                (matChipInputTokenEnd)="addVersion(bundle_versions, $event)">
+                        </mat-chip-list>
+                    </mat-form-field>
+
                 </div>
             </mat-card-content>
-
 
             <mat-card-actions>
                 <button mat-raised-button (click)="update()">{{'accept' | translate}}</button>
                 <button mat-icon-button (click)="delete()"><mat-icon>delete</mat-icon></button>
             </mat-card-actions>
         </mat-card>
-        
+
         <mat-expansion-panel *ngIf="device" class="file-section">
             <mat-expansion-panel-header>
                 {{"files" | translate}}

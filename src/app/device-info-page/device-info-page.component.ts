@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
-
+import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceInfo, EventInfo, FileInfo, event_type_map, file_type_map } from './interfaces';
@@ -8,6 +8,7 @@ import { EventEditDialogComponent } from './components/event-edit-dialog/event-e
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from "jalali-moment";
 import { Observable, of } from 'rxjs';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 
 @Component({
@@ -20,6 +21,28 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
   @Output() public deviceDeleted = new EventEmitter<number>();
   @Output() public updated = new EventEmitter<number>(); 
 
+  public device_versions: string[] = [];
+  public bundle_versions: string[] = [];
+
+  public readonly separatorKeysCodes = [ENTER, COMMA, SPACE];
+
+
+  addVersion(list: string[], event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      list.push(value);
+    }
+
+    event.chipInput!.clear();
+  }
+  
+  removeVersion(list: string[], version: string): void {
+    const index = list.indexOf(version);
+
+    if (index >= 0) {
+      list.splice(index, 1);
+    }
+  }
 
   public windows_versions = [
     'Windows XP',
@@ -60,11 +83,13 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
 
   getDevice(): void {
     this.device = null;
-    this.dataService.getDevice(this.device_id).subscribe((data) =>{
+    this.dataService.getDevice(this.device_id).subscribe((data) => {
       for(let i = 0; i < data.files.length; ++i) {
         data.files[i].created_at = moment(data.files[i].created_at).format("jYYYY/MM/DD - HH:mm")
       }
       this.device = data;
+      this.device_versions = this.device.version.split("\n");
+      this.bundle_versions = this.device.bundle_version.split("\n");
     });
   }
 
@@ -129,6 +154,10 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
 
   update(): void {
     if(this.device != null) {
+      this.device.version = this.device_versions.join("\n");
+      this.device.bundle_version = this.bundle_versions.join("\n");
+
+      console.log(this.device.version);
       this.dataService.updateDevice(this.device_id, this.device).subscribe(() => {
         this.getDevice();
         this.updated.emit(this.device_id);

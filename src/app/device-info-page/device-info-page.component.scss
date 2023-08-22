@@ -27,8 +27,10 @@
 
 .form-section {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
 }
+
 
 .events-list {
     display: flex;
@@ -45,7 +47,7 @@
 }
 
 
-::ng-deep .mat-chip-list-wrapper {
+.file-section ::ng-deep .mat-chip-list-wrapper {
     display: flex;
     flex-direction: column !important;
     align-items: normal !important;
@@ -71,4 +73,16 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+}
+
+.chip-list {
+    width: 45%;
+}
+
+.chip-list ::ng-deep .mat-chip-list-wrapper {
+    min-height: 3rem;
+}
+
+.string-field {
+    width: 25%;
 }
