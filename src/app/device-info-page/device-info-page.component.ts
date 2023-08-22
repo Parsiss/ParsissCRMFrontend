@@ -21,6 +21,14 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
   @Output() public updated = new EventEmitter<number>(); 
 
 
+  public windows_versions = [
+    'Windows XP',
+    'Windows 7',
+    'Windows 8',
+    'Windows 10',
+    'Windows 11',
+  ]
+
   public event_type_map = event_type_map;
   public file_type_map = file_type_map;
 

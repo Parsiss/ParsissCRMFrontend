@@ -50,7 +50,7 @@
                     <div>
                         <input type="file" style="display: none;" #fileInput (change)="onFileSelected($event)" />
                         <button mat-icon-button (click)="fileInput.click()"><mat-icon>attach_file</mat-icon></button>
-                        <label for="fileInput">{{selected_file_name || "Select A file"}}</label>
+                        <label for="fileInput">{{selected_file_name || "select_a_file" | translate}}</label>
                     </div>
                 </div>
             </div>

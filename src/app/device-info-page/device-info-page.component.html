@@ -26,7 +26,11 @@
 
                     <mat-form-field>
                         <mat-label>{{'windows' | translate}}</mat-label>
-                        <input [(ngModel)]="device.windows_version" matInput>
+                        <mat-select  [(ngModel)]="device.windows_version">
+                            <mat-option *ngFor="let item of windows_versions" [value]="item">
+                              {{ item | translate }}
+                            </mat-option>
+                          </mat-select>
                     </mat-form-field>
 
                     <div>
@@ -43,7 +47,7 @@
 
 
             <mat-card-actions>
-                <button mat-raised-button (click)="update()">{{'Accept' | translate}}</button>
+                <button mat-raised-button (click)="update()">{{'accept' | translate}}</button>
                 <button mat-icon-button (click)="delete()"><mat-icon>delete</mat-icon></button>
             </mat-card-actions>
         </mat-card>
@@ -79,7 +83,7 @@
                     <div>
                         <input type="file" style="display: none;" #fileInput (change)="onFileSelected($event)" />
                         <button mat-icon-button (click)="fileInput.click()"><mat-icon>attach_file</mat-icon></button>
-                        <label for="fileInput">{{selected_file_name || "Select A file"}}</label>
+                        <label for="fileInput">{{selected_file_name || "select_a_file" | translate}}</label>
                     </div>
                 </div>
             </mat-chip-list>
