@@ -1,4 +1,10 @@
-## 1.0.15 (August 22, 2023)
+## 1.0.16 (August 22, 2023)
+  - Bump version to 1.0.15.
+  - Add VERSION and CHANGELOG.md files, Bump version to v0.1.0.
+  - Delete notification.yml
+  - Create notification.yml
+
+## 1.0.16 (August 22, 2023)
   - Delete notification.yml
   - Create notification.yml
   - Merge branch 'events'
