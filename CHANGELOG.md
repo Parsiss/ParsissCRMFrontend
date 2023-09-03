@@ -1,3 +1,6 @@
+## 1.1.0 (September 03, 2023)
+  - Adding Login page and checking authentication
+
 ## 1.0.18 (August 22, 2023)
   - Fix item 3 of ToDo#2
   - Fix item 1 and 2 of ToDo#2
