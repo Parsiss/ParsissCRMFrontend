@@ -4,6 +4,7 @@ import { Injectable, isDevMode } from '@angular/core';
   providedIn: 'root'
 })
 export class ApiBaseService {
+  public token_url: string;
   public url_base: string;
   public use_main_db_anyway = false;
 
@@ -16,9 +17,11 @@ export class ApiBaseService {
 
   constructor() {
     if(!isDevMode() || this.use_main_db_anyway) {
+      this.token_url = 'http://192.168.1.201:8000/token/'
       this.url_base = 'http://192.168.1.201:8000/api/';
     } else {
-      this.url_base = 'http://localhost:8000/api/';
+      this.token_url = 'http://localhost:8000/token/'
+      this.url_base = 'http://localhost:8000/api/'
     }
   }
 

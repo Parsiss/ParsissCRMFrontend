@@ -9,18 +9,26 @@ import {CanDeactivateGuard} from "./guards/can-deactivate.guard";
 import { CentersInfoPageComponent } from './centers-info-page/centers-info-page.component';
 import { DeviceInfoPageComponent } from './device-info-page/device-info-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { LoginPageComponent } from './login/login-page.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'detailPage/:id', component: UpdatePatientComponent , canDeactivate: [CanDeactivateGuard] },
-  { path: 'add_new_patient', component: AddNewPatientComponent , canDeactivate: [CanDeactivateGuard] },
-  { path: 'home', component: HomePageComponent },
-  { path: 'reportsList', component: ReportsListComponent },
-  { path: 'preports', component: PeriodicReportsComponent},
-  { path: 'centers', component: CentersInfoPageComponent },
+  {path: '', canActivate:[AuthGuard], children: [
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'detailPage/:id', component: UpdatePatientComponent , canDeactivate: [CanDeactivateGuard] },
+    { path: 'add_new_patient', component: AddNewPatientComponent , canDeactivate: [CanDeactivateGuard] },
+    { path: 'home', component: HomePageComponent },
+    { path: 'reportsList', component: ReportsListComponent },
+    { path: 'preports', component: PeriodicReportsComponent},
+    { path: 'centers', component: CentersInfoPageComponent },
+  ]
+  },
+
+  { path: 'login', component: LoginPageComponent },
   { path: '404', component: PageNotFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {

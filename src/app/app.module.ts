@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
@@ -76,6 +76,9 @@ import { DeviceInfoPageComponent } from './device-info-page/device-info-page.com
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { EventEditDialogComponent } from './device-info-page/components/event-edit-dialog/event-edit-dialog.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { LoginPageComponent } from './login/login-page.component';
+import { AuthGuard } from './guards/auth.guard';
+import { TokenInterceptor } from './token.interceptor';
 
 
 
@@ -116,6 +119,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DeviceInfoPageComponent,
     PageNotFoundComponent,
     EventEditDialogComponent,
+    LoginPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -168,6 +172,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClient,
     { provide: MAT_DATE_LOCALE, useValue: 'fa' },
     { provide: DateAdapter, useClass: JalaliMomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false} },
     { provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: {
         autoActiveFirstOption: true
@@ -176,6 +184,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormGroupDirective,
     DatePipe,
     CanDeactivateGuard,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

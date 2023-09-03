@@ -35,7 +35,8 @@ export class AppComponent {
     translate.addLangs(['en', 'fa']);
     translate.setDefaultLang('fa');
     this.selectedLanguage = 'fa';
-    localStorage.clear();
+    localStorage.removeItem('ReportsList_internalFilter')
+    localStorage.removeItem('currentDate')
   }
 
 }

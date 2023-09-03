@@ -290,6 +290,7 @@ export class ReportsListComponent implements OnInit {
   }
 
   fillSearchReportData(data: PatientListData) {
+    console.log("HERE")
     var temp: tableData[] = [];
     data.data.forEach((patient) => {
       temp.push({
@@ -312,11 +313,12 @@ export class ReportsListComponent implements OnInit {
     this.dataSearch.filter = this.filterValue.trim().toLowerCase();
     this.dataCount = this.dataSearch.filteredData.length;
     this.dataSource = new MatTableDataSource<tableData>(this.dataSearch.filteredData);
-    this.dataSource.paginator = this.paginator
+    // this.dataSource.paginator = this.paginator
   }
 
   public filterValue = ""
   doFilter(event: Event) {
+    console.log("HERE")
     this.filterValue = (event.target as HTMLInputElement).value;
     if (this.filterValue.length === 0) {
       this.dataService.getReports(this.activeFilters, this.paginator.pageIndex, this.paginator.pageSize).subscribe(this.fillTableReportData.bind(this));
@@ -325,7 +327,7 @@ export class ReportsListComponent implements OnInit {
       this.dataSearch.filter = this.filterValue.trim().toLowerCase();
       this.dataCount = this.dataSearch.filteredData.length;
       this.dataSource = new MatTableDataSource<tableData>(this.dataSearch.filteredData);
-      this.dataSource.paginator = this.paginator
+      // this.dataSource.paginator = this.paginator
     }
   }
 
