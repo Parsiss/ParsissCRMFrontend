@@ -13,7 +13,7 @@ export class ApiBaseService {
   // public static base_url = 'http://localhost:8000/api/';
 
   // public base_url = 'http://192.168.1.201:9000/api/';
-  
+
 
   constructor() {
     if(!isDevMode() || this.use_main_db_anyway) {
