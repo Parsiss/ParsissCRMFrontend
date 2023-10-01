@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import * as moment from 'moment';
-import { filter, map, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 
 import { DataService as BaseDataService } from '../data.service';
@@ -28,18 +28,21 @@ export class AuthenticationService {
 
   public login(user: User): Observable<void> {
     let observable = new EventEmitter<void>();
-    this.http.post<LoginResult>(this.base_url, JSON.stringify(user), this.httpOptions).subscribe(data => {
-      this.authData = data;
-      localStorage.setItem(this.localStorageKey, this.authData.access);
-      observable.emit()
+    this.http.post<LoginResult>(this.base_url, JSON.stringify(user), this.httpOptions).subscribe({ next:
+          data => { this.authData = data;
+                    localStorage.setItem(this.localStorageKey, this.authData!.access);
+                    observable.emit()},
+      error: err => {console.log("Login error"), observable.error(err)}
     })
     return observable;
   }
 
   public isLoggedIn(): boolean {
-    let token = localStorage.getItem(this.localStorageKey);
-    console.log(token)
-    return token != null && token.length > 0;
+    let current_token = localStorage.getItem(this.localStorageKey);
+    if (current_token === null){
+      return false
+    }
+    return true
   }
 
 

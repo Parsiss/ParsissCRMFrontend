@@ -290,7 +290,6 @@ export class ReportsListComponent implements OnInit {
   }
 
   fillSearchReportData(data: PatientListData) {
-    console.log("HERE")
     var temp: tableData[] = [];
     data.data.forEach((patient) => {
       temp.push({

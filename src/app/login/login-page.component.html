@@ -1,24 +1,27 @@
-<h2>Login</h2>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && username.errors }" />
-        <div *ngIf="submitted && username.errors" class="invalid-feedback">
-            <div *ngIf="username.errors['required']">Username is required</div>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && password.errors }" />
-        <div *ngIf="submitted && password.errors" class="invalid-feedback">
-            <div *ngIf="password.errors['required']">Password is required</div>
-        </div>
-    </div>
-    <div class="form-group">
-        <button [disabled]="loading" class="btn btn-primary">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-            Login
-        </button>
-        <a routerLink="/register" class="btn btn-link">Register</a>
-    </div>
-</form>
+<mat-card>
+  <mat-card-title>{{'Login' | translate}}</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="{{'Username' | translate}}" formControlName="username">
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field>
+          <input type="password" matInput placeholder="{{'Password' | translate}}" formControlName="password">
+        </mat-form-field>
+      </p>
+
+      <p *ngIf="error" class="error">
+        {{ error }}
+      </p>
+
+      <div class="button">
+        <button type="submit" mat-button>{{'Login' | translate}}</button>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>

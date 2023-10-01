@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-login-page',
@@ -24,8 +25,9 @@ export class LoginPageComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private authService: AuthenticationService,
-    private router: Router
-  ) { 
+    private router: Router,
+    private translate: TranslateService
+  ) {
   }
 
   ngOnInit() {
@@ -36,7 +38,7 @@ export class LoginPageComponent implements OnInit {
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    
+
   }
 
   onSubmit() {
@@ -44,13 +46,15 @@ export class LoginPageComponent implements OnInit {
     if (this.form.invalid) {
         return;
     }
-
     this.loading = true;
     this.authService.login(
       {
-        username: this.username.value, 
+        username: this.username.value,
         password: this.password.value
-      }).subscribe(_ => this.router.navigate([this.returnUrl]));  
+      }).subscribe({ next: response => {this.router.navigate([this.returnUrl])},
+                            error: (error: any) => {this.error = this.translate.instant("Username or Password invalid")}});
   }
+  @Input() error: string | null;
 
+  @Output() submitEM = new EventEmitter();
 }

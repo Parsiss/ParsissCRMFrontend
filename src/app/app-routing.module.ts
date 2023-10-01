@@ -13,16 +13,16 @@ import { LoginPageComponent } from './login/login-page.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  {path: '', canActivate:[AuthGuard], children: [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'detailPage/:id', component: UpdatePatientComponent , canDeactivate: [CanDeactivateGuard] },
-    { path: 'add_new_patient', component: AddNewPatientComponent , canDeactivate: [CanDeactivateGuard] },
-    { path: 'home', component: HomePageComponent },
-    { path: 'reportsList', component: ReportsListComponent },
-    { path: 'preports', component: PeriodicReportsComponent},
-    { path: 'centers', component: CentersInfoPageComponent },
-  ]
-  },
+ // {path: '', canActivate:[AuthGuard], children: [
+    { path: '', redirectTo: 'home', pathMatch: 'full'},
+    { path: 'detailPage/:id', component: UpdatePatientComponent , canDeactivate: [CanDeactivateGuard],canActivate:[AuthGuard] },
+    { path: 'add_new_patient', component: AddNewPatientComponent , canDeactivate: [CanDeactivateGuard],canActivate:[AuthGuard] },
+    { path: 'home', component: HomePageComponent,canActivate:[AuthGuard] },
+    { path: 'reportsList', component: ReportsListComponent,canActivate:[AuthGuard] },
+    { path: 'preports', component: PeriodicReportsComponent,canActivate:[AuthGuard]},
+    { path: 'centers', component: CentersInfoPageComponent,canActivate:[AuthGuard] },
+  // ]
+ // },
 
   { path: 'login', component: LoginPageComponent },
   { path: '404', component: PageNotFoundComponent },
