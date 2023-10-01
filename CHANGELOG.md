@@ -1,3 +1,10 @@
+## 1.3.0 (October 01, 2023)
+  - Bump version to 1.2.0.
+  - add login page
+  - Merge remote-tracking branch 'origin/master'
+  - add login page
+  - Fix bump-version \r issue
+
 ## 1.2.0 (October 01, 2023)
   - add login page
   - Merge remote-tracking branch 'origin/master'
