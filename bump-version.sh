@@ -47,7 +47,6 @@ if [ -f VERSION ]; then
     echo -e "${NOTICE_FLAG} Current version: ${WHITE}$BASE_STRING"
     echo -e "${NOTICE_FLAG} Latest commit hash: ${WHITE}$LATEST_HASH"
     V_PATCH=$((V_PATCH + 1))
-    V_PATCH=0
     SUGGESTED_VERSION="$V_MAJOR.$V_MINOR.$V_PATCH"
     echo -ne "${QUESTION_FLAG} ${CYAN}Enter a version number [${WHITE}$SUGGESTED_VERSION${CYAN}]: "
     read INPUT_STRING
