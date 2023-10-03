@@ -1,3 +1,13 @@
+## 1.2.1 (October 04, 2023)
+  - fix bump-version.sh
+  - add 3 new fields to device
+  - Bug fix
+  - Default Device Name
+  - add login page
+  - Merge remote-tracking branch 'origin/master'
+  - add login page
+  - Fix bump-version \r issue
+
 ## 1.2.0 (October 01, 2023)
 
 
