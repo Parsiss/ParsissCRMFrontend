@@ -44,11 +44,11 @@ export class DataService {
     return this.http.get<CenterViewInfo[]>(this.base_url + 'centers/');
   }
 
-  addDevice(centerId: number): Observable<object> {
+  addDevice(centerId: number, centerName: string): Observable<object> {
     return this.http.post<object>(
       this.base_url + 'devices/',
       { 
-        name: 'New Device',
+        name: centerName,
         center_id: centerId
       },
       this.httpOptions

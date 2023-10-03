@@ -61,8 +61,8 @@ export class CentersInfoPageComponent implements OnInit, AfterViewInit {
     this.dataService.getCenters().subscribe((data) => this.dataSource.data = data);
   }
 
-  addDevice(centerId: number): void {
-    this.dataService.addDevice(centerId).subscribe(this.updateTableInfo.bind(this));
+  addDevice(centerId: number, centerName: string): void {
+    this.dataService.addDevice(centerId, centerName).subscribe(this.updateTableInfo.bind(this));
   }
 
   selectDevice(element: CenterViewInfo, device_id: number) {
