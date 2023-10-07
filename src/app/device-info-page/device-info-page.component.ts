@@ -52,6 +52,16 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
     'Windows 11',
   ]
 
+  public installation_years: number[];
+
+  public device_models = [
+    'Iv2',
+    'OV3',
+    'OV4',
+    'Compo',
+    'CompoPlus'
+  ]
+
   public event_type_map = event_type_map;
   public file_type_map = file_type_map;
 
@@ -74,6 +84,9 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
     private dataService: DataService,
     public dialog: MatDialog
   ) {
+    let years = [...Array(20).keys()];
+    let currentYear = moment().jYear();
+    this.installation_years = years.map((d) => currentYear - d)
   }
 
   ngOnInit(): void {
@@ -88,8 +101,10 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
         data.files[i].created_at = moment(data.files[i].created_at).format("jYYYY/MM/DD - HH:mm")
       }
       this.device = data;
-      this.device_versions = this.device.version.split("\n");
-      this.bundle_versions = this.device.bundle_version.split("\n");
+
+      // Check this shit out: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split#using_split
+      this.device_versions = this.device.version.split("\n").filter(r => r !== '');
+      this.bundle_versions = this.device.bundle_version.split("\n").filter(r => r !== '');
     });
   }
 
@@ -146,7 +161,6 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
       file.append("device_id", this.device_id.toString());
       file.append("event_id", data.id.toString());
       file.append("type", "MC")
-      console.log(data)
       return this.dataService.addFile(file);
     }
     return of('ok!');
@@ -157,7 +171,6 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
       this.device.version = this.device_versions.join("\n");
       this.device.bundle_version = this.bundle_versions.join("\n");
 
-      console.log(this.device.version);
       this.dataService.updateDevice(this.device_id, this.device).subscribe(() => {
         this.getDevice();
         this.updated.emit(this.device_id);

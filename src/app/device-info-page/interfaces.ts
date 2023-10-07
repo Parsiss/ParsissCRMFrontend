@@ -32,6 +32,9 @@ export interface DeviceInfo
     bundle_version: string;
     system_password: string;
     files: FileInfo[];
+    serial_number: string;
+    model: string;
+    installation_year: number;
 };
 
 

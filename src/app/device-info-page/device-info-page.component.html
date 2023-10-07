@@ -9,12 +9,12 @@
             </mat-card-subtitle>
             <mat-card-content>
                 <div class="form-section">
-                    <mat-form-field class="string-field">
+                    <mat-form-field>
                         <mat-label>{{'name' | translate}}</mat-label>
                         <input [(ngModel)]="device.name" matInput>
                     </mat-form-field>
 
-                    <mat-form-field class="string-field">
+                    <mat-form-field>
                         <mat-label>{{'windows' | translate}}</mat-label>
                         <mat-select [(ngModel)]="device.windows_version">
                             <mat-option *ngFor="let item of windows_versions" [value]="item">
@@ -23,16 +23,40 @@
                         </mat-select>
                     </mat-form-field>
 
-                    <div >
+                    <div style="display: flex;">
                         <button mat-icon-button (click)="password_show = !password_show"><mat-icon>{{password_show ?
                             'close' : 'remove_red_eye'}}</mat-icon></button>
-                        <mat-form-field>
+                        <mat-form-field style="flex-grow: 1;">
                             <mat-label>{{'passowrd' | translate}}</mat-label>
                             <input [(ngModel)]="device.system_password" matInput
                                 [type]="password_show ? 'text' : 'password'">
                         </mat-form-field>
-
                     </div>
+
+
+                    <mat-form-field>
+                        <mat-label>{{'installation_year' | translate}}</mat-label>
+                        <mat-select [(ngModel)]="device.installation_year">
+                            <mat-option *ngFor="let item of installation_years" [value]="item">
+                                {{ item }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>{{'device_model' | translate}}</mat-label>
+                        <mat-select [(ngModel)]="device.model">
+                            <mat-option *ngFor="let item of device_models" [value]="item">
+                                {{ item | translate }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+                    <mat-form-field>
+                        <mat-label>{{'serial_number' | translate}}</mat-label>
+                        <input [(ngModel)]="device.serial_number" matInput>
+                    </mat-form-field>
 
                     <mat-form-field class="chip-list">
                         <mat-label>{{'version' | translate}}</mat-label>

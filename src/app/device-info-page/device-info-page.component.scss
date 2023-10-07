@@ -26,9 +26,11 @@
 }
 
 .form-section {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 1em;
+    row-gap: 2rem;
+    align-items: flex-end;
 }
 
 
@@ -75,14 +77,6 @@
     justify-content: space-between;
 }
 
-.chip-list {
-    width: 45%;
-}
-
 .chip-list ::ng-deep .mat-chip-list-wrapper {
     min-height: 3rem;
-}
-
-.string-field {
-    width: 25%;
 }

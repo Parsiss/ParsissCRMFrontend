@@ -263,7 +263,8 @@ export class ReportsListComponent implements OnInit {
       let previous_surgeries = '';
       for(let [date, result] of patient.PreviousSurgeries!) {
         let jdate = this.formatJdate(date);
-        let result_text = this.translate.instant(this.getBasicComboOptionText('surgery_result', result))
+        let surgery_result = this.getBasicComboOptionText('surgery_result', result) || 'unknown'
+        let result_text = this.translate.instant(surgery_result);
         previous_surgeries += `${jdate}(${result_text}), `;
       }
       previous_surgeries = previous_surgeries.slice(0, -2);
