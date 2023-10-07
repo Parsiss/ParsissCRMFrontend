@@ -28,7 +28,7 @@ export class DataService {
     public http: HttpClient,
     public dateAdapter: DateAdapter<moment.Moment>
   ) {
-    
+
     this.http.get('assets/config.json').subscribe(data => {
       // @ts-ignore
       // this.base_url = data['url'];
@@ -48,7 +48,6 @@ export class DataService {
       'page_index': page_index,
       'page_size': page_size
     };
-
     return this.http.post<PatientListData>(this.base_url + 'report/filtered/', bodyString, DataService.httpOptions);
   }
 
@@ -59,7 +58,6 @@ export class DataService {
     let bodyString = {
       'filters': JSON.stringify(filters),
     };
-
     return this.http.post<PatientListData>(this.base_url + 'report/search/', bodyString, DataService.httpOptions);
   }
 
