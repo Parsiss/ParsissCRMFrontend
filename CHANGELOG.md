@@ -1,3 +1,12 @@
+## 1.3.1 (October 07, 2023)
+  - Merge remote-tracking branch 'origin/master'
+  - change cash amount format
+  - Bump version to 1.2.1.
+  - fix bump-version.sh
+  - add 3 new fields to device
+  - Bug fix
+  - Default Device Name
+
 ## 1.3.0 (October 01, 2023)
   - Bump version to 1.2.0.
   - add login page
