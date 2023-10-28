@@ -1,3 +1,6 @@
+## 1.3.2 (October 28, 2023)
+
+
 ## 1.3.1 (October 07, 2023)
   - Merge remote-tracking branch 'origin/master'
   - change cash amount format
