@@ -20,9 +20,9 @@ export class ApiBaseService {
       // this.token_url = 'http://192.168.1.201:8000/token/'
       // this.url_base = 'http://192.168.1.201:8000/api/'
       const currentOrigin = window.location.origin
-      const originWithoutPort = currentOrigin.replace(`:${window.location.port}`, '');
-      this.token_url = originWithoutPort + ':8000/token/'
-      this.url_base = originWithoutPort + ':8000/api/'
+      // const originWithoutPort = currentOrigin.replace(`:${window.location.port}`, '');
+      this.token_url = currentOrigin + '/token/'
+      this.url_base = currentOrigin + '/api/'
     } else {
       this.token_url = 'http://localhost:8000/token/'
       this.url_base = 'http://localhost:8000/api/'
