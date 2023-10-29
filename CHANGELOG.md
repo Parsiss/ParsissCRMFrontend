@@ -1,3 +1,6 @@
+## 1.3.5 (October 29, 2023)
+  - add overflow-x for mobile screen
+
 ## 1.3.4 (October 28, 2023)
   - change base url
 
