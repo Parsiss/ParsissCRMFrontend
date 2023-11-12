@@ -1,3 +1,6 @@
+## 1.3.6 (November 12, 2023)
+  - add surgery_type
+
 ## 1.3.5 (October 29, 2023)
   - add overflow-x for mobile screen
 
