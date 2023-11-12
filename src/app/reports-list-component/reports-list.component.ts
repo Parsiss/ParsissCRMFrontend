@@ -225,7 +225,7 @@ export class ReportsListComponent implements OnInit {
     }
 
     this.dataService.getAdaptiveFilterOptions(this.activeFilters).subscribe((filters) => {
-      for(let field of ['hospital', 'surgeon_first', 'operator_first']) {
+      for(let field of ['hospital', 'surgeon_first', 'operator_first', 'surgery_type']) {
         let selected = this.adaptiveFilterOptions[field].filter((item) => item.Selected).map((item) => item.Value);
         this.adaptiveFilterOptions[field].splice(0, this.adaptiveFilterOptions[field].length)
 
