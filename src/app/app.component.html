@@ -2,7 +2,7 @@
 <mat-card [dir]="textDir" style="min-height: 100%; display: flex; flex-direction: column; padding: 0;">
   <mat-toolbar>
     <mat-toolbar-row>
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <button id="menuButton" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="handleButtonClick()">
         <mat-icon>menu</mat-icon>
       </button>
       <a mat-button href="https://parsiss.com/{{selectedLanguage == 'fa' ? 'fa' : ''}}"> {{ 'parsiss' | translate }}</a>

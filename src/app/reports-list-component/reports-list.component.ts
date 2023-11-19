@@ -1,5 +1,5 @@
 // زن زندگی آزادی
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, ElementRef} from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { PatientInformation, PatientListData, tableData } from 'src/types/report';
@@ -64,7 +64,7 @@ export class ReportsListComponent implements OnInit {
     end: new FormControl(null),
   });
 
-
+  @Output() menuClick = new EventEmitter<void>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   loading: boolean = false;
@@ -412,5 +412,18 @@ export class ReportsListComponent implements OnInit {
 
   tabChanged(event: MatTabChangeEvent): void {
     this.periodicTab = (event.index === 2);
+  }
+  @ViewChild('reportFilters', { static: true }) reportFilters: ElementRef;
+
+  onMenuReportFilterClick(): void {
+    // Access the element to remove the class from using a template reference variable
+    const elementToRemoveClass = this.reportFilters.nativeElement;
+
+    // Check if the element exists before removing the class
+    if (elementToRemoveClass) {
+      // Remove the class from the element
+      elementToRemoveClass.classList.remove('mobile-hide');
+      console.log('Class removed from the element:', elementToRemoveClass);
+    }
   }
 }

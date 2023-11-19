@@ -1,8 +1,9 @@
-import {Component, Inject, Injectable} from '@angular/core';
+import {Component, Inject, Injectable, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT } from '@angular/common';
 import {AutofillService} from "./autofill.service";
+import {ReportsListComponent} from "./reports-list-component/reports-list.component";
 
 @Component({
   selector: 'app-root',
@@ -39,4 +40,11 @@ export class AppComponent {
     localStorage.removeItem('currentDate')
   }
 
+  @ViewChild('childComponentRef', { static: true }) childComponent: ReportsListComponent;
+
+  handleButtonClick() {
+    // Call the method in the child component
+    this.childComponent.onMenuReportFilterClick();
+    console.log('dfgdg');
+  }
 }

@@ -250,12 +250,6 @@
         <mat-label>{{'cancellation_reason' | translate}}</mat-label>
         <input matInput placeholder="{{'cancellation_reason' | translate}}" formControlName="CancellationReason">
       </mat-form-field>
-
-      <mat-form-field appearance="fill" style="grid-area: surgery-description;">
-        <mat-label>{{'surgery_description' | translate}}</mat-label>
-        <textarea matInput placeholder="{{'surgery_description' | translate}}" formControlName="SurgeryDescription"
-                  rows="1"></textarea>
-      </mat-form-field>
     </form>
   </mat-tab>
   <mat-tab label="{{'complementary_information' | translate }}">
@@ -368,12 +362,29 @@
         </mat-select>
       </mat-form-field>
 
+      <mat-form-field appearance="fill" style="grid-area: enter-time;">
+        <mat-label>{{'enter_time' | translate}}</mat-label>
+        <input matInput placeholder="{{'enter_time' | translate}}" [ngxTimepicker]="enterTimeDatepicker" [format]="24"
+               [value]="toTime(form.controls['EnterTime'].value)">
+        <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['EnterTime'])" #enterTimeDatepicker
+                                 [format]="24" [theme]="darkTheme" [enableKeyboardInput]="true"></ngx-material-timepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: patient-enter-time;">
+        <mat-label>{{'patient_enter_time' | translate}}</mat-label>
+        <input matInput placeholder="{{'patient_enter_time' | translate}}" [ngxTimepicker]="patientEnterTimeDatepicker"
+               [format]="24" [value]="toTime(form.controls['PatientEnterTime'].value)">
+        <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['PatientEnterTime'])"
+                                 #patientEnterTimeDatepicker [format]="24" [theme]="darkTheme"
+                                 [enableKeyboardInput]="true"></ngx-material-timepicker>
+      </mat-form-field>
+
       <mat-form-field appearance="fill" style="grid-area: start-time;">
         <mat-label>{{'start_time' | translate}}</mat-label>
         <input matInput [ngxTimepicker]="startTimeDatepicker" [format]="24" placeholder="{{'start_time' | translate}}"
           [value]="toTime(form.controls['StartTime'].value)">
         <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['StartTime'])" #startTimeDatepicker
-          [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
+          [format]="24" [theme]="darkTheme" [enableKeyboardInput]="true"></ngx-material-timepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: end-time;">
@@ -381,15 +392,7 @@
         <input matInput placeholder="{{'end_time' | translate}}" [ngxTimepicker]="stopTimeDatepicker" [format]="24"
           [value]="toTime(form.controls['StopTime'].value)">
         <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['StopTime'])" #stopTimeDatepicker
-          [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" style="grid-area: enter-time;">
-        <mat-label>{{'enter_time' | translate}}</mat-label>
-        <input matInput placeholder="{{'enter_time' | translate}}" [ngxTimepicker]="enterTimeDatepicker" [format]="24"
-          [value]="toTime(form.controls['EnterTime'].value)">
-        <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['EnterTime'])" #enterTimeDatepicker
-          [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
+          [format]="24" [theme]="darkTheme" [enableKeyboardInput]="true"></ngx-material-timepicker>
       </mat-form-field>
 
       <mat-form-field appearance="fill" style="grid-area: exit-time;">
@@ -397,17 +400,14 @@
         <input matInput placeholder="{{'exit_time' | translate}}" [ngxTimepicker]="exitTimeDatepicker" [format]="24"
           [value]="toTime(form.controls['ExitTime'].value)">
         <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['ExitTime'])" #exitTimeDatepicker
-          [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
+          [format]="24" [theme]="darkTheme" [enableKeyboardInput]="true"></ngx-material-timepicker>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" style="grid-area: patient-enter-time;">
-        <mat-label>{{'patient_enter_time' | translate}}</mat-label>
-        <input matInput placeholder="{{'patient_enter_time' | translate}}" [ngxTimepicker]="patientEnterTimeDatepicker"
-        [format]="24" [value]="toTime(form.controls['PatientEnterTime'].value)">
-        <ngx-material-timepicker (timeSet)="onTimeChange($event, form.controls['PatientEnterTime'])"
-          #patientEnterTimeDatepicker [format]="24" [theme]="darkTheme"></ngx-material-timepicker>
+      <mat-form-field appearance="fill" style="grid-area: surgery-description;">
+        <mat-label>{{'surgery_description' | translate}}</mat-label>
+        <textarea matInput placeholder="{{'surgery_description' | translate}}" formControlName="SurgeryDescription"
+                  rows="1"></textarea>
       </mat-form-field>
-
     </form>
 
   </mat-tab>

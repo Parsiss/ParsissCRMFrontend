@@ -46,3 +46,8 @@ td.mat-column-position {
   justify-content: center !important;
 }
 
+@media (max-width:576px){
+.mobile-hide{
+  display: none !important;
+}
+}
