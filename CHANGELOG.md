@@ -1,3 +1,6 @@
+## 1.3.7 (November 19, 2023)
+  - change some bug
+
 ## 1.3.6 (November 12, 2023)
   - add surgery_type
 
