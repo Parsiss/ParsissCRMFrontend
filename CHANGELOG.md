@@ -1,3 +1,7 @@
+## 1.3.7 (November 27, 2023)
+  - adding refund status; removing surgery_result=Failed and replacing it with None
+  - change some bug
+
 ## 1.3.6 (November 12, 2023)
   - add surgery_type
 
