@@ -80,6 +80,7 @@ export class DetailPageComponent implements OnInit {
       ReceiptNumber: new FormControl(0),
       SurgeryResult: new FormControl(0),
       CancellationReason: new FormControl(''),
+      RefundStatus: new FormControl(''),
       FileNumber: new FormControl(''),
       DateOfHospitalAdmission: new FormControl(0),
       Age: new FormControl(0),

@@ -250,6 +250,13 @@
         <mat-label>{{'cancellation_reason' | translate}}</mat-label>
         <input matInput placeholder="{{'cancellation_reason' | translate}}" formControlName="CancellationReason">
       </mat-form-field>
+
+      <mat-form-field appearance="fill" style="grid-area: refund-status;"
+        *ngIf="form.controls['SurgeryResult'].value === 2">
+        <mat-label>{{'refund_status' | translate}}</mat-label>
+        <input matInput placeholder="{{'refund_status' | translate}}" formControlName="RefundStatus">
+      </mat-form-field>
+
     </form>
   </mat-tab>
   <mat-tab label="{{'complementary_information' | translate }}">
