@@ -49,6 +49,19 @@
 }
 
 
+.hints-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hint-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
 .file-section ::ng-deep .mat-chip-list-wrapper {
     display: flex;
     flex-direction: column !important;

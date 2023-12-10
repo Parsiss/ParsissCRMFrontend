@@ -32,6 +32,7 @@ export class CentersInfoPageComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
   
+  
   ngOnInit(): void {
     this.updateTableInfo();
   }
@@ -45,7 +46,12 @@ export class CentersInfoPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  tableRowCliecked(row: CenterViewInfo): void {
+    applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+    
+    tableRowCliecked(row: CenterViewInfo): void {
     let dialog = this.dialog.open(DetailCenterDialogComponent, {data: row});
     dialog.afterClosed().subscribe((data: CenterViewInfo) => {
       let result = (data ? this.dataService.updateCenter(data) : null);

@@ -1,4 +1,8 @@
-
+export interface DeviceHint {
+    id: number;
+    description: string;
+    is_essential: boolean;
+}
 
 export interface FileInfo {
     id: number;
@@ -7,7 +11,6 @@ export interface FileInfo {
     created_at: string;
     type: string;
 };
-
 
 
 export interface EventInfo {
@@ -35,6 +38,8 @@ export interface DeviceInfo
     serial_number: string;
     model: string;
     installation_year: number;
+
+    hints: DeviceHint[];
 };
 
 

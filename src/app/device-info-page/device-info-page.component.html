@@ -95,6 +95,32 @@
             </mat-card-actions>
         </mat-card>
 
+        <mat-expansion-panel *ngIf="device">
+            <mat-expansion-panel-header>
+                {{"hints" | translate}} {{ has_essential_hints ? '*' : '' }}
+            </mat-expansion-panel-header>
+            <div class="hints-section">
+                <div *ngFor="let hint of device.hints">
+                    <mat-chip class="hint-item" [selected]="hint.is_essential" color='warn'>
+                        <div>
+                            {{hint.description}}
+                        </div>
+                        <button mat-icon-button (click)="deleteHint(hint.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-chip>
+                </div>
+
+                <div class="add-hint">
+                    <mat-form-field style="width: calc(100% - 40px);">
+                        <mat-label>{{'description' | translate}}</mat-label>
+                        <input [(ngModel)]="new_hint" placeholder="{{'enter_start' | translate}}" matInput>
+                    </mat-form-field>
+                    <button mat-icon-button (click)="addHint()"><mat-icon>add</mat-icon></button>
+                </div>
+            </div>
+        </mat-expansion-panel>
+
         <mat-expansion-panel *ngIf="device" class="file-section">
             <mat-expansion-panel-header>
                 {{"files" | translate}}
@@ -153,3 +179,4 @@
         <mat-spinner *ngIf="!events"></mat-spinner>
     </div>
 </div>
+<div style="height: 30px;"></div>

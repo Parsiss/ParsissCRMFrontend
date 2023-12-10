@@ -7,7 +7,7 @@ import { filter, map, Observable, of } from 'rxjs';
 
 import { DataService as BaseDataService } from '../data.service';
 
-import { EventInfo, DeviceInfo, FileInfo } from './interfaces';
+import { EventInfo, DeviceInfo, FileInfo, DeviceHint } from './interfaces';
 import { ApiBaseService } from '../api-base.service';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class DataService {
 
   public base_url = this.apiBase.url_base + 'centers/';
   public httpOptions = BaseDataService.httpOptions;
-
+  
   constructor(
     private apiBase: ApiBaseService,
     public http: HttpClient,
@@ -29,12 +29,20 @@ export class DataService {
     return this.http.get<DeviceInfo>(`${this.base_url}devices/${id}`);
   }
 
+  addHint(device_id: number, hint: string, is_essential: boolean): Observable<object> {
+    return this.http.post<object>(`${this.base_url}hints/`, JSON.stringify({device_id: device_id, description: hint, is_essential: is_essential}), this.httpOptions);
+  }
+
   updateDevice(id: number, device: DeviceInfo): Observable<object> {
     return this.http.post<object>(`${this.base_url}devices/${id}/`, JSON.stringify(device), this.httpOptions);
   }
 
   deleteDevice(id: number): Observable<object> {
     return this.http.delete<object>(`${this.base_url}devices/${id}`);
+  }
+
+  deleteHint(hint_id: number): Observable<object> {
+    return this.http.delete<object>(`${this.base_url}hints/${hint_id}`);
   }
 
   addEvent(data: EventInfo): Observable<EventInfo> {

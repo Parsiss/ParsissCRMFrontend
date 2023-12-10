@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, 
 import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { DeviceInfo, EventInfo, FileInfo, event_type_map, file_type_map } from './interfaces';
+import { DeviceHint, DeviceInfo, EventInfo, FileInfo, event_type_map, file_type_map } from './interfaces';
 import { DataService } from './data.service';
 import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -65,6 +65,10 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
   public event_type_map = event_type_map;
   public file_type_map = file_type_map;
 
+  public new_hint: string = '';
+  public has_essential_hints: boolean;
+
+
   public device: DeviceInfo | null;
   public events?: EventInfo[] | null;
 
@@ -100,8 +104,15 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
       for(let i = 0; i < data.files.length; ++i) {
         data.files[i].created_at = moment(data.files[i].created_at).format("jYYYY/MM/DD - HH:mm")
       }
-      this.device = data;
 
+      this.device = data;
+      this.has_essential_hints = ((this.device.hints.filter(value => value.is_essential)).length != 0);
+      if(this.has_essential_hints) {
+        this.device.hints.sort((x, y) => (x.is_essential == y.is_essential) ? 0 : x.is_essential ? -1 : 1);
+        this.device.hints = [...this.device.hints]
+        console.log(this.device.hints)
+      }
+      
       // Check this shit out: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split#using_split
       this.device_versions = this.device.version.split("\n").filter(r => r !== '');
       this.bundle_versions = this.device.bundle_version.split("\n").filter(r => r !== '');
@@ -127,6 +138,32 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
         }
       }
     });
+  }
+
+  deleteHint(id: number) {
+    this.dataService.deleteHint(id).subscribe((data) => {
+      this.device!.hints = this.device!.hints.filter((value) => value.id !== id);
+    })
+  }
+
+  addHint() {
+    let description = this.new_hint.trim();
+
+    if(description == '') {
+      return;
+    }
+    
+    let has_essential_hints = false;
+    if(description.startsWith('*')) {
+      description = description.slice(1);
+      has_essential_hints = true;
+    }
+
+    this.dataService.addHint(this.device_id, description, has_essential_hints).subscribe((data) => {
+      this.device!.hints = [...this.device!.hints, data as DeviceHint]
+      this.new_hint = ''
+    })
+    
   }
 
 
