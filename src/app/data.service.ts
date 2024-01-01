@@ -10,6 +10,7 @@ import { DateConversionService } from './date-conversion.service';
 
 import { KeyListOfValues, AutolFillOptions } from './reports-list-component/interfaces';
 import { ApiBaseService } from './api-base.service';
+import { DeviceHint } from './device-info-page/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -130,6 +131,10 @@ export class DataService {
 
   public getAutofillData(fields: string[]): Observable<AutolFillOptions> {
     return this.http.post<AutolFillOptions>(this.base_url + 'autofill/', JSON.stringify(fields), DataService.httpOptions);
+  }
+
+  public getAllHints(): Observable<Map<string, number>> {
+    return this.http.get<Map<string, number>>(this.base_url + 'centers/all_hints/', DataService.httpOptions);
   }
 
   public getFilteredReportExcel(filters: KeyListOfValues<number> | null = null): Observable<PatientListData> {

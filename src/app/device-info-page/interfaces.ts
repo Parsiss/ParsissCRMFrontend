@@ -20,6 +20,9 @@ export interface EventInfo {
     type: string;
     device_id: string;
     files: FileInfo[];
+    can_have_children: boolean;
+    children: EventInfo[];
+    parent_id: number;
 }
 
 
@@ -45,7 +48,8 @@ export interface DeviceInfo
 
 export let event_type_map = new Map<string, string>([
     ["SV", "service"],
-    ["NA", "none"]
+    ["FC", "factor"],
+    ["NA", "none"],
 ]);
 
 

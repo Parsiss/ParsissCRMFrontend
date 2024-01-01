@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EventInfo, file_type_map } from '../../interfaces';
+import { EventInfo, event_type_map, file_type_map } from '../../interfaces';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '../../data.service';
 import * as moment from "jalali-moment";
@@ -12,7 +12,10 @@ import * as moment from "jalali-moment";
 })
 export class EventEditDialogComponent implements OnInit {
   public file_type_map = file_type_map;
+  public event_type_map = event_type_map;
   
+  asIsOrder(a:any, b:any) {return 1;}
+
   public deleted = new EventEmitter<boolean>();
 
   public editable: boolean = false;

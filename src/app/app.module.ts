@@ -79,6 +79,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { LoginPageComponent } from './login/login-page.component';
 import { AuthGuard } from './guards/auth.guard';
 import { TokenInterceptor } from './token.interceptor';
+import { EventListComponent } from './device-info-page/components/event-list/event-list.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 
@@ -120,6 +122,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PageNotFoundComponent,
     EventEditDialogComponent,
     LoginPageComponent,
+    EventListComponent,
   ],
   imports: [
     BrowserModule,
@@ -160,6 +163,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatListModule,
     MatTreeModule,
     MatChipsModule,
+    DragDropModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

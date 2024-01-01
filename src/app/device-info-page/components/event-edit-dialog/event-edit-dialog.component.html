@@ -11,8 +11,12 @@
             <mat-form-field>
                 <mat-label>{{"type" | translate}}</mat-label>
                 <mat-select formControlName="type">
-                    <mat-option value="NA">{{'none' | translate}}</mat-option>
-                    <mat-option value="SV">{{'service' | translate}}</mat-option>
+                    <mat-option 
+                        *ngFor="let type of event_type_map | keyvalue: asIsOrder"
+                        [value]="type.key"
+                    >
+                        {{type.value | translate}}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
 

@@ -1,6 +1,8 @@
 import {Injectable, OnInit} from '@angular/core';
 import {DataService} from "./data.service";
 
+import {DeviceHint} from "./device-info-page/interfaces"
+
 @Injectable({
   providedIn: 'root'
 })
@@ -33,7 +35,7 @@ export class AutofillService {
   ) {
     this.dataService.getAutofillData(this.autofillFields).subscribe(
       (data) => {
-        for(let [key, value]of Object.entries(data)) {
+        for(let [key, value] of Object.entries(data)) {
           this.autofillOptions.set(key, new Map(value));
           for(let [item, count] of this.autofillOptions.get(key)!) {
             this.autofillOptions.get(key)!.set(item, count);
@@ -41,9 +43,18 @@ export class AutofillService {
         }
       }
     );
+
+    this.dataService.getAllHints().subscribe((data: Map<string, number>) => {
+      let map = new Map<string, number>();
+      for(let [name, value] of Object.entries(data)) {
+        map.set(name, value);
+      }
+      this.autofillOptions.set("Hints", map);
+    })
   }
 
   get(str: string, filter: any, threshold: number = 3) {
+    console.log(str, filter, threshold)
     if(filter.length < threshold) {
       return [];
     }
@@ -52,8 +63,9 @@ export class AutofillService {
     if(options !== undefined) {
       let lst = Array.from(options, ([name, value]) => ({name, value}));
       const sorted = lst.sort((a, b) => b.value - a.value).map((struct) => struct.name)
-      return sorted.filter(option => option && option.includes(filter))
+      return sorted.filter(option => option && option.includes(filter));      
     }
+
     return [];
   }
 }

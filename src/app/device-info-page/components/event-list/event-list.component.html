@@ -1,0 +1,43 @@
+<mat-card *ngIf="events">
+    <mat-card-header>{{'events' | translate}}</mat-card-header>
+    <mat-card-content>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+            <mat-tree-node *matTreeNodeDef="let node" 
+                matTreeNodePadding draggable="true" 
+                cdkDragBoundary="mat-tree"
+                (dragstart)="dragStart($event, node);"
+            >
+                <button mat-icon-button><mat-icon>drag_handle</mat-icon></button>
+                <button mat-stroked-button class="events-item" (click)="tableRowCliecked(node.event)">
+                    <div class="events-item">
+                        <div>{{formatDate(node.event.date)}}</div>
+                        <div>{{event_type_map.get(node.event.type) || "" | translate}}</div>
+                    </div>
+                </button>
+            </mat-tree-node>
+
+            <mat-tree-node 
+                *matTreeNodeDef="let node;when: hasChild" 
+                matTreeNodePadding
+                (dragover)="dragOver($event, node);"
+                (drop)="drop($event, node);"
+            >   
+                <button mat-icon-button matTreeNodeToggle>
+                    <mat-icon class="mat-icon-rtl-mirror">
+                        folder
+                    </mat-icon>
+                </button>
+                <button mat-stroked-button class="events-item" (click)="tableRowCliecked(node.event)">
+                    <div class="events-item">
+                        <div>{{formatDate(node.event.date)}}</div>
+                        <div>{{event_type_map.get(node.event.type) || "" | translate}}</div>
+                    </div>
+                </button>
+            </mat-tree-node>
+        </mat-tree>
+
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-icon-button (click)="openDialog()"><mat-icon>add</mat-icon></button>
+    </mat-card-actions>
+</mat-card>

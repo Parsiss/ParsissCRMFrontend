@@ -4,11 +4,12 @@ import {COMMA, ENTER, SPACE} from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceHint, DeviceInfo, EventInfo, FileInfo, event_type_map, file_type_map } from './interfaces';
 import { DataService } from './data.service';
-import { EventEditDialogComponent } from './components/event-edit-dialog/event-edit-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from "jalali-moment";
 import { Observable, of } from 'rxjs';
 import { MatChipInputEvent } from '@angular/material/chips';
+
+import {AutofillService} from "../autofill.service";
 
 
 @Component({
@@ -86,7 +87,8 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
     route: ActivatedRoute,
     private router: Router,
     private dataService: DataService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public autofill: AutofillService
   ) {
     let years = [...Array(20).keys()];
     let currentYear = moment().jYear();
@@ -110,7 +112,6 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
       if(this.has_essential_hints) {
         this.device.hints.sort((x, y) => (x.is_essential == y.is_essential) ? 0 : x.is_essential ? -1 : 1);
         this.device.hints = [...this.device.hints]
-        console.log(this.device.hints)
       }
       
       // Check this shit out: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split#using_split
@@ -143,7 +144,9 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
   deleteHint(id: number) {
     this.dataService.deleteHint(id).subscribe((data) => {
       this.device!.hints = this.device!.hints.filter((value) => value.id !== id);
+      this.has_essential_hints = ((this.device!.hints.filter(value => value.is_essential)).length != 0);
     })
+
   }
 
   addHint() {
@@ -162,34 +165,12 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
     this.dataService.addHint(this.device_id, description, has_essential_hints).subscribe((data) => {
       this.device!.hints = [...this.device!.hints, data as DeviceHint]
       this.new_hint = ''
+      this.has_essential_hints = ((this.device!.hints.filter(value => value.is_essential)).length != 0);
+      if(this.has_essential_hints) {
+        this.device!.hints.sort((x, y) => (x.is_essential == y.is_essential) ? 0 : x.is_essential ? -1 : 1);
+        this.device!.hints = [...this.device!.hints]
+      }
     })
-    
-  }
-
-
-  openDialog(): void {
-    let dialog = this.dialog.open(EventEditDialogComponent, {direction: 'rtl', data: {device_id: this.device_id}});
-    dialog.componentInstance.enableEdit();
-    dialog.afterClosed().subscribe((data: EventInfo) => {
-      let file = data && (data as any)['file'];
-      let result = (data ? this.dataService.addEvent(data) : null);
-      result?.subscribe((data: EventInfo) => {
-        this.addFile(file, data).subscribe(this.getEvents.bind(this));
-      });
-    });
-  }
-
-  tableRowCliecked(i: number, row: EventInfo): void {
-    let dialog = this.dialog.open(EventEditDialogComponent, {direction: 'rtl', data: row});
-    dialog.afterClosed().subscribe((data: EventInfo) => {
-      let file = data && (data as any)['file'];
-      let result = (data ? this.dataService.updateEvent(data) : null);
-      result?.subscribe((data: EventInfo) => {
-        this.addFile(file, data).subscribe(this.getEvents.bind(this));
-      });
-    });
-    
-    dialog.componentInstance.deleted.subscribe(() => this.events?.splice(i, 1));
   }
 
   addFile(file: FormData, data: EventInfo): Observable<any> {        
@@ -257,10 +238,5 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
 
   deleteFile(id: number): void {
     this.dataService.deleteFile(id).subscribe(() => this.getFiles());
-  }
-
-  formatDate(datetime: Date): string {
-    let date = moment(datetime).format("jYYYY/jMM/jDD")
-    return date;
   }
 }

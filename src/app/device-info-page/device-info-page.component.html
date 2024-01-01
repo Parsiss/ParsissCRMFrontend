@@ -1,6 +1,6 @@
 <div class="page-container">
     <div class="device-section">
-        <mat-card *ngIf="device">
+        <mat-card *ngIf="device" style="margin-bottom: 1rem;">
             <mat-card-title>
                 {{device.center}}
             </mat-card-title>
@@ -25,7 +25,7 @@
 
                     <div style="display: flex;">
                         <button mat-icon-button (click)="password_show = !password_show"><mat-icon>{{password_show ?
-                            'close' : 'remove_red_eye'}}</mat-icon></button>
+                                'close' : 'remove_red_eye'}}</mat-icon></button>
                         <mat-form-field style="flex-grow: 1;">
                             <mat-label>{{'passowrd' | translate}}</mat-label>
                             <input [(ngModel)]="device.system_password" matInput
@@ -94,7 +94,6 @@
                 <button mat-icon-button (click)="delete()"><mat-icon>delete</mat-icon></button>
             </mat-card-actions>
         </mat-card>
-
         <mat-expansion-panel *ngIf="device">
             <mat-expansion-panel-header>
                 {{"hints" | translate}} {{ has_essential_hints ? '*' : '' }}
@@ -114,8 +113,18 @@
                 <div class="add-hint">
                     <mat-form-field style="width: calc(100% - 40px);">
                         <mat-label>{{'description' | translate}}</mat-label>
-                        <input [(ngModel)]="new_hint" placeholder="{{'enter_start' | translate}}" matInput>
+                        <input [(ngModel)]="new_hint" (keyup.enter)="addHint()"
+                            placeholder="{{'enter_start' | translate}}" matInput [matAutocomplete]="autocomplete">
                     </mat-form-field>
+
+                    <mat-autocomplete #autocomplete="matAutocomplete">
+                        <mat-option
+                            *ngFor="let option of autofill.get('Hints', new_hint, 1)"
+                            [value]="option">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
+
                     <button mat-icon-button (click)="addHint()"><mat-icon>add</mat-icon></button>
                 </div>
             </div>
@@ -161,21 +170,8 @@
     </div>
 
     <div class="events-section">
-        <mat-card *ngIf="events">
-            <mat-card-header>{{'events' | translate}}</mat-card-header>
-            <mat-card-content class="events-list">
-                <button mat-stroked-button *ngFor="let event of events; let i = index;"
-                    style="margin-top: 4px; margin-bottom: 4px;" (click)="tableRowCliecked(i, event)">
-                    <div class="events-item">
-                        <div>{{formatDate(event.date)}}</div>
-                        <div>{{event_type_map.get(event.type) || "" | translate}}</div>
-                    </div>
-                </button>
-            </mat-card-content>
-            <mat-card-actions>
-                <button mat-icon-button (click)="openDialog()"><mat-icon>add</mat-icon></button>
-            </mat-card-actions>
-        </mat-card>
+        <app-event-list *ngIf="events" [events]="events" [device_id]="device_id" (updated)="getEvents()">
+        </app-event-list>
         <mat-spinner *ngIf="!events"></mat-spinner>
     </div>
 </div>
