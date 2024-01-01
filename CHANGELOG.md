@@ -1,3 +1,6 @@
+## 1.3.9 (January 01, 2024)
+  - centers common problem section; search
+
 ## 1.3.8 (November 27, 2023)
 
 
