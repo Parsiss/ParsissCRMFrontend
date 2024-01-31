@@ -331,10 +331,6 @@ export class ReportsListComponent implements OnInit {
   }
 
   downloadExcel() {
-    // pop up
-    // this._snackBar.open('This feature is not working right now', 'Close', {
-    //   duration: 2000,
-    // });
     this.dataService.getFilteredReportExcel(this.activeFilters).subscribe(data => {
       let excelFileData: Map<string, any[]> = new Map<string, any[]>();
       data.data.forEach((patient) => {

@@ -1,0 +1,6 @@
+<mat-form-field appearance="fill">
+    <mat-label>{{name | translate}}</mat-label>
+    <input matInput [matDatepicker]="endpicker" [formControl]="date" [placeholder]="name | translate">
+    <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+    <mat-datepicker #endpicker></mat-datepicker>
+</mat-form-field>

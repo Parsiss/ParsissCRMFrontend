@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { EventInfo, event_type_map, file_type_map } from '../../interfaces';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '../../data.service';
@@ -58,6 +58,7 @@ export class EventEditDialogComponent implements OnInit {
     if(this.dataForm) {
       (result as any)['file'] = this.dataForm;
     }
+    result.type_specific_field = {};
     this.dialogRef.close(result);
   }
 
@@ -69,8 +70,8 @@ export class EventEditDialogComponent implements OnInit {
   }
 
   onFileSelected(event: Event) {
-      const element = event.currentTarget as HTMLInputElement;
-      let fileList: FileList | null = element.files;
+    const element = event.currentTarget as HTMLInputElement;
+    let fileList: FileList | null = element.files;
     if(fileList && fileList.length == 1) {
       let file = fileList[0];
       this.selected_file_name = file.name;

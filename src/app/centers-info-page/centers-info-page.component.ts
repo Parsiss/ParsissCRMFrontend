@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { DetailCenterDialogComponent } from './components/detail-center-dialog/detail-center-dialog.component';
 import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -20,10 +21,10 @@ export class CentersInfoPageComponent implements OnInit, AfterViewInit {
   public selected_device_id: number | null = null;
   public selectedElement: CenterViewInfo;
 
-
   constructor(
     public dialog: MatDialog,
-    public dataService: DataService
+    public dataService: DataService,
+    private _snackBar: MatSnackBar
   ) {
   }
 
@@ -60,7 +61,11 @@ export class CentersInfoPageComponent implements OnInit, AfterViewInit {
   }
 
   deleteElement(row: CenterViewInfo): void {
-    this.dataService.deleteCenter(row.id).subscribe(this.updateTableInfo.bind(this));
+    if(confirm("Are you sure to delete ")) {
+      this.dataService.deleteCenter(row.id).subscribe(this.updateTableInfo.bind(this));
+      return;
+    }
+
   }
 
   updateTableInfo(): void  {

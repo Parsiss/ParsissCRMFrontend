@@ -33,6 +33,8 @@
                 <ngx-material-timepicker #startTimeDatepicker class="overlay-timepicker" [format]="24"></ngx-material-timepicker>
             </mat-form-field>
 
+            <app-event-specific-fields [type]="form.controls['type'].value"></app-event-specific-fields>
+
             <mat-form-field>
                 <mat-label>{{'description' | translate}}</mat-label>
                 <textarea formControlName="description" matInput> </textarea>

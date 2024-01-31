@@ -60,7 +60,8 @@ export class DeviceInfoPageComponent implements OnInit, OnChanges {
     'OV3',
     'OV4',
     'Compo',
-    'CompoPlus'
+    'CompoPlus',
+    'OPTO'
   ]
 
   public event_type_map = event_type_map;

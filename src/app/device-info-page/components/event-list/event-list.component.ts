@@ -7,7 +7,7 @@ import { DataService } from '../../data.service';
 import { Observable, of } from 'rxjs';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 
 interface FlatEventInfoNode {
@@ -30,6 +30,9 @@ export class EventListComponent implements OnInit, OnChanges {
 
   @Output() public updated = new EventEmitter<number>();
 
+  public filterDateRange: FormGroup;
+  public isFiltered: boolean = false;
+
   public event_type_map = event_type_map;
 
   private _transformer = (node: EventInfo, level: number) => {
@@ -42,8 +45,32 @@ export class EventListComponent implements OnInit, OnChanges {
 
   constructor(
     public dialog: MatDialog,
-    public dataService: DataService
-  ) { }
+    public dataService: DataService,
+    private fb: FormBuilder
+  ) {
+    this.filterDateRange = fb.group({
+      end: [null],
+      start: [null]
+    });
+    this.filterDateRange.valueChanges.subscribe(this.filterByDateRange.bind(this))
+  }
+
+  clearRangeFilter() {
+    this.filterDateRange.setValue({
+      start: null,
+      end: null
+    })
+    
+  }
+
+  filterByDateRange(value: any) {
+    this.isFiltered = (value.start || value.end);
+    this.dataSource.data = this.events.filter((event) => {
+      let {start, end} = value;
+      let date = new Date(event.date);
+      return (!start || date > start) && (!end || date <= end);
+    });
+  }
 
   ngOnInit(): void {
   }
@@ -109,7 +136,6 @@ export class EventListComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
     if(changes['events']) {
       this.dataSource.data = this.events;
     }

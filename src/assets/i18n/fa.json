@@ -1,8 +1,10 @@
 {
   "id": "شناسه",
   "enter date": "بازه زمانی را انتخاب کنید",
-  "start date": "تاریخ شروع",
-  "end date": "تاریخ پایان",
+  "start_date": "تاریخ شروع",
+  "end_date": "تاریخ پایان",
+  "start": "شروع",
+  "end": "پایان",
   "advanced search": "جستجوی پیشرفته",
   "simple search": "جستجو",
   "search": "جستجو",
@@ -165,5 +167,9 @@
   "Login": "ورود",
   "Username": "نام کاربری",
   "Password": "رمز",
-  "Username or Password invalid": "نام کاربری یا پسورد اشتباه است"
+  "Username or Password invalid": "نام کاربری یا پسورد اشتباه است",
+  "prefactor": "پیش فارکتور",
+  "investigation": "کارشناسی",
+  "request_serivce": "درخواست سرویس",
+  "installation": "نصب"
 }

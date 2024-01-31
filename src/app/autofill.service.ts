@@ -1,7 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
 import {DataService} from "./data.service";
 
-import {DeviceHint} from "./device-info-page/interfaces"
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +53,6 @@ export class AutofillService {
   }
 
   get(str: string, filter: any, threshold: number = 3) {
-    console.log(str, filter, threshold)
     if(filter.length < threshold) {
       return [];
     }

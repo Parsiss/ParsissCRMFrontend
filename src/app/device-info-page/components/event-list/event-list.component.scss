@@ -7,10 +7,37 @@
 }
 
 
-:host ::ng-deep .mat-button-wrapper {
+.event-cotainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+
+mat-card-header {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-drawer-container {
+    min-height: 100px;
+}
+
+mat-drawer {
+    width: 100%;
+    height: min-content;
+}
+
+
+:host ::ng-deep .mat-stroked-button>.mat-button-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+}
+
+::ng-deep .mat-card-header-text {
+    margin: 0px;
 }

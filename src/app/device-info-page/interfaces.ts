@@ -16,6 +16,7 @@ export interface FileInfo {
 export interface EventInfo {
     id: number;
     description: string;  
+    type_specific_field: {};
     date: Date;
     type: string;
     device_id: string;
@@ -24,7 +25,6 @@ export interface EventInfo {
     children: EventInfo[];
     parent_id: number;
 }
-
 
 
 export interface DeviceInfo
@@ -45,10 +45,14 @@ export interface DeviceInfo
     hints: DeviceHint[];
 };
 
-
+    
 export let event_type_map = new Map<string, string>([
     ["SV", "service"],
     ["FC", "factor"],
+    ['PF', 'prefactor'],
+    ['II', 'investigation'],
+    ['RS', 'request_serivce'],
+    ["IN", "installation"],
     ["NA", "none"],
 ]);
 
@@ -60,3 +64,4 @@ export let  file_type_map = new Map<string, string>([
     ["SR", "given_services"],
     ["MC", "main_check_list"]  
 ])
+

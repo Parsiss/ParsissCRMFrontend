@@ -1,41 +1,54 @@
 <mat-card *ngIf="events">
-    <mat-card-header>{{'events' | translate}}</mat-card-header>
-    <mat-card-content>
-        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-            <mat-tree-node *matTreeNodeDef="let node" 
-                matTreeNodePadding draggable="true" 
-                cdkDragBoundary="mat-tree"
-                (dragstart)="dragStart($event, node);"
+    <mat-card-header>
+        {{'events' | translate}}
+        <div>
+            <button mat-icon-button (click)="drawer.toggle()"><mat-icon>filter_list</mat-icon></button>
+            <button mat-icon-button 
+                *ngIf="(drawer.opened && isFiltered) || (!this.dataSource.data.length && this.events.length)" 
+                (click)="clearRangeFilter(); drawer.close();"
             >
-                <button mat-icon-button><mat-icon>drag_handle</mat-icon></button>
-                <button mat-stroked-button class="events-item" (click)="tableRowCliecked(node.event)">
-                    <div class="events-item">
-                        <div>{{formatDate(node.event.date)}}</div>
-                        <div>{{event_type_map.get(node.event.type) || "" | translate}}</div>
-                    </div>
-                </button>
-            </mat-tree-node>
+                <mat-icon>settings_backup_restore</mat-icon>
+            </button>
+        </div>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-drawer-container hasBackdrop="false">
+            <mat-drawer #drawer mode="over">
+                <app-range-date-picker [formGroup]="filterDateRange"></app-range-date-picker>
+            </mat-drawer>
+            <mat-drawer-content>
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding draggable="true"
+                        cdkDragBoundary="mat-tree" (dragstart)="dragStart($event, node);"
+                    >
+                        <button mat-icon-button><mat-icon>drag_handle</mat-icon></button>
+                        <button mat-stroked-button class="events-item" (click)="tableRowCliecked(node.event)">
+                            <div class="events-item">
+                                <div>{{formatDate(node.event.date)}}</div>
+                                <div>{{event_type_map.get(node.event.type) || "" | translate}}</div>
+                            </div>
+                        </button>
+                    </mat-tree-node>
 
-            <mat-tree-node 
-                *matTreeNodeDef="let node;when: hasChild" 
-                matTreeNodePadding
-                (dragover)="dragOver($event, node);"
-                (drop)="drop($event, node);"
-            >   
-                <button mat-icon-button matTreeNodeToggle>
-                    <mat-icon class="mat-icon-rtl-mirror">
-                        folder
-                    </mat-icon>
-                </button>
-                <button mat-stroked-button class="events-item" (click)="tableRowCliecked(node.event)">
-                    <div class="events-item">
-                        <div>{{formatDate(node.event.date)}}</div>
-                        <div>{{event_type_map.get(node.event.type) || "" | translate}}</div>
-                    </div>
-                </button>
-            </mat-tree-node>
-        </mat-tree>
-
+                    <mat-nested-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding
+                        (dragover)="dragOver($event, node);" (drop)="drop($event, node);"
+                        class="event-cotainer"
+                    >
+                        <button mat-icon-button matTreeNodeToggle>
+                            <mat-icon class="mat-icon-rtl-mirror">
+                                folder
+                            </mat-icon>
+                        </button>
+                        <button mat-stroked-button class="events-item" (click)="tableRowCliecked(node.event)">
+                            <div class="events-item">
+                                <div>{{formatDate(node.event.date)}}</div>
+                                <div>{{event_type_map.get(node.event.type) || "" | translate}}</div>
+                            </div>
+                        </button>
+                    </mat-nested-tree-node>
+                </mat-tree>
+            </mat-drawer-content>
+        </mat-drawer-container>
     </mat-card-content>
     <mat-card-actions>
         <button mat-icon-button (click)="openDialog()"><mat-icon>add</mat-icon></button>

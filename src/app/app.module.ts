@@ -37,7 +37,7 @@ import { NgxCurrencyModule } from "ngx-currency";
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { NativeDateAdapter, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { DatePipe } from '@angular/common'
+import { CommonModule, DatePipe } from '@angular/common'
 import { FormControlDirective, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DetailPageComponent } from './detail-page-component/detail-page.component';
 import { NumberfieldDirective } from './numberfield.directive';
@@ -81,7 +81,11 @@ import { AuthGuard } from './guards/auth.guard';
 import { TokenInterceptor } from './token.interceptor';
 import { EventListComponent } from './device-info-page/components/event-list/event-list.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { RangeTimePickerComponent } from './common/range-date-picker/range-date-picker.component';
 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TimePickerComponent } from './common/date-picker/date-picker.component';
+import { EventSpecificFieldsComponent } from './device-info-page/components/event-specific-fields/event-specific-fields.component';
 
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
@@ -123,7 +127,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     EventEditDialogComponent,
     LoginPageComponent,
     EventListComponent,
+    RangeTimePickerComponent,
+    TimePickerComponent,
+    EventSpecificFieldsComponent,
   ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],  
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -142,6 +152,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatPaginatorModule,
     MatSortModule,
     MatFormFieldModule,
+    CommonModule,
+    BrowserModule,
     MatInputModule,
     MatGridListModule,
     MatCardModule,

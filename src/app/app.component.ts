@@ -13,11 +13,10 @@ import {ReportsListComponent} from "./reports-list-component/reports-list.compon
 @Injectable()
 export class AppComponent {
   title = 'ParsissCRMFrontend';
+  public today = new Date();
   private _selectedLanguage = 'fa';
 
   public textDir: 'rtl' | 'ltr' = 'rtl';
-
-  date = new Date();
 
   get selectedLanguage(): string {
     return this._selectedLanguage;
