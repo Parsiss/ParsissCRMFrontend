@@ -1,3 +1,6 @@
+## 1.3.12 (February 27, 2024)
+  - Centers style/Login intercept on first try/Login Passowrd manager
+
 ## 1.3.11 (January 31, 2024)
   - update centers info
 
