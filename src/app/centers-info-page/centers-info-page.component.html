@@ -5,6 +5,8 @@
             <input matInput (keyup)="applyFilter($event)" #input>
         </mat-form-field>
         
+        <div class="table-container">
+            
         <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="edit" stickyEnd>
                 <th style="width: 20%;" mat-header-cell *matHeaderCellDef>{{ 'edit' | translate}}</th>
@@ -43,7 +45,7 @@
                 <td class="mat-cell" colspan="4">{{'no_center' | translate}}</td>
             </tr>
         </table>
-
+        </div>
         <mat-card-actions>
             <button mat-raised-button (click)="openDialog()">{{"add" | translate}}</button>
         </mat-card-actions>

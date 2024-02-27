@@ -9,6 +9,11 @@
   min-width: 300px;
 }
 
+form {
+  flex-direction: column;
+  display: flex;
+}
+
 mat-card-title,
 mat-card-content {
   display: flex;

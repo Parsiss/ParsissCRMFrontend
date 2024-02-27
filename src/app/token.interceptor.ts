@@ -8,10 +8,14 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(public authenticationService: AuthenticationService) {}
+  constructor(
+    public authenticationService: AuthenticationService,
+    private router: Router
+  ) {}
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
@@ -28,6 +32,7 @@ export class TokenInterceptor implements HttpInterceptor {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
             localStorage.removeItem(this.authenticationService.localStorageKey)
+            this.router.navigate(["login"]);
           }
         }
         return throwError(err);
