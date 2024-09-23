@@ -45,6 +45,7 @@ export interface PatientInformation {
     CancellationReason?: string;
     FileNumber?: string;
     DateOfHospitalAdmission?: number;
+    FRE? : number
 
     PaymentStatus?: number;
     DateOfFirstContact?: number;

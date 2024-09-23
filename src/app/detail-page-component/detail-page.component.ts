@@ -98,7 +98,7 @@ export class DetailPageComponent implements OnInit {
       ExitTime: new FormControl('00:00:00'),
       PatientEnterTime: new FormControl('00:00:00'),
       HeadFixType: new FormControl(0),
-      FRE: new FormControl(0),
+      FRE: new FormControl(0.0),
     });
 
     this.form.controls['SurgeryDate'].valueChanges.subscribe(value => {
@@ -131,6 +131,7 @@ export class DetailPageComponent implements OnInit {
     if (this.id != -1) {
       this.dataService.getPatient(this.id).subscribe(fulldata => {
         this.fulldata = fulldata;
+        console.log(fulldata)
         for (let key in this.form.controls) {
           this.form.controls[key].setValue((fulldata as any)[key]);
         }
