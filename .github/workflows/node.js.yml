@@ -33,7 +33,7 @@ jobs:
       run: echo "::set-output name=version::$(./bin/CRMAngular --version)"
       id: version
     - name: release
-      uses: actions/create-release@v1
+      uses: actions/create-release@v4
       id: create_release
       with:
         draft: false
@@ -44,12 +44,12 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: release
         path: release.zip
     - name: upload windows artifact
-      uses: actions/upload-release-asset@v1
+      uses: actions/upload-release-asset@v4
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
